@@ -1,0 +1,30 @@
+﻿---
+import type { Post } from '../lib/posts';
+import { formatPostDate, getPostUrl } from '../lib/posts';
+
+interface Props {
+  post: Post;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+const { title, description, pubDate, tags, cover, coverAlt } = post.data;
+---
+
+<article class:list={["post-card", { "post-card--featured": featured }]}>
+  {cover && (
+    <a class="post-card__cover" href={getPostUrl(post)} aria-label={`阅读《${title}》`}>
+      <img src={cover} alt={coverAlt ?? ''} loading={featured ? 'eager' : 'lazy'} />
+    </a>
+  )}
+  <div class="post-card__body">
+    <p class="eyebrow">{formatPostDate(pubDate)}</p>
+    <h2 class="post-card__title"><a href={getPostUrl(post)}>{title}</a></h2>
+    <p class="post-card__description">{description}</p>
+    {tags.length > 0 && (
+      <ul class="tag-list" aria-label="文章标签">
+        {tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+    )}
+  </div>
+</article>

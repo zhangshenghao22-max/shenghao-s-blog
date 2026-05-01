@@ -1,0 +1,28 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="雨后阳台上的植物和一杯热茶">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9e3d5"/>
+      <stop offset="1" stop-color="#f5dfc3"/>
+    </linearGradient>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .11"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="1200" height="760" fill="url(#sky)"/>
+  <rect width="1200" height="760" filter="url(#paper)" opacity=".5"/>
+  <rect x="100" y="470" width="1000" height="52" rx="20" fill="#8f5f3e" opacity=".28"/>
+  <rect x="140" y="520" width="920" height="34" rx="14" fill="#8f5f3e" opacity=".36"/>
+  <circle cx="270" cy="474" r="8" fill="#f7efe2"/><circle cx="422" cy="476" r="6" fill="#f7efe2"/><circle cx="760" cy="472" r="7" fill="#f7efe2"/>
+  <g transform="translate(230 260)">
+    <path d="M55 170h210l-32 190H88z" fill="#b8724e"/>
+    <path d="M62 170h196l-14 54H76z" fill="#8f5f3e"/>
+    <path d="M152 168C120 96 107 42 132 22c31-25 68 54 42 146" fill="#607d54"/>
+    <path d="M158 168c18-92 59-145 98-128 35 15 11 91-98 128" fill="#749261"/>
+    <path d="M150 168C93 128 58 79 77 48c25-41 80 18 73 120" fill="#7a9a68"/>
+    <path d="M152 168c-31-88-7-153 31-151 39 2 35 86-31 151" fill="#4f7047"/>
+  </g>
+  <g transform="translate(690 360)">
+    <ellipse cx="95" cy="178" rx="150" ry="34" fill="#8f5f3e" opacity=".18"/>
+    <path d="M26 90h142v74c0 43-31 76-71 76s-71-33-71-76z" fill="#f7efe2" stroke="#8f5f3e" stroke-width="10"/>
+    <path d="M168 116c54-4 73 17 68 48-5 33-32 50-76 37" fill="none" stroke="#8f5f3e" stroke-width="16" stroke-linecap="round"/>
+    <path d="M58 78c-14-34 16-43 2-75M100 78c-18-42 26-52 10-86M137 79c-12-28 20-39 8-67" stroke="#d8a35d" stroke-width="9" stroke-linecap="round" fill="none" opacity=".65"/>
+  </g>
+</svg>

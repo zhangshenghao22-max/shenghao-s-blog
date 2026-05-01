@@ -1,0 +1,37 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) => {
+  const year = String(post.data.pubDate.getFullYear());
+  groups[year] ??= [];
+  groups[year].push(post);
+  return groups;
+}, {});
+---
+
+<BaseLayout title="归档" description="纸上有风的所有生活随笔归档。">
+  <section class="page-hero section-shell reveal">
+    <p class="eyebrow">Archive</p>
+    <h1>所有纸页</h1>
+    <p>按时间整理这些散落的日常，像把信件重新放回抽屉。</p>
+  </section>
+
+  <section class="archive section-shell">
+    {Object.entries(groupedPosts).map(([year, yearPosts]) => (
+      <div class="archive-year reveal">
+        <h2>{year}</h2>
+        <ol class="archive-list">
+          {yearPosts.map((post) => (
+            <li>
+              <time datetime={post.data.pubDate.toISOString()}>{formatPostDate(post.data.pubDate)}</time>
+              <a href={getPostUrl(post)}>{post.data.title}</a>
+              <span>{post.data.description}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

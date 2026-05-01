@@ -1,0 +1,22 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="黄昏里的旧书店窗边和摊开的书">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7bd76"/><stop offset=".6" stop-color="#8f5f3e"/><stop offset="1" stop-color="#4f4741"/></linearGradient>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .13"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <rect width="1200" height="760" filter="url(#paper)" opacity=".5"/>
+  <rect x="120" y="110" width="310" height="500" rx="18" fill="#4f4741" opacity=".76"/>
+  <rect x="770" y="115" width="300" height="480" rx="18" fill="#f7efe2" opacity=".33"/>
+  <path d="M805 150h230v400H805z" fill="#f7efe2" opacity=".34"/>
+  <path d="M920 150v400M805 310h230" stroke="#f7efe2" stroke-width="8" opacity=".5"/>
+  <g transform="translate(166 170)">
+    <rect x="0" y="0" width="48" height="360" fill="#b8724e"/><rect x="62" y="30" width="42" height="330" fill="#d8a35d"/><rect x="118" y="8" width="44" height="352" fill="#607d54"/><rect x="178" y="44" width="46" height="316" fill="#f0c88f"/>
+    <path d="M12 36h24M73 80h20M130 58h22M190 96h24" stroke="#f7efe2" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+  </g>
+  <g transform="translate(370 470)">
+    <path d="M20 30c120-44 210-28 290 36v165c-96-62-194-78-290-36z" fill="#f7efe2" stroke="#8f5f3e" stroke-width="9"/>
+    <path d="M310 66c82-61 185-72 310-28v165c-112-45-214-31-310 28z" fill="#fbf2e4" stroke="#8f5f3e" stroke-width="9"/>
+    <path d="M310 66v165" stroke="#8f5f3e" stroke-width="7"/>
+    <path d="M76 96c62-15 114-9 160 12M78 132c60-14 120-8 174 18M360 98c74-28 142-34 206-18M360 136c64-24 130-29 198-12" stroke="#b8724e" stroke-width="7" stroke-linecap="round" opacity=".62"/>
+  </g>
+</svg>

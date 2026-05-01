@@ -1,0 +1,24 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="周日早市上的蔬果摊和布袋">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4d6aa"/><stop offset="1" stop-color="#c9d6b5"/></linearGradient>
+    <filter id="paper"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .10"/></feComponentTransfer></filter>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <rect width="1200" height="760" filter="url(#paper)" opacity=".55"/>
+  <path d="M130 260h940l-90 360H220z" fill="#8f5f3e" opacity=".22"/>
+  <path d="M168 255h864v75H168z" fill="#b8724e"/>
+  <path d="M220 165h760l52 90H168z" fill="#f7efe2" stroke="#8f5f3e" stroke-width="10"/>
+  <path d="M240 165l-38 90M392 165l-20 90M544 165l-4 90M696 165l14 90M848 165l32 90M980 165l52 90" stroke="#d8a35d" stroke-width="10"/>
+  <g transform="translate(260 390)">
+    <circle cx="38" cy="48" r="38" fill="#c65f45"/><circle cx="96" cy="42" r="34" fill="#d76f50"/><circle cx="150" cy="54" r="42" fill="#bb5740"/>
+    <path d="M34 8l16 16M93 8l14 14M151 14l16 18" stroke="#607d54" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(560 386)">
+    <ellipse cx="50" cy="60" rx="48" ry="33" fill="#d8a35d"/><ellipse cx="126" cy="55" rx="50" ry="32" fill="#c9914f"/><ellipse cx="202" cy="62" rx="48" ry="34" fill="#d8a35d"/>
+  </g>
+  <g transform="translate(820 370)">
+    <path d="M52 50c10-56 100-56 110 0" fill="none" stroke="#8f5f3e" stroke-width="16" stroke-linecap="round"/>
+    <path d="M28 58h158l-20 170H48z" fill="#f7efe2" stroke="#8f5f3e" stroke-width="9"/>
+    <path d="M70 102h78M65 140h88" stroke="#d8a35d" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="纸上有风">
+  <rect width="64" height="64" rx="18" fill="#8f5f3e"/>
+  <path d="M18 15h28c2 0 4 2 4 4v26c0 2-2 4-4 4H18c-2 0-4-2-4-4V19c0-2 2-4 4-4Z" fill="#f6ead7"/>
+  <path d="M22 25h20M22 32h17M22 39h12" stroke="#8f5f3e" stroke-width="3" stroke-linecap="round"/>
+  <path d="M44 20c-8 7-11 15-9 24 6-7 10-13 9-24Z" fill="#d8a35d" opacity=".9"/>
+</svg>

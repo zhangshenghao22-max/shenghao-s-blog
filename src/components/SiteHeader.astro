@@ -1,0 +1,28 @@
+﻿---
+const navItems = [
+  { href: '/', label: '首页' },
+  { href: '/archive/', label: '归档' },
+  { href: '/about/', label: '关于' },
+];
+const pathname = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <a class="skip-link" href="#content">跳到正文</a>
+  <div class="site-header__inner">
+    <a class="brand" href="/" aria-label="纸上有风首页">
+      <span class="brand__mark" aria-hidden="true">纸</span>
+      <span>
+        <span class="brand__name">纸上有风</span>
+        <span class="brand__tagline">Life notes in warm light</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      {navItems.map((item) => (
+        <a class:list={[{ 'is-active': item.href === '/' ? pathname === '/' : pathname.startsWith(item.href) }, 'nav__link']} href={item.href}>
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

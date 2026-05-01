@@ -1,0 +1,49 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPublishedPosts } from '../lib/posts';
+
+const posts = await getPublishedPosts();
+const [latestPost, ...morePosts] = posts;
+---
+
+<BaseLayout>
+  <section class="hero section-shell">
+    <div class="hero__copy reveal">
+      <p class="eyebrow">生活随笔 · 慢记录</p>
+      <h1>把微小的日常，折进一页温暖的纸里。</h1>
+      <p class="hero__lead">
+        这里收藏散步时遇见的光、餐桌上的气味、雨后的街道，以及那些不急着被总结的片刻。
+      </p>
+      <div class="hero__actions">
+        <a class="button" href="/archive/">阅读归档</a>
+        <a class="button button--ghost" href="/about/">认识我</a>
+      </div>
+    </div>
+    <aside class="hero__note reveal" aria-label="手账便签">
+      <span class="note-pin" aria-hidden="true"></span>
+      <p class="hero__note-date">今日札记</p>
+      <p>
+        不必把每一天都过成宏大的故事。也许只是把窗台擦干净，给一杯茶留出十分钟。
+      </p>
+    </aside>
+  </section>
+
+  <section class="section-shell section-heading reveal">
+    <p class="eyebrow">Recent Notes</p>
+    <h2>最近写下</h2>
+  </section>
+
+  {latestPost ? (
+    <section class="section-shell posts-showcase">
+      <PostCard post={latestPost} featured />
+      <div class="posts-grid">
+        {morePosts.slice(0, 4).map((post) => <PostCard post={post} />)}
+      </div>
+    </section>
+  ) : (
+    <section class="section-shell empty-state">
+      <p>还没有文章。稍后在 <code>src/content/posts/</code> 中写下第一篇吧。</p>
+    </section>
+  )}
+</BaseLayout>

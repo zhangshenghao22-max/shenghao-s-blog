@@ -1,0 +1,37 @@
+﻿---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  pageClass?: string;
+}
+
+const siteName = '纸上有风';
+const defaultDescription = '一间安静的个人生活随笔博客，记录日常、散步、餐桌和城市里的微光。';
+const { title, description = defaultDescription, pageClass = '' } = Astro.props;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · 生活随笔`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#efe2cb" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body class={pageClass}>
+    <div class="paper-grain" aria-hidden="true"></div>
+    <SiteHeader />
+    <main id="content" class="site-main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

@@ -42,11 +42,11 @@ coverAlt: "封面图描述"
 2. 进入仓库 Settings → Pages。
 3. Build and deployment 的 Source 选择 `GitHub Actions`。
 4. 推送后等待 `Deploy to GitHub Pages` workflow 完成。
-5. 当前仓库会先发布到 `https://zhangshenghao22-max.github.io/shenghao-s-blog/`。如果以后使用自定义域名，再新增 `public/CNAME`。
+5. 当前仓库会发布到自定义域名 `https://www.zhangshenghao.com/`。
 
 ## 自定义域名
 
-当前没有启用自定义域名，默认发布到 GitHub Pages 项目地址。以后如需绑定域名，请新增 `public/CNAME`，并同步修改 `.github/workflows/deploy.yml` 中的 `SITE_URL` 和 `astro.config.mjs` 默认站点地址。
+当前启用自定义域名 `www.zhangshenghao.com`，域名记录写在 `public/CNAME`，构建站点地址写在 `.github/workflows/deploy.yml` 和 `astro.config.mjs`。
 
 推荐 DNS 配置：
 
@@ -59,5 +59,6 @@ coverAlt: "封面图描述"
 - 站点名称：`src/layouts/BaseLayout.astro`、`src/components/SiteHeader.astro`、`src/components/SiteFooter.astro`
 - 关于页内容和链接：`src/pages/about.astro`
 - 示例文章：`src/content/posts/`
-- GitHub Pages 地址：`https://zhangshenghao22-max.github.io/shenghao-s-blog/`
+- 自定义域名：`https://www.zhangshenghao.com/`
+
 

@@ -30,8 +30,7 @@ jobs:
       - name: Build site
         run: npm run build
         env:
-          SITE_URL: https://zhangshenghao22-max.github.io
-          BASE_PATH: /shenghao-s-blog
+          SITE_URL: https://www.zhangshenghao.com
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -47,4 +46,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 

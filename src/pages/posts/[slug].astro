@@ -1,7 +1,7 @@
 ﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { render } from 'astro:content';
-import { formatPostDate, getPostSlug, getPostUrl, getPublishedPosts } from '../../lib/posts';
+import { categoryLabels, formatPostDate, getPostSlug, getPostUrl, getPublishedPosts } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -22,7 +22,7 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title} description={post.data.description} pageClass="article-page">
   <article class="article-shell section-shell reveal">
     <header class="article-header">
-      <p class="eyebrow">Transmission · {formatPostDate(post.data.pubDate)}</p>
+      <p class="eyebrow"><span>{categoryLabels[post.data.category]}</span> · {formatPostDate(post.data.pubDate)}</p>
       <h1>{post.data.title}</h1>
       <p class="article-description">{post.data.description}</p>
       {post.data.tags.length > 0 && (
@@ -41,13 +41,13 @@ const { Content } = await render(post);
   <nav class="post-nav section-shell" aria-label="文章导航">
     {previousPost ? (
       <a class="post-nav__item" href={getPostUrl(previousPost)}>
-        <span>上一条轨道</span>
+        <span>上一篇</span>
         {previousPost.data.title}
       </a>
     ) : <span></span>}
     {nextPost ? (
       <a class="post-nav__item post-nav__item--next" href={getPostUrl(nextPost)}>
-        <span>下一条轨道</span>
+        <span>下一篇</span>
         {nextPost.data.title}
       </a>
     ) : <span></span>}

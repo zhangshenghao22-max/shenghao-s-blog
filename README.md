@@ -1,6 +1,6 @@
-﻿# 星际编码日志
+﻿# 日光微屿
 
-一个基于 Astro 和 GitHub Pages 的个人技术站点。当前版本采用更明亮的深空霓虹风格，除了技术文章，也包含项目舱、灵感信号、工具箱和星际菜单等静态入口。
+一个基于 Astro 和 GitHub Pages 的个人博客。当前版本采用简约苹果风和奶油玻璃拟态，内容包含生活文章、技术文章、个人简介、心情胶囊和灵感橱窗。
 
 ## 本地开发
 
@@ -19,14 +19,15 @@ npm run dev
 
 ## 写一篇文章
 
-在 `src/content/posts/` 新建 Markdown 或 MDX 文件：
+在 `src/content/posts/` 新建 Markdown 或 MDX 文件。使用 `category` 区分生活和技术文章：
 
 ```md
 ---
 title: "文章标题"
 description: "一句简短摘要"
 pubDate: 2026-05-01
-tags: ["Astro", "前端工程"]
+category: life # life 或 tech
+tags: ["日常", "咖啡"]
 cover: "/images/example.svg"
 coverAlt: "封面图描述"
 ---
@@ -38,10 +39,10 @@ coverAlt: "封面图描述"
 
 ## 站点结构
 
-- `/`：长首页，包含 Hero、星际菜单预览、最新文章、项目舱、灵感信号和关于摘要。
-- `/menu/`：完整星图导航页，汇总文章、项目、灵感、工具、关于和 GitHub 入口。
-- `/archive/`：技术文章归档。
-- `/about/`：任务档案和个人介绍。
+- `/`：首页，包含生活文章、技术文章、个人简介、心情胶囊和灵感橱窗。
+- `/menu/`：灵感菜单，汇总生活、技术、简介、归档和 GitHub 入口。
+- `/archive/`：全部文章归档。
+- `/about/`：个人简介页。
 
 ## GitHub Pages 发布
 
@@ -65,6 +66,6 @@ coverAlt: "封面图描述"
 
 - 站点名称：`src/layouts/BaseLayout.astro`、`src/components/SiteHeader.astro`、`src/components/SiteFooter.astro`
 - 关于页内容和链接：`src/pages/about.astro`
-- 星图菜单和首页模块：`src/pages/index.astro`、`src/pages/menu.astro`
+- 首页模块：`src/pages/index.astro`
 - 示例文章：`src/content/posts/`
 - 自定义域名：`https://www.zhangshenghao.com/`

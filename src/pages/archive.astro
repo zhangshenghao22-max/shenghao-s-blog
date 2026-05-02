@@ -1,6 +1,6 @@
 ﻿---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
+import { categoryLabels, formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
 
 const posts = await getPublishedPosts();
 const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) => {
@@ -11,11 +11,11 @@ const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) =
 }, {});
 ---
 
-<BaseLayout title="归档" description="星际编码日志的所有技术文章归档。">
+<BaseLayout title="归档" description="日光微屿的所有生活和技术文章归档。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">Archive Matrix</p>
-    <h1>知识星图</h1>
-    <p>按时间整理每一次工程记录，像在深空里标记可再次抵达的坐标。</p>
+    <p class="eyebrow">Archive</p>
+    <h1>所有文章</h1>
+    <p>把生活记录和技术文章按时间收好，像把灵感、经验和日常都放进一个干净抽屉。</p>
   </section>
 
   <section class="archive section-shell">
@@ -27,7 +27,8 @@ const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) =
             <li>
               <time datetime={post.data.pubDate.toISOString()}>{formatPostDate(post.data.pubDate)}</time>
               <a href={getPostUrl(post)}>{post.data.title}</a>
-              <span>{post.data.description}</span>
+              <span>{categoryLabels[post.data.category]}</span>
+              <p>{post.data.description}</p>
             </li>
           ))}
         </ol>

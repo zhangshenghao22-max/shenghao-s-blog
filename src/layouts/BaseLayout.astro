@@ -9,10 +9,10 @@ interface Props {
   pageClass?: string;
 }
 
-const siteName = '星际编码日志';
-const defaultDescription = '一个宇宙太空风格的个人技术博客，记录工程实践、系统设计、前端实验与开发思考。';
+const siteName = '日光微屿';
+const defaultDescription = '一个简约明朗的个人博客，分享生活记录、技术文章、灵感收藏和个人简介。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
-const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Tech Blog`;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Life & Tech Blog`;
 ---
 
 <!doctype html>
@@ -22,18 +22,18 @@ const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Tech Blog`
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#060816" />
+    <meta name="theme-color" content="#fff8ef" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
   </head>
   <body class={pageClass}>
-    <div class="space-field" aria-hidden="true">
-      <span class="star-layer star-layer--near"></span>
-      <span class="star-layer star-layer--far"></span>
-      <span class="orb orb--cyan"></span>
-      <span class="orb orb--violet"></span>
-      <span class="orbit-line orbit-line--one"></span>
-      <span class="orbit-line orbit-line--two"></span>
+    <div class="soft-stage" aria-hidden="true">
+      <span class="glow glow--peach"></span>
+      <span class="glow glow--blue"></span>
+      <span class="glow glow--mint"></span>
+      <span class="floaty floaty--one">✦</span>
+      <span class="floaty floaty--two">♡</span>
+      <span class="floaty floaty--three">•</span>
     </div>
     <SiteHeader />
     <main id="content" class="site-main">

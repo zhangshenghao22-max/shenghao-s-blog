@@ -2,9 +2,10 @@
 title: "Astro 博客的静态轨道"
 description: "为什么个人技术博客适合用 Astro：构建快、内容结构清晰、部署到 GitHub Pages 足够轻。"
 pubDate: 2026-04-18
+category: tech
 tags: ["Astro", "静态站点", "GitHub Pages"]
 cover: "/images/astro-orbit.svg"
-coverAlt: "围绕代码核心运行的 Astro 静态站轨道图"
+coverAlt: "柔和浅色界面中的 Astro 静态站轨道图"
 ---
 
 搭建个人技术博客时，我最关心的不是功能有多少，而是它能不能长期稳定地承载写作。Astro 的好处在于：默认输出静态页面，运行时负担很低，内容又可以直接用 Markdown 管理。

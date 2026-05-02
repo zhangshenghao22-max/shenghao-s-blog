@@ -2,36 +2,29 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const menuItems = [
-  { href: '/archive/', label: '技术文章', title: 'Transmission Archive', text: '所有长文、教程、复盘和工程笔记都会进入这里。', status: 'online' },
-  { href: '/#projects', label: '项目舱', title: 'Project Dock', text: '展示项目、组件实验、设计系统和可复用代码片段。', status: 'build' },
-  { href: '/#signals', label: '灵感信号', title: 'Signal Radio', text: '暂存短想法、设计灵感、工具观察和未来选题。', status: 'live' },
-  { href: '/archive/', label: '工具箱', title: 'Toolbox', text: '未来用于整理开发工具、脚本、配置和效率实践。', status: 'soon' },
-  { href: '/about/', label: '关于我', title: 'Mission Profile', text: '查看站点定位、技术关注点和联系方式。', status: 'stable' },
-  { href: 'https://github.com/zhangshenghao22-max', label: 'GitHub', title: 'Open Hangar', text: '前往 GitHub 查看仓库、项目和后续开源实验。', status: 'external' },
+  { href: '/#life', emoji: '🌤️', title: '生活文章', text: '日常观察、咖啡、散步、书桌和心情记录。' },
+  { href: '/#tech', emoji: '💻', title: '技术文章', text: '前端工程、Astro、自动化和 AI Coding 复盘。' },
+  { href: '/#profile', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
+  { href: '/#inspiration', emoji: '✨', title: '灵感橱窗', text: '短想法、设计片段和未来想做的小功能。' },
+  { href: '/archive/', emoji: '📚', title: '全部归档', text: '按时间浏览所有生活和技术文章。' },
+  { href: 'https://github.com/zhangshenghao22-max', emoji: '🛠️', title: 'GitHub', text: '查看代码、项目和后续开源实验。' },
 ];
 ---
 
-<BaseLayout title="星图" description="星际编码日志的全站导航星图。">
+<BaseLayout title="灵感菜单" description="日光微屿的生活、技术和灵感入口。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">Navigation Starmap</p>
-    <h1>选择你的下一条轨道</h1>
-    <p>这里是全站入口：技术文章、项目舱、灵感信号、工具箱和任务档案都被整理成可探索的星图。</p>
+    <p class="eyebrow">Soft Menu</p>
+    <h1>一个轻盈的入口菜单</h1>
+    <p>像打开一台干净的 iPhone：生活、技术、简介和灵感都变成顺手的小组件。</p>
   </section>
 
-  <section class="section-shell menu-orbit reveal" aria-label="星际菜单">
-    <div class="menu-orbit__core">
-      <span>CORE</span>
-      <strong>星际编码日志</strong>
-    </div>
-    <div class="menu-grid">
-      {menuItems.map((item) => (
-        <a class="menu-card" href={item.href}>
-          <span class="menu-card__status">{item.status}</span>
-          <span class="menu-card__label">{item.label}</span>
-          <h2>{item.title}</h2>
-          <p>{item.text}</p>
-        </a>
-      ))}
-    </div>
+  <section class="section-shell soft-menu reveal" aria-label="灵感菜单">
+    {menuItems.map((item) => (
+      <a class="menu-card" href={item.href}>
+        <span>{item.emoji}</span>
+        <h2>{item.title}</h2>
+        <p>{item.text}</p>
+      </a>
+    ))}
   </section>
 </BaseLayout>

@@ -1,0 +1,10 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="傍晚街道、柔和夕阳和一只小猫贴纸">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0df"/><stop offset=".52" stop-color="#f8fbff"/><stop offset="1" stop-color="#e9f5ff"/></linearGradient></defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <circle cx="900" cy="190" r="92" fill="#ffd166" opacity=".72"/>
+  <path d="M0 560c160-42 282-54 430-22s276 82 430 44 234-88 340-70v248H0z" fill="#dbe9ff" opacity=".72"/>
+  <path d="M0 630c160-38 350-28 530 0s332 44 670-40v170H0z" fill="#fff" opacity=".76"/>
+  <g stroke="#8b92a3" stroke-width="9" stroke-linecap="round" opacity=".55"><path d="M210 460v-120M280 470v-160M350 464v-104"/><path d="M185 340h190"/></g>
+  <g transform="translate(760 430)"><circle cx="72" cy="78" r="58" fill="#fff" stroke="#e7d8c9" stroke-width="8"/><path d="M36 38l18 30M108 38L90 68" fill="none" stroke="#e7d8c9" stroke-width="8" stroke-linecap="round"/><circle cx="52" cy="76" r="6" fill="#1d1d1f"/><circle cx="92" cy="76" r="6" fill="#1d1d1f"/><path d="M68 94c12 10 22 10 34 0" fill="none" stroke="#1d1d1f" stroke-width="6" stroke-linecap="round"/></g>
+  <path d="M190 590h360M640 574h250" stroke="#ffb199" stroke-width="12" stroke-linecap="round" opacity=".7"/>
+</svg>

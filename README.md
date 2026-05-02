@@ -1,6 +1,6 @@
 ﻿# 星际编码日志
 
-一个基于 Astro 和 GitHub Pages 的个人技术博客。当前版本采用宇宙太空风格，适合记录前端工程、系统设计、工具链和 AI Coding 实践。
+一个基于 Astro 和 GitHub Pages 的个人技术站点。当前版本采用更明亮的深空霓虹风格，除了技术文章，也包含项目舱、灵感信号、工具箱和星际菜单等静态入口。
 
 ## 本地开发
 
@@ -36,6 +36,13 @@ coverAlt: "封面图描述"
 
 图片可以放在 `public/images/`，在文章中用 `/images/文件名` 引用。
 
+## 站点结构
+
+- `/`：长首页，包含 Hero、星际菜单预览、最新文章、项目舱、灵感信号和关于摘要。
+- `/menu/`：完整星图导航页，汇总文章、项目、灵感、工具、关于和 GitHub 入口。
+- `/archive/`：技术文章归档。
+- `/about/`：任务档案和个人介绍。
+
 ## GitHub Pages 发布
 
 1. 在 GitHub 新建仓库，并把本地代码推送到 `main` 分支。
@@ -58,5 +65,6 @@ coverAlt: "封面图描述"
 
 - 站点名称：`src/layouts/BaseLayout.astro`、`src/components/SiteHeader.astro`、`src/components/SiteFooter.astro`
 - 关于页内容和链接：`src/pages/about.astro`
+- 星图菜单和首页模块：`src/pages/index.astro`、`src/pages/menu.astro`
 - 示例文章：`src/content/posts/`
 - 自定义域名：`https://www.zhangshenghao.com/`

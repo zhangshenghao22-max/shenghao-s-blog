@@ -1,0 +1,37 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const menuItems = [
+  { href: '/archive/', label: '技术文章', title: 'Transmission Archive', text: '所有长文、教程、复盘和工程笔记都会进入这里。', status: 'online' },
+  { href: '/#projects', label: '项目舱', title: 'Project Dock', text: '展示项目、组件实验、设计系统和可复用代码片段。', status: 'build' },
+  { href: '/#signals', label: '灵感信号', title: 'Signal Radio', text: '暂存短想法、设计灵感、工具观察和未来选题。', status: 'live' },
+  { href: '/archive/', label: '工具箱', title: 'Toolbox', text: '未来用于整理开发工具、脚本、配置和效率实践。', status: 'soon' },
+  { href: '/about/', label: '关于我', title: 'Mission Profile', text: '查看站点定位、技术关注点和联系方式。', status: 'stable' },
+  { href: 'https://github.com/zhangshenghao22-max', label: 'GitHub', title: 'Open Hangar', text: '前往 GitHub 查看仓库、项目和后续开源实验。', status: 'external' },
+];
+---
+
+<BaseLayout title="星图" description="星际编码日志的全站导航星图。">
+  <section class="page-hero section-shell reveal">
+    <p class="eyebrow">Navigation Starmap</p>
+    <h1>选择你的下一条轨道</h1>
+    <p>这里是全站入口：技术文章、项目舱、灵感信号、工具箱和任务档案都被整理成可探索的星图。</p>
+  </section>
+
+  <section class="section-shell menu-orbit reveal" aria-label="星际菜单">
+    <div class="menu-orbit__core">
+      <span>CORE</span>
+      <strong>星际编码日志</strong>
+    </div>
+    <div class="menu-grid">
+      {menuItems.map((item) => (
+        <a class="menu-card" href={item.href}>
+          <span class="menu-card__status">{item.status}</span>
+          <span class="menu-card__label">{item.label}</span>
+          <h2>{item.title}</h2>
+          <p>{item.text}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

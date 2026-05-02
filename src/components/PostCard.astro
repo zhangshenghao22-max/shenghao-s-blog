@@ -18,7 +18,7 @@ const { title, description, pubDate, tags, cover, coverAlt } = post.data;
     </a>
   )}
   <div class="post-card__body">
-    <p class="eyebrow">{formatPostDate(pubDate)}</p>
+    <p class="eyebrow">Telemetry · {formatPostDate(pubDate)}</p>
     <h2 class="post-card__title"><a href={getPostUrl(post)}>{title}</a></h2>
     <p class="post-card__description">{description}</p>
     {tags.length > 0 && (

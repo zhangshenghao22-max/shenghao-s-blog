@@ -1,0 +1,22 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="显示构建、检查、部署状态的深空任务控制台">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#081b3d"/><stop offset=".55" stop-color="#050714"/><stop offset="1" stop-color="#160b2b"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="760" fill="url(#bg)"/>
+  <path d="M0 152h1200M0 304h1200M0 456h1200M0 608h1200M200 0v760M400 0v760M600 0v760M800 0v760M1000 0v760" stroke="#40e7ff" stroke-width="1" opacity=".08"/>
+  <rect x="130" y="110" width="940" height="540" rx="34" fill="rgba(9,18,42,.82)" stroke="#40e7ff" stroke-width="4" opacity=".95"/>
+  <rect x="172" y="160" width="360" height="156" rx="18" fill="#071126" stroke="#5a7dff" stroke-width="3"/>
+  <rect x="172" y="350" width="360" height="220" rx="18" fill="#071126" stroke="#40e7ff" stroke-width="3"/>
+  <rect x="574" y="160" width="454" height="410" rx="18" fill="#071126" stroke="#a56bff" stroke-width="3"/>
+  <circle cx="238" cy="236" r="44" fill="none" stroke="#65ffb5" stroke-width="10" filter="url(#glow)"/>
+  <path d="M216 238l18 18 34-46" fill="none" stroke="#65ffb5" stroke-width="10" stroke-linecap="round"/>
+  <path d="M314 204h152M314 236h118M314 268h168" stroke="#edf7ff" stroke-width="10" stroke-linecap="round" opacity=".72"/>
+  <path d="M218 402h248M218 446h198M218 490h278M218 534h160" stroke="#40e7ff" stroke-width="9" stroke-linecap="round" opacity=".68"/>
+  <circle cx="802" cy="364" r="134" fill="none" stroke="#40e7ff" stroke-width="3" opacity=".52"/>
+  <circle cx="802" cy="364" r="88" fill="none" stroke="#a56bff" stroke-width="3" opacity=".45"/>
+  <path d="M802 364l116-56" stroke="#65ffb5" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="802" cy="364" r="10" fill="#65ffb5"/>
+  <path d="M650 548h304" stroke="#ff5fd7" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+  <path d="M650 508h244" stroke="#40e7ff" stroke-width="8" stroke-linecap="round" opacity=".72"/>
+</svg>

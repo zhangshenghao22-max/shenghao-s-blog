@@ -1,0 +1,18 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="带有星云、网格和发光面板的深空科技界面">
+  <defs>
+    <radialGradient id="nebula" cx="62%" cy="34%" r="72%"><stop offset="0" stop-color="#5a7dff"/><stop offset=".38" stop-color="#160b2b"/><stop offset="1" stop-color="#02030a"/></radialGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#40e7ff" stop-opacity=".28"/><stop offset="1" stop-color="#a56bff" stop-opacity=".12"/></linearGradient>
+  </defs>
+  <rect width="1200" height="760" fill="url(#nebula)"/>
+  <circle cx="940" cy="164" r="150" fill="#ff5fd7" opacity=".18"/><circle cx="226" cy="578" r="210" fill="#40e7ff" opacity=".12"/>
+  <path d="M70 620C228 538 326 522 492 548s266 86 442 8c72-32 132-82 196-158" fill="none" stroke="#40e7ff" stroke-width="3" opacity=".25"/>
+  <g stroke="#40e7ff" stroke-width="1" opacity=".12"><path d="M0 110h1200M0 220h1200M0 330h1200M0 440h1200M0 550h1200M0 660h1200"/><path d="M120 0v760M240 0v760M360 0v760M480 0v760M600 0v760M720 0v760M840 0v760M960 0v760M1080 0v760"/></g>
+  <rect x="140" y="150" width="340" height="210" rx="28" fill="url(#panel)" stroke="#40e7ff" stroke-width="3"/>
+  <rect x="532" y="126" width="510" height="318" rx="28" fill="rgba(7,17,38,.72)" stroke="#a56bff" stroke-width="3"/>
+  <rect x="210" y="412" width="610" height="180" rx="28" fill="rgba(7,17,38,.72)" stroke="#40e7ff" stroke-width="3"/>
+  <path d="M190 218h238M190 262h190M190 306h268" stroke="#edf7ff" stroke-width="10" stroke-linecap="round" opacity=".7"/>
+  <path d="M590 196h390M590 248h310M590 300h354M590 352h220" stroke="#40e7ff" stroke-width="10" stroke-linecap="round" opacity=".68"/>
+  <circle cx="946" cy="352" r="46" fill="none" stroke="#65ffb5" stroke-width="9"/>
+  <path d="M270 482h470M270 530h350" stroke="#ff5fd7" stroke-width="10" stroke-linecap="round" opacity=".72"/>
+  <circle cx="151" cy="92" r="2" fill="#fff"/><circle cx="1080" cy="610" r="2" fill="#fff"/><circle cx="714" cy="82" r="3" fill="#40e7ff"/><circle cx="502" cy="684" r="2" fill="#fff"/>
+</svg>

@@ -1,6 +1,6 @@
-﻿# 纸上有风
+﻿# 星际编码日志
 
-一个基于 Astro 和 GitHub Pages 的个人生活随笔博客。第一版采用纸张杂志感设计，专注文章阅读、归档和关于页。
+一个基于 Astro 和 GitHub Pages 的个人技术博客。当前版本采用宇宙太空风格，适合记录前端工程、系统设计、工具链和 AI Coding 实践。
 
 ## 本地开发
 
@@ -26,7 +26,7 @@ npm run dev
 title: "文章标题"
 description: "一句简短摘要"
 pubDate: 2026-05-01
-tags: ["日常", "城市"]
+tags: ["Astro", "前端工程"]
 cover: "/images/example.svg"
 coverAlt: "封面图描述"
 ---
@@ -39,7 +39,7 @@ coverAlt: "封面图描述"
 ## GitHub Pages 发布
 
 1. 在 GitHub 新建仓库，并把本地代码推送到 `main` 分支。
-2. 进入仓库 Settings → Pages。
+2. 进入仓库 Settings -> Pages。
 3. Build and deployment 的 Source 选择 `GitHub Actions`。
 4. 推送后等待 `Deploy to GitHub Pages` workflow 完成。
 5. 当前仓库会发布到自定义域名 `https://www.zhangshenghao.com/`。
@@ -50,7 +50,7 @@ coverAlt: "封面图描述"
 
 推荐 DNS 配置：
 
-- `www` 添加 `CNAME`，指向 `username.github.io`
+- `www` 添加 `CNAME`，指向 `zhangshenghao22-max.github.io`
 - 根域名如需同时访问，按 GitHub Pages 官方文档添加 apex `A` / `AAAA` 记录
 - GitHub Pages 设置中开启 Enforce HTTPS
 
@@ -60,5 +60,3 @@ coverAlt: "封面图描述"
 - 关于页内容和链接：`src/pages/about.astro`
 - 示例文章：`src/content/posts/`
 - 自定义域名：`https://www.zhangshenghao.com/`
-
-

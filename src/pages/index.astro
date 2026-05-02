@@ -5,33 +5,50 @@ import { getPublishedPosts } from '../lib/posts';
 
 const posts = await getPublishedPosts();
 const [latestPost, ...morePosts] = posts;
+const signalStats = [
+  { value: '03', label: '技术笔记' },
+  { value: '42ms', label: '灵感延迟' },
+  { value: '∞', label: '探索半径' },
+];
 ---
 
 <BaseLayout>
   <section class="hero section-shell">
     <div class="hero__copy reveal">
-      <p class="eyebrow">生活随笔 · 慢记录</p>
-      <h1>把微小的日常，折进一页温暖的纸里。</h1>
+      <p class="eyebrow">Deep Space Tech Log</p>
+      <h1>在星际噪声里，记录可运行的工程信号。</h1>
       <p class="hero__lead">
-        这里收藏散步时遇见的光、餐桌上的气味、雨后的街道，以及那些不急着被总结的片刻。
+        这里收集前端实验、系统设计、开发工具链和 AI 时代的工程思考。把复杂问题拆成清晰轨道，让每次实践都留下可复用的坐标。
       </p>
       <div class="hero__actions">
-        <a class="button" href="/archive/">阅读归档</a>
-        <a class="button button--ghost" href="/about/">认识我</a>
+        <a class="button" href="/archive/">进入知识星图</a>
+        <a class="button button--ghost" href="/about/">查看任务档案</a>
       </div>
     </div>
-    <aside class="hero__note reveal" aria-label="手账便签">
-      <span class="note-pin" aria-hidden="true"></span>
-      <p class="hero__note-date">今日札记</p>
-      <p>
-        不必把每一天都过成宏大的故事。也许只是把窗台擦干净，给一杯茶留出十分钟。
-      </p>
+    <aside class="hero__console reveal" aria-label="任务控制台">
+      <div class="console-topline">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="hero__console-title">Mission Console</p>
+      <code>boot: astro-blog</code>
+      <code>theme: cosmic-tech</code>
+      <code>status: publishing</code>
+      <div class="radar" aria-hidden="true"><span></span></div>
     </aside>
   </section>
 
+  <section class="section-shell signal-strip reveal" aria-label="博客状态">
+    {signalStats.map((stat) => (
+      <div>
+        <strong>{stat.value}</strong>
+        <span>{stat.label}</span>
+      </div>
+    ))}
+  </section>
+
   <section class="section-shell section-heading reveal">
-    <p class="eyebrow">Recent Notes</p>
-    <h2>最近写下</h2>
+    <p class="eyebrow">Latest Transmissions</p>
+    <h2>最新传输</h2>
   </section>
 
   {latestPost ? (

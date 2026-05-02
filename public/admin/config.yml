@@ -2,7 +2,7 @@
   name: github
   repo: zhangshenghao22-max/shenghao-s-blog
   branch: main
-  base_url: https://decap-oauth.zhangshenghao.workers.dev
+  base_url: https://decap-oauth.zhangshenghao22.workers.dev
   auth_endpoint: auth
   auth_scope: public_repo
 

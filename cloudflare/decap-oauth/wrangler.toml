@@ -5,6 +5,7 @@ compatibility_date = "2026-05-02"
 [vars]
 ALLOWED_GITHUB_LOGIN = "zhangshenghao22-max"
 CMS_ORIGIN = "https://www.zhangshenghao.com"
+GITHUB_CLIENT_ID = "Ov23li3lmDNKjw4yHWO0"
 GITHUB_AUTHORIZE_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
 GITHUB_USER_URL = "https://api.github.com/user"

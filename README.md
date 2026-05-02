@@ -17,9 +17,46 @@ npm run dev
 | `npm run build` | 类型检查并构建静态站点 |
 | `npm run preview` | 本地预览构建结果 |
 
+## 网页一键发布文章
+
+网站已新增站内后台：`https://www.zhangshenghao.com/admin/`。
+
+发布流程：
+
+1. 打开 `/admin/` 后台。
+2. 点击 GitHub 登录。
+3. 只有白名单账号 `zhangshenghao22-max` 可以通过认证。
+4. 在后台新建文章、上传封面图、填写标题/摘要/分类/标签。
+5. 点击发布后，Decap CMS 会直接提交到 `main` 分支。
+6. GitHub Actions 自动构建并发布到 GitHub Pages。
+
+后台由 Decap CMS 提供，GitHub 登录由 `cloudflare/decap-oauth` 中的 Cloudflare Worker 代理完成。不要把 `GITHUB_CLIENT_SECRET` 写进前端文件或仓库。
+
+## 后台 OAuth 部署
+
+首次启用 `/admin/` 前，需要部署 Cloudflare Worker 并创建 GitHub OAuth App。
+
+1. 在 GitHub 创建 OAuth App：
+   - Homepage URL: `https://www.zhangshenghao.com`
+   - Authorization callback URL: `https://你的-worker-地址/callback`
+2. 部署 Worker：
+
+   ```bash
+   cd cloudflare/decap-oauth
+   npx wrangler login
+   npx wrangler secret put GITHUB_CLIENT_ID
+   npx wrangler secret put GITHUB_CLIENT_SECRET
+   npx wrangler deploy
+   ```
+
+3. 把 `public/admin/config.yml` 中的 `backend.base_url` 改成真实 Worker 地址。
+4. 提交并推送，访问 `/admin/` 测试发布。
+
+Worker 默认只允许 `zhangshenghao22-max` 发布；如需更换账号，修改 `cloudflare/decap-oauth/wrangler.toml` 中的 `ALLOWED_GITHUB_LOGIN` 后重新部署。
+
 ## 写一篇文章
 
-在 `src/content/posts/` 新建 Markdown 或 MDX 文件。使用 `category` 区分生活和技术文章：
+推荐使用 `/admin/` 后台写文章。也可以手动在 `src/content/posts/` 新建 Markdown 或 MDX 文件。使用 `category` 区分生活和技术文章：
 
 ```md
 ---
@@ -30,29 +67,21 @@ category: life # life 或 tech
 tags: ["日常", "咖啡"]
 cover: "/images/example.svg"
 coverAlt: "封面图描述"
+draft: false
 ---
 
 正文从这里开始。
 ```
 
-图片可以放在 `public/images/`，在文章中用 `/images/文件名` 引用。
+图片可以放在 `public/images/` 或通过后台上传到 `public/images/uploads/`，在文章中用 `/images/文件名` 或 `/images/uploads/文件名` 引用。
 
 ## 站点结构
 
 - `/`：首页，包含生活文章、技术文章、个人简介、心情胶囊和灵感橱窗。
-- `/menu/`：灵感菜单，汇总生活、技术、简介、归档和 GitHub 入口。
+- `/admin/`：文章发布后台，仅白名单 GitHub 账号可发布。
+- `/menu/`：灵感菜单，汇总生活、技术、简介、归档和发布入口。
 - `/archive/`：全部文章归档。
 - `/about/`：个人简介页。
-
-
-## 发表文章入口
-
-网站首页和 `/menu/` 都提供了“发表文章”入口，指向 GitHub 仓库的 `src/content/posts` 目录。发布流程：
-
-1. 打开 `src/content/posts` 目录。
-2. 新建或编辑 Markdown 文件。
-3. 按上面的 frontmatter 模板填写 `title`、`description`、`pubDate`、`category`、`tags` 等字段。
-4. 提交到 `main` 分支后，GitHub Actions 会自动构建并发布到网站。
 
 ## GitHub Pages 发布
 
@@ -79,4 +108,4 @@ coverAlt: "封面图描述"
 - 首页模块：`src/pages/index.astro`
 - 示例文章：`src/content/posts/`
 - 自定义域名：`https://www.zhangshenghao.com/`
-
+- 后台 OAuth Worker 地址：`public/admin/config.yml`

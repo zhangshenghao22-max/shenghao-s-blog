@@ -3,13 +3,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { getPostsByCategory } from '../lib/posts';
 
-const postsUrl = 'https://github.com/zhangshenghao22-max/shenghao-s-blog/tree/main/src/content/posts';
+const adminUrl = '/admin/';
 const lifePosts = await getPostsByCategory('life');
 const techPosts = await getPostsByCategory('tech');
 const entryItems = [
   { href: '#life', emoji: '🌤️', title: '生活文章', text: '咖啡、散步、书桌和日常小片段。' },
   { href: '#tech', emoji: '💻', title: '技术板块', text: '前端工程、Astro、自动化和 AI 复盘。' },
-  { href: postsUrl, emoji: '✍️', title: '发表文章', text: '在 GitHub 新增 Markdown，推送后自动部署。' },
+  { href: adminUrl, emoji: '✍️', title: '发表文章', text: '进入站内后台写文章，点击发布后自动上线。' },
   { href: '#profile', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
   { href: '#inspiration', emoji: '✨', title: '灵感橱窗', text: '短想法、配色、工具和未来小功能。' },
   { href: '/archive/', emoji: '📚', title: '全部归档', text: '按时间浏览所有生活和技术文章。' },

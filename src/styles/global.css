@@ -1230,3 +1230,129 @@ h3 {
     grid-column: auto;
   }
 }
+
+/* Layout safety pass: keep sections separated and add soft bridges. */
+.hero {
+  min-height: 560px;
+  padding-bottom: 34px;
+}
+
+.quick-entry {
+  margin-top: 0;
+  margin-bottom: 46px;
+}
+
+.mood-strip {
+  margin-top: 0;
+  margin-bottom: 56px;
+}
+
+.section-block {
+  margin-top: 76px;
+}
+
+.section-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 74px;
+  margin-block: 18px;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(217, 168, 79, 0.32), rgba(106, 168, 255, 0.22), transparent);
+}
+
+.section-divider span {
+  display: block;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-soft);
+}
+
+.section-divider span:nth-child(1),
+.section-divider span:nth-child(3) {
+  width: 10px;
+  height: 10px;
+}
+
+.section-divider span:nth-child(2) {
+  width: 72px;
+  height: 16px;
+  background: linear-gradient(90deg, rgba(255, 216, 229, 0.88), rgba(183, 243, 212, 0.74), rgba(219, 233, 255, 0.86));
+}
+
+.section-divider--soft span:nth-child(2) {
+  background: linear-gradient(90deg, rgba(255, 248, 239, 0.9), rgba(255, 255, 255, 0.9), rgba(255, 216, 229, 0.72));
+}
+
+.entry-card,
+.menu-card,
+.route-card,
+.mood-pill,
+.post-card,
+.profile-panel,
+.inspiration-card {
+  scroll-margin-top: 120px;
+}
+
+@media (max-width: 1000px) {
+  .hero {
+    gap: 30px;
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+
+  .quick-entry,
+  .mood-strip {
+    margin-bottom: 44px;
+  }
+
+  .section-block {
+    margin-top: 66px;
+  }
+
+  .section-divider {
+    height: 58px;
+    margin-block: 12px;
+  }
+}
+
+@media (max-width: 680px) {
+  .hero {
+    gap: 24px;
+    padding-bottom: 8px;
+  }
+
+  .quick-entry {
+    margin-top: 0;
+    margin-bottom: 34px;
+  }
+
+  .mood-strip {
+    margin-top: 0;
+    margin-bottom: 36px;
+  }
+
+  .section-block {
+    margin-top: 52px;
+  }
+
+  .section-divider {
+    height: 44px;
+    gap: 10px;
+    margin-block: 8px;
+  }
+
+  .section-divider span:nth-child(2) {
+    width: 52px;
+    height: 12px;
+  }
+}

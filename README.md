@@ -44,6 +44,16 @@ coverAlt: "封面图描述"
 - `/archive/`：全部文章归档。
 - `/about/`：个人简介页。
 
+
+## 发表文章入口
+
+网站首页和 `/menu/` 都提供了“发表文章”入口，指向 GitHub 仓库的 `src/content/posts` 目录。发布流程：
+
+1. 打开 `src/content/posts` 目录。
+2. 新建或编辑 Markdown 文件。
+3. 按上面的 frontmatter 模板填写 `title`、`description`、`pubDate`、`category`、`tags` 等字段。
+4. 提交到 `main` 分支后，GitHub Actions 会自动构建并发布到网站。
+
 ## GitHub Pages 发布
 
 1. 在 GitHub 新建仓库，并把本地代码推送到 `main` 分支。
@@ -69,3 +79,4 @@ coverAlt: "封面图描述"
 - 首页模块：`src/pages/index.astro`
 - 示例文章：`src/content/posts/`
 - 自定义域名：`https://www.zhangshenghao.com/`
+

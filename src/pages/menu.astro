@@ -1,18 +1,19 @@
 ﻿---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+const postsUrl = 'https://github.com/zhangshenghao22-max/shenghao-s-blog/tree/main/src/content/posts';
 const menuItems = [
   { href: '/#life', emoji: '🌤️', title: '生活文章', text: '日常观察、咖啡、散步、书桌和心情记录。' },
   { href: '/#tech', emoji: '💻', title: '技术文章', text: '前端工程、Astro、自动化和 AI Coding 复盘。' },
+  { href: postsUrl, emoji: '✍️', title: '发表文章', text: '在 GitHub 中新增 Markdown，推送后自动部署。' },
   { href: '/#profile', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
   { href: '/#inspiration', emoji: '✨', title: '灵感橱窗', text: '短想法、设计片段和未来想做的小功能。' },
   { href: '/archive/', emoji: '📚', title: '全部归档', text: '按时间浏览所有生活和技术文章。' },
-  { href: 'https://github.com/zhangshenghao22-max', emoji: '🛠️', title: 'GitHub', text: '查看代码、项目和后续开源实验。' },
 ];
 const routeItems = [
   { step: '01', title: '先看生活', href: '/#life', text: '从咖啡、散步和书桌开始，快速了解这个站点的温度。' },
   { step: '02', title: '再看技术', href: '/#tech', text: '进入 Astro、前端工程和自动化笔记，找到可复用的经验。' },
-  { step: '03', title: '最后认识我', href: '/about/', text: '查看个人简介、联系方式和这个博客接下来会扩展的方向。' },
+  { step: '03', title: '开始发表', href: postsUrl, text: '进入 GitHub 文章目录，新建 Markdown 后自动上线。' },
 ];
 ---
 
@@ -27,7 +28,7 @@ const routeItems = [
     <div>
       <p class="eyebrow">Suggested Route</p>
       <h2>不知道从哪里开始？</h2>
-      <p>可以按这条推荐路线走一遍：先感受生活记录，再进入技术文章，最后看看个人简介。</p>
+      <p>可以按这条推荐路线走一遍：先感受生活记录，再进入技术文章，需要更新时直接去 GitHub 发表。</p>
     </div>
     <div class="route-grid">
       {routeItems.map((item) => (
@@ -39,6 +40,8 @@ const routeItems = [
       ))}
     </div>
   </section>
+
+  <div class="section-divider section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <section class="section-shell soft-menu reveal" aria-label="入口菜单">
     {menuItems.map((item) => (

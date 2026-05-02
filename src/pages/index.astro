@@ -3,15 +3,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { getPostsByCategory } from '../lib/posts';
 
+const postsUrl = 'https://github.com/zhangshenghao22-max/shenghao-s-blog/tree/main/src/content/posts';
 const lifePosts = await getPostsByCategory('life');
 const techPosts = await getPostsByCategory('tech');
 const entryItems = [
   { href: '#life', emoji: '🌤️', title: '生活文章', text: '咖啡、散步、书桌和日常小片段。' },
   { href: '#tech', emoji: '💻', title: '技术板块', text: '前端工程、Astro、自动化和 AI 复盘。' },
+  { href: postsUrl, emoji: '✍️', title: '发表文章', text: '在 GitHub 新增 Markdown，推送后自动部署。' },
   { href: '#profile', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
   { href: '#inspiration', emoji: '✨', title: '灵感橱窗', text: '短想法、配色、工具和未来小功能。' },
   { href: '/archive/', emoji: '📚', title: '全部归档', text: '按时间浏览所有生活和技术文章。' },
-  { href: 'https://github.com/zhangshenghao22-max', emoji: '🛠️', title: 'GitHub', text: '查看代码仓库和后续开源实验。' },
 ];
 const moodCapsules = [
   { icon: '☕', label: '今日状态', text: '慢热但在线' },
@@ -50,6 +51,8 @@ const inspirationItems = [
     </aside>
   </section>
 
+  <div class="section-divider section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
+
   <section id="entry" class="section-shell quick-entry reveal" aria-label="快速入口总览">
     <div class="quick-entry__header">
       <p class="eyebrow">Quick Entrance</p>
@@ -67,6 +70,8 @@ const inspirationItems = [
     </div>
   </section>
 
+  <div class="section-divider section-divider--soft section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
+
   <section class="section-shell mood-strip reveal" aria-label="心情胶囊">
     {moodCapsules.map((item) => (
       <article class="mood-pill">
@@ -78,6 +83,8 @@ const inspirationItems = [
       </article>
     ))}
   </section>
+
+  <div class="section-divider section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <section id="life" class="section-shell section-block reveal">
     <div class="section-heading">
@@ -92,6 +99,8 @@ const inspirationItems = [
     </div>
   </section>
 
+  <div class="section-divider section-divider--soft section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
+
   <section id="tech" class="section-shell section-block reveal">
     <div class="section-heading">
       <div>
@@ -104,6 +113,8 @@ const inspirationItems = [
       {techPosts.slice(0, 3).map((post, index) => <PostCard post={post} featured={index === 0} />)}
     </div>
   </section>
+
+  <div class="section-divider section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <section id="profile" class="section-shell section-block profile-panel reveal">
     <div>
@@ -126,6 +137,8 @@ const inspirationItems = [
       </dl>
     </div>
   </section>
+
+  <div class="section-divider section-divider--soft section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
 
   <section id="inspiration" class="section-shell section-block reveal">
     <div class="section-heading">

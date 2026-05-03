@@ -7,11 +7,11 @@ const adminUrl = '/admin/';
 const lifePosts = await getPostsByCategory('life');
 const techPosts = await getPostsByCategory('tech');
 const entryItems = [
-  { href: '#life', emoji: '🌤️', title: '生活文章', text: '咖啡、散步、书桌和日常小片段。' },
-  { href: '#tech', emoji: '💻', title: '技术板块', text: '前端工程、Astro、自动化和 AI 复盘。' },
+  { href: '/life/', emoji: '🌤️', title: '生活文章', text: '咖啡、散步、书桌和日常小片段。' },
+  { href: '/tech/', emoji: '💻', title: '技术板块', text: '前端工程、Astro、自动化和 AI 复盘。' },
   { href: adminUrl, emoji: '✍️', title: '发表文章', text: '进入站内后台写文章，点击发布后自动上线。' },
-  { href: '#profile', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
-  { href: '#inspiration', emoji: '✨', title: '灵感橱窗', text: '短想法、配色、工具和未来小功能。' },
+  { href: '/about/', emoji: '☺️', title: '个人简介', text: '关于我、兴趣关键词和联系方式。' },
+  { href: '/inspiration/', emoji: '✨', title: '灵感橱窗', text: '短想法、配色、工具和未来小功能。' },
   { href: '/archive/', emoji: '📚', title: '全部归档', text: '按时间浏览所有生活和技术文章。' },
 ];
 const moodCapsules = [
@@ -30,14 +30,14 @@ const inspirationItems = [
 <BaseLayout>
   <section class="hero section-shell">
     <div class="hero__copy reveal">
-      <p class="eyebrow">Life & Tech Studio</p>
-      <h1>把生活的柔光，和技术的秩序放在同一个岛屿。</h1>
+      <p class="eyebrow">操全世界</p>
+      <h1>操全世界</h1>
       <p class="hero__lead">
         这里是我的个人博客：分享生活里的小确幸，也记录技术文章、前端实验和 AI Coding 复盘。整体保持简约明朗，但保留一点可爱和惊喜。
       </p>
       <div class="hero__actions">
         <a class="button" href="#entry">探索入口</a>
-        <a class="button button--ghost" href="#life">看最新文章</a>
+        <a class="button button--ghost" href="/life/">看最新文章</a>
       </div>
     </div>
     <aside class="hero-card reveal" aria-label="今日小岛状态">
@@ -146,7 +146,7 @@ const inspirationItems = [
         <p class="eyebrow">Inspiration Shelf</p>
         <h2>灵感橱窗</h2>
       </div>
-      <a class="text-link" href="/menu/">打开灵感菜单</a>
+      <a class="text-link" href="/inspiration/">打开灵感页面</a>
     </div>
     <div class="inspiration-grid">
       {inspirationItems.map((item) => (

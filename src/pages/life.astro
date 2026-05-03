@@ -1,0 +1,30 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPostsByCategory } from '../lib/posts';
+
+const lifePosts = await getPostsByCategory('life');
+---
+
+<BaseLayout title="生活文章" description="清夏玖的博客的生活文章，记录日常、散步、咖啡和小片段。">
+  <section class="page-hero section-shell reveal">
+    <p class="eyebrow">Daily Notes</p>
+    <h1>生活文章</h1>
+    <p>把咖啡、散步、书桌、天气和那些让日子变亮的小事单独收好。</p>
+  </section>
+
+  <section class="section-shell section-block reveal" aria-label="生活文章列表">
+    {lifePosts.length > 0 ? (
+      <div class="posts-grid posts-grid--life">
+        {lifePosts.map((post, index) => <PostCard post={post} featured={index === 0} />)}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <p class="eyebrow">Empty</p>
+        <h2>还没有生活文章</h2>
+        <p>去发布后台写下第一篇生活记录吧。</p>
+        <a class="button" href="/admin/">发表文章</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>

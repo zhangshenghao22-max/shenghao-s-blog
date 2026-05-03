@@ -1,0 +1,30 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPostsByCategory } from '../lib/posts';
+
+const techPosts = await getPostsByCategory('tech');
+---
+
+<BaseLayout title="技术文章" description="清夏玖的博客的技术文章，记录前端工程、Astro、自动化和 AI Coding。">
+  <section class="page-hero section-shell reveal">
+    <p class="eyebrow">Tech Notes</p>
+    <h1>技术文章</h1>
+    <p>把前端工程、Astro、自动化、AI Coding 和踩坑复盘放到一个清晰入口里。</p>
+  </section>
+
+  <section class="section-shell section-block reveal" aria-label="技术文章列表">
+    {techPosts.length > 0 ? (
+      <div class="posts-grid posts-grid--tech">
+        {techPosts.map((post, index) => <PostCard post={post} featured={index === 0} />)}
+      </div>
+    ) : (
+      <div class="empty-state">
+        <p class="eyebrow">Empty</p>
+        <h2>还没有技术文章</h2>
+        <p>去发布后台写下第一篇技术笔记吧。</p>
+        <a class="button" href="/admin/">发表文章</a>
+      </div>
+    )}
+  </section>
+</BaseLayout>

@@ -1,0 +1,32 @@
+﻿---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const inspirationItems = [
+  { icon: '✦', title: '小组件日记', text: '把每日心情做成像 iOS widget 一样的小卡片。' },
+  { icon: '♡', title: '灵感抽屉', text: '收集一句话想法、配色、排版和喜欢的交互。' },
+  { icon: '⌘', title: '温柔工具箱', text: '整理让开发更顺手的小工具和工作流。' },
+  { icon: '☁', title: '照片备忘录', text: '为以后的生活照片墙预留一个轻盈入口。' },
+  { icon: '♪', title: '声音片段', text: '记录最近循环的歌、播客和能量来源。' },
+  { icon: '…', title: '未来小功能', text: '把想做但还没做的小点子先放在这里。' },
+];
+---
+
+<BaseLayout title="灵感橱窗" description="清夏玖的博客的灵感橱窗，收藏短想法、设计片段和未来小功能。">
+  <section class="page-hero section-shell reveal">
+    <p class="eyebrow">Inspiration Shelf</p>
+    <h1>灵感橱窗</h1>
+    <p>这里不追求完整，只负责把突然出现的想法、喜欢的细节和未来小功能先留住。</p>
+  </section>
+
+  <section class="section-shell section-block reveal" aria-label="灵感列表">
+    <div class="inspiration-grid">
+      {inspirationItems.map((item) => (
+        <article class="inspiration-card">
+          <span>{item.icon}</span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

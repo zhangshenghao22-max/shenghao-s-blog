@@ -11,8 +11,8 @@ display_url: https://www.zhangshenghao.com
 logo_url: /favicon.svg
 locale: zh_Hans
 
-media_folder: public/images/uploads
-public_folder: /images/uploads
+media_folder: public/images
+public_folder: /images
 
 collections:
   - name: posts
@@ -24,9 +24,10 @@ collections:
     extension: md
     format: frontmatter
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
     editor:
       preview: false
-    summary: "{{title}} · {{category}} · {{pubDate}}"
+    summary: "{{title}}"
     fields:
       - label: 标题
         name: title
@@ -36,15 +37,11 @@ collections:
         widget: text
       - label: 发布日期
         name: pubDate
-        widget: datetime
-        date_format: YYYY-MM-DD
-        time_format: false
+        widget: date
         format: YYYY-MM-DD
       - label: 更新日期
         name: updatedDate
-        widget: datetime
-        date_format: YYYY-MM-DD
-        time_format: false
+        widget: date
         format: YYYY-MM-DD
         required: false
       - label: 分类
@@ -66,11 +63,11 @@ collections:
           label: 标签
           name: tag
           widget: string
-      - label: 封面图
+      - label: 封面图路径
         name: cover
-        widget: image
+        widget: string
         required: false
-        choose_url: false
+        hint: "填写 /images/xxx.svg 或 /images/uploads/xxx.png；上传图片后会保存在 public/images。"
       - label: 封面说明
         name: coverAlt
         widget: string

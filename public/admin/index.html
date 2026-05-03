@@ -93,8 +93,19 @@
   <body>
     <aside class="admin-note" aria-label="后台操作提示">
       <strong>文章操作提示</strong>
-      进入已发布文章后可编辑原内容；删除按钮在文章详情的右上角菜单中。删除或发布都会提交到 GitHub，并触发自动部署。
+      进入已发布文章后可编辑原内容；删除按钮在文章详情的右上角菜单中。删除或发布都会提交到 GitHub，并触发自动部署。若旧文章仍空白，请强制刷新后台或用无痕窗口重新登录。
     </aside>
+    <script>
+      window.CMS_MANUAL_INIT = true;
+    </script>
     <script src="https://unpkg.com/decap-cms@3.12.2/dist/decap-cms.js"></script>
+    <script>
+      CMS.init({
+        config: {
+          load_config_file: true,
+          editor: { preview: false },
+        },
+      });
+    </script>
   </body>
 </html>

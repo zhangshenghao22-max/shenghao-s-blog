@@ -1,4 +1,4 @@
-﻿# 日光微屿
+# 清夏玖的博客
 
 一个基于 Astro 和 GitHub Pages 的个人博客。当前版本采用简约苹果风和奶油玻璃拟态，内容包含生活文章、技术文章、个人简介、心情胶囊和灵感橱窗。
 
@@ -31,6 +31,17 @@ npm run dev
 6. GitHub Actions 自动构建并发布到 GitHub Pages。
 
 后台由 Decap CMS 提供，GitHub 登录由 `cloudflare/decap-oauth` 中的 Cloudflare Worker 代理完成。不要把 `GITHUB_CLIENT_SECRET` 写进前端文件或仓库。
+
+
+## 后台旧文章编辑排查
+
+如果进入 `/admin/` 后点击已发布文章仍然看不到原内容，优先按下面步骤处理：
+
+1. 在浏览器中对 `/admin/` 强制刷新（Windows 通常是 `Ctrl + F5`）。
+2. 退出 Decap CMS 后重新登录，或使用无痕窗口打开 `/admin/`。
+3. 若仍为空白，清理浏览器站点数据中 `www.zhangshenghao.com` 的 Local Storage / IndexedDB 后再登录。
+
+当前 CMS 已关闭预览区、开启文章删除、把旧文章封面改为纯路径字段，并统一旧 Markdown 为 UTF-8 无 BOM，避免旧文章被编辑器解析失败。媒体目录已放宽到 `public/images`，旧封面和新上传图片都可以使用 `/images/...` 路径。
 
 ## 后台 OAuth 部署
 
@@ -73,7 +84,7 @@ draft: false
 正文从这里开始。
 ```
 
-图片可以放在 `public/images/` 或通过后台上传到 `public/images/uploads/`，在文章中用 `/images/文件名` 或 `/images/uploads/文件名` 引用。
+图片可以放在 `public/images/`，后台上传的图片也会进入这个目录；在文章中用 `/images/文件名` 或 `/images/uploads/文件名` 引用。
 
 ## 站点结构
 

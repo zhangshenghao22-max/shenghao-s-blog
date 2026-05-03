@@ -1,19 +1,11 @@
 <div class="scroll-spark" aria-hidden="true"></div>
-<div class="aurora-stage" aria-hidden="true">
-  <span class="aurora-ribbon aurora-ribbon--one"></span>
-  <span class="aurora-ribbon aurora-ribbon--two"></span>
-  <span class="aurora-ribbon aurora-ribbon--three"></span>
-</div>
 <div class="playful-ornaments" aria-hidden="true">
-  <span class="ornament ornament--cloud">&#9729;</span>
-  <span class="ornament ornament--spark">&#10022;</span>
-  <span class="ornament ornament--coffee">&#9749;</span>
+  <span class="ornament ornament--cloud">☁</span>
+  <span class="ornament ornament--spark">✦</span>
+  <span class="ornament ornament--coffee">☕</span>
   <span class="ornament ornament--code">&lt;/&gt;</span>
-  <span class="ornament ornament--star">&#9734;</span>
-  <span class="ornament ornament--diamond">&#9671;</span>
-  <span class="ornament ornament--moon">&#9680;</span>
+  <span class="ornament ornament--star">☆</span>
 </div>
-<div class="cursor-comet" aria-hidden="true"></div>
 
 <script is:inline>
   (() => {
@@ -21,7 +13,7 @@
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     if (reduceMotion || !finePointer) return;
 
-    const cards = document.querySelectorAll('.entry-card, .menu-card, .route-card, .post-card, .inspiration-card, .toy-card, .profile-card, .about-card');
+    const cards = document.querySelectorAll('.entry-card, .menu-card, .route-card, .post-card, .inspiration-card, .toy-card');
     for (const card of cards) {
       card.classList.add('magnetic-card');
       card.addEventListener('pointermove', (event) => {
@@ -48,40 +40,5 @@
         card.style.removeProperty('--shine-y');
       });
     }
-
-    const comet = document.querySelector('.cursor-comet');
-    let targetX = window.innerWidth / 2;
-    let targetY = window.innerHeight / 2;
-    let currentX = targetX;
-    let currentY = targetY;
-
-    window.addEventListener('pointermove', (event) => {
-      targetX = event.clientX;
-      targetY = event.clientY;
-      document.documentElement.style.setProperty('--pointer-x', `${event.clientX}px`);
-      document.documentElement.style.setProperty('--pointer-y', `${event.clientY}px`);
-      if (comet) {
-        comet.classList.add('cursor-comet--active');
-      }
-    }, { passive: true });
-
-    const follow = () => {
-      currentX += (targetX - currentX) * 0.16;
-      currentY += (targetY - currentY) * 0.16;
-      if (comet) {
-        comet.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0)`;
-      }
-      requestAnimationFrame(follow);
-    };
-    follow();
-
-    window.addEventListener('pointerdown', (event) => {
-      const burst = document.createElement('span');
-      burst.className = 'click-burst';
-      burst.style.left = `${event.clientX}px`;
-      burst.style.top = `${event.clientY}px`;
-      document.body.appendChild(burst);
-      window.setTimeout(() => burst.remove(), 760);
-    }, { passive: true });
   })();
 </script>

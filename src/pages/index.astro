@@ -26,10 +26,10 @@ const inspirationItems = [
   { title: '温柔工具箱', text: '整理让开发更顺手的小工具和工作流。' },
 ];
 const toyItems = [
-  { icon: '&#9681;', title: '极光丝带', text: '淡蓝、奶金和粉色光带在背景里缓慢漂移，让浅色页面更有空气感。' },
-  { icon: '&#9734;', title: '星尘点击', text: '桌面端点击页面会散开一圈小星尘，像给文字空间撒一点亮粉。' },
-  { icon: '&#9671;', title: '光标彗星', text: '鼠标后面跟着一颗柔光小彗星，移动时更灵动但不影响阅读。' },
-  { icon: '&#8984;', title: '磁吸卡片', text: '入口、文章和灵感卡片会有轻微倾斜与追光，交互更有质感。' },
+  { icon: '☁', title: '漂浮云朵', text: '慢慢经过页面边缘，像一条不打扰阅读的弹幕。' },
+  { icon: '⌘', title: '磁吸卡片', text: '桌面端悬停时会轻轻倾斜，像被鼠标吸住。' },
+  { icon: '✦', title: '滚动光带', text: '页面顶部有一条会跟随阅读进度前进的柔光。' },
+  { icon: '☕', title: '咖啡摆件', text: '给页面留一点可爱、松弛和可继续扩展的小机关。' },
 ];
 ---
 
@@ -157,7 +157,7 @@ const toyItems = [
     <div class="toy-grid">
       {toyItems.map((item) => (
         <article class="toy-card">
-          <span set:html={item.icon}></span>
+          <span>{item.icon}</span>
           <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>

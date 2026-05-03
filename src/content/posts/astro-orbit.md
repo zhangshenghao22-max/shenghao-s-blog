@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Astro 博客的静态轨道"
 description: "为什么个人技术博客适合用 Astro：构建快、内容结构清晰、部署到 GitHub Pages 足够轻。"
 pubDate: 2026-04-18

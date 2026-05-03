@@ -1,0 +1,44 @@
+<div class="scroll-spark" aria-hidden="true"></div>
+<div class="playful-ornaments" aria-hidden="true">
+  <span class="ornament ornament--cloud">☁</span>
+  <span class="ornament ornament--spark">✦</span>
+  <span class="ornament ornament--coffee">☕</span>
+  <span class="ornament ornament--code">&lt;/&gt;</span>
+  <span class="ornament ornament--star">☆</span>
+</div>
+
+<script is:inline>
+  (() => {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (reduceMotion || !finePointer) return;
+
+    const cards = document.querySelectorAll('.entry-card, .menu-card, .route-card, .post-card, .inspiration-card, .toy-card');
+    for (const card of cards) {
+      card.classList.add('magnetic-card');
+      card.addEventListener('pointermove', (event) => {
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        const rx = ((y / rect.height) - 0.5) * -5;
+        const ry = ((x / rect.width) - 0.5) * 6;
+        const tx = ((x / rect.width) - 0.5) * 8;
+        const ty = ((y / rect.height) - 0.5) * 8;
+        card.style.setProperty('--tilt-x', `${rx.toFixed(2)}deg`);
+        card.style.setProperty('--tilt-y', `${ry.toFixed(2)}deg`);
+        card.style.setProperty('--magnet-x', `${tx.toFixed(2)}px`);
+        card.style.setProperty('--magnet-y', `${ty.toFixed(2)}px`);
+        card.style.setProperty('--shine-x', `${x.toFixed(0)}px`);
+        card.style.setProperty('--shine-y', `${y.toFixed(0)}px`);
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.removeProperty('--tilt-x');
+        card.style.removeProperty('--tilt-y');
+        card.style.removeProperty('--magnet-x');
+        card.style.removeProperty('--magnet-y');
+        card.style.removeProperty('--shine-x');
+        card.style.removeProperty('--shine-y');
+      });
+    }
+  })();
+</script>

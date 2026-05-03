@@ -1,4 +1,4 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
 import { getPostsByCategory } from '../lib/posts';
@@ -24,6 +24,12 @@ const inspirationItems = [
   { title: '小组件日记', text: '把每日心情做成像 iOS widget 一样的小卡片。' },
   { title: '灵感抽屉', text: '收集一句话想法、配色、排版和喜欢的交互。' },
   { title: '温柔工具箱', text: '整理让开发更顺手的小工具和工作流。' },
+];
+const toyItems = [
+  { icon: '☁', title: '漂浮云朵', text: '慢慢经过页面边缘，像一条不打扰阅读的弹幕。' },
+  { icon: '⌘', title: '磁吸卡片', text: '桌面端悬停时会轻轻倾斜，像被鼠标吸住。' },
+  { icon: '✦', title: '滚动光带', text: '页面顶部有一条会跟随阅读进度前进的柔光。' },
+  { icon: '☕', title: '咖啡摆件', text: '给页面留一点可爱、松弛和可继续扩展的小机关。' },
 ];
 ---
 
@@ -135,6 +141,27 @@ const inspirationItems = [
         <div><dt>喜欢</dt><dd>简洁界面、温柔配色、可爱细节</dd></div>
         <div><dt>正在做</dt><dd>把博客打磨成个人灵感空间</dd></div>
       </dl>
+    </div>
+  </section>
+
+  <div class="section-divider section-shell" aria-hidden="true"><span></span><span></span><span></span></div>
+
+  <section class="section-shell section-block toy-shelf reveal" aria-label="动效摆件">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Tiny Motion Toys</p>
+        <h2>动效摆件</h2>
+      </div>
+      <p>不做大型炫技，只放一些轻盈的小机关，让页面在安静之外多一点好玩。</p>
+    </div>
+    <div class="toy-grid">
+      {toyItems.map((item) => (
+        <article class="toy-card">
+          <span>{item.icon}</span>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </article>
+      ))}
     </div>
   </section>
 

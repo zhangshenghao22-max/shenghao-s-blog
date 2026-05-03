@@ -1,7 +1,8 @@
-﻿---
+---
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import PlayfulOrnaments from '../components/PlayfulOrnaments.astro';
 
 interface Props {
   title?: string;
@@ -35,6 +36,7 @@ const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Life & Tec
       <span class="floaty floaty--two">♡</span>
       <span class="floaty floaty--three">•</span>
     </div>
+    <PlayfulOrnaments />
     <SiteHeader />
     <main id="content" class="site-main">
       <slot />

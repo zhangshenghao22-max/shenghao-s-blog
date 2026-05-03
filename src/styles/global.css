@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --cream: #fff8ef;
   --cream-2: #fffdf8;
   --milk: rgba(255, 255, 255, 0.74);
@@ -1354,5 +1354,269 @@ h3 {
   .section-divider span:nth-child(2) {
     width: 52px;
     height: 12px;
+  }
+}
+
+/* Playful motion layer and tiny toys. */
+.scroll-spark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: 100%;
+  height: 4px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(255, 216, 229, 0.2), rgba(106, 168, 255, 0.95), rgba(247, 216, 138, 0.9), rgba(183, 243, 212, 0.85));
+  box-shadow: 0 0 22px rgba(106, 168, 255, 0.42);
+  transform-origin: left;
+  transform: scaleX(0.08);
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-spark {
+    animation: page-progress linear both;
+    animation-timeline: scroll();
+  }
+}
+
+.playful-ornaments {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ornament {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.76);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.52);
+  color: rgba(29, 29, 31, 0.72);
+  box-shadow: var(--shadow-soft);
+  font-weight: 900;
+  backdrop-filter: blur(16px) saturate(1.18);
+  animation: ornament-drift 12s ease-in-out infinite;
+}
+
+.ornament--cloud {
+  left: 4vw;
+  top: 18vh;
+  width: 72px;
+  height: 44px;
+  color: rgba(106, 168, 255, 0.76);
+}
+
+.ornament--spark {
+  right: 7vw;
+  top: 29vh;
+  width: 46px;
+  height: 46px;
+  color: var(--gold);
+  animation-delay: -2s;
+}
+
+.ornament--coffee {
+  left: 7vw;
+  bottom: 18vh;
+  width: 54px;
+  height: 54px;
+  animation-delay: -4s;
+}
+
+.ornament--code {
+  right: 6vw;
+  bottom: 24vh;
+  width: 74px;
+  height: 42px;
+  border-radius: 18px;
+  color: var(--blue-deep);
+  font-size: 0.86rem;
+  letter-spacing: -0.08em;
+  animation-delay: -6s;
+}
+
+.ornament--star {
+  left: 46vw;
+  top: 11vh;
+  width: 42px;
+  height: 42px;
+  color: rgba(255, 177, 153, 0.9);
+  animation-delay: -8s;
+}
+
+.magnetic-card {
+  transform: perspective(900px) translate3d(var(--magnet-x, 0), var(--magnet-y, 0), 0) rotateX(var(--tilt-x, 0)) rotateY(var(--tilt-y, 0));
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.magnetic-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--shine-x, 50%) var(--shine-y, 50%), rgba(255, 255, 255, 0.66), transparent 32%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.magnetic-card:hover::before {
+  opacity: 0.82;
+}
+
+.magnetic-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.toy-shelf {
+  position: relative;
+}
+
+.toy-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.toy-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 30px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.42)),
+    rgba(255, 255, 255, 0.64);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  backdrop-filter: blur(22px) saturate(1.18);
+}
+
+.toy-card::after {
+  content: "";
+  position: absolute;
+  right: -54px;
+  bottom: -54px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(183, 243, 212, 0.58), transparent 70%);
+}
+
+.toy-card > span {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-soft);
+  color: var(--gold);
+  font-size: 1.35rem;
+  animation: toy-bob 5.4s ease-in-out infinite;
+}
+
+.toy-card:nth-child(2) > span {
+  color: var(--blue-deep);
+  animation-delay: -1.1s;
+}
+
+.toy-card:nth-child(3) > span {
+  color: rgba(255, 177, 153, 0.95);
+  animation-delay: -2.2s;
+}
+
+.toy-card:nth-child(4) > span {
+  color: rgba(70, 170, 122, 0.95);
+  animation-delay: -3.3s;
+}
+
+.toy-card h3 {
+  margin-top: 1.2rem;
+  font-size: 1.35rem;
+}
+
+.toy-card p {
+  color: var(--ink-soft);
+}
+
+@keyframes page-progress {
+  from {
+    transform: scaleX(0.02);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes ornament-drift {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-4deg);
+  }
+  50% {
+    transform: translate3d(10px, -18px, 0) rotate(5deg);
+  }
+}
+
+@keyframes toy-bob {
+  0%, 100% {
+    transform: translateY(0) rotate(-3deg);
+  }
+  50% {
+    transform: translateY(-9px) rotate(4deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  .toy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ornament--cloud,
+  .ornament--coffee {
+    left: -26px;
+  }
+
+  .ornament--spark,
+  .ornament--code {
+    right: -28px;
+  }
+}
+
+@media (max-width: 680px) {
+  .toy-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .playful-ornaments {
+    opacity: 0.48;
+  }
+
+  .ornament--code,
+  .ornament--star {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-spark {
+    transform: scaleX(1);
+  }
+
+  .playful-ornaments {
+    display: none;
+  }
+
+  .magnetic-card {
+    transform: none !important;
+  }
+
+  .magnetic-card::before {
+    display: none;
   }
 }

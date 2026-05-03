@@ -1,4 +1,4 @@
-﻿backend:
+backend:
   name: github
   repo: zhangshenghao22-max/shenghao-s-blog
   branch: main
@@ -20,11 +20,12 @@ collections:
     label_singular: 文章
     folder: src/content/posts
     create: true
+    delete: true
     extension: md
     format: frontmatter
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     editor:
-      preview: true
+      preview: false
     summary: "{{title}} · {{category}} · {{pubDate}}"
     fields:
       - label: 标题

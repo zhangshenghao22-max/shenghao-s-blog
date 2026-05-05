@@ -1,20 +1,20 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const inspirationItems = [
-  { icon: '✦', title: '小组件日记', text: '把每日心情做成像 iOS widget 一样的小卡片。' },
-  { icon: '♡', title: '灵感抽屉', text: '收集一句话想法、配色、排版和喜欢的交互。' },
-  { icon: '⌘', title: '温柔工具箱', text: '整理让开发更顺手的小工具和工作流。' },
-  { icon: '☁', title: '照片备忘录', text: '为以后的生活照片墙预留一个轻盈入口。' },
-  { icon: '♪', title: '声音片段', text: '记录最近循环的歌、播客和能量来源。' },
-  { icon: '…', title: '未来小功能', text: '把想做但还没做的小点子先放在这里。' },
+  { code: 'W-01', title: '组件备忘', text: '记录想做成终端卡片、小工具或交互组件的点子。' },
+  { code: 'D-02', title: '设计抽屉', text: '收集配色、版式、斜切边框和喜欢的信息面板。' },
+  { code: 'T-03', title: '工具箱', text: '整理让开发更顺手的小工具和工作流。' },
+  { code: 'P-04', title: '照片墙预留', text: '后续可以把生活照片变成档案墙。' },
+  { code: 'B-05', title: '声音片段', text: '记录最近循环的歌、播客和能量来源。' },
+  { code: 'N-06', title: '未来功能', text: '把想做但还没做的小点子先放在这里。' },
 ];
 ---
 
-<BaseLayout title="灵感橱窗" description="清夏玖的博客的灵感橱窗，收藏短想法、设计片段和未来小功能。">
+<BaseLayout title="灵感仓库" description="清夏玖的博客的灵感仓库，收藏短想法、设计片段和未来小功能。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">Inspiration Shelf</p>
-    <h1>灵感橱窗</h1>
+    <p class="eyebrow">INTEL SHELF</p>
+    <h1>灵感仓库</h1>
     <p>这里不追求完整，只负责把突然出现的想法、喜欢的细节和未来小功能先留住。</p>
   </section>
 
@@ -22,7 +22,7 @@ const inspirationItems = [
     <div class="inspiration-grid">
       {inspirationItems.map((item) => (
         <article class="inspiration-card">
-          <span>{item.icon}</span>
+          <span>{item.code}</span>
           <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>

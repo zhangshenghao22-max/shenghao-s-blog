@@ -1,4 +1,4 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { categoryLabels, formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
 
@@ -13,9 +13,9 @@ const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) =
 
 <BaseLayout title="归档" description="清夏玖的博客的所有生活和技术文章归档。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">Archive</p>
+    <p class="eyebrow">ARCHIVE INDEX</p>
     <h1>所有文章</h1>
-    <p>把生活记录和技术文章按时间收好，像把灵感、经验和日常都放进一个干净抽屉。</p>
+    <p>把生活档案和技术记录按时间收好，方便快速检索每一次记录。</p>
   </section>
 
   <section class="archive section-shell">

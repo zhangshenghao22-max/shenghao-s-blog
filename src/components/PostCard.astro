@@ -1,4 +1,4 @@
----
+﻿---
 import type { Post } from '../lib/posts';
 import { categoryLabels, formatPostDate, getPostUrl } from '../lib/posts';
 
@@ -9,16 +9,17 @@ interface Props {
 
 const { post, featured = false } = Astro.props;
 const { title, description, pubDate, tags, cover, coverAlt, category } = post.data;
+const categoryLabel = categoryLabels[category];
 ---
 
-<article class:list={["post-card", `post-card--${category}`, { "post-card--featured": featured }]}>
+<article class:list={["post-card", `post-card--${category}`, { "post-card--featured": featured }]} data-status={categoryLabel}>
   {cover && (
     <a class="post-card__cover" href={getPostUrl(post)} aria-label={`阅读《${title}》`}>
       <img src={cover} alt={coverAlt ?? ''} loading={featured ? 'eager' : 'lazy'} />
     </a>
   )}
   <div class="post-card__body">
-    <p class="eyebrow"><span>{categoryLabels[category]}</span> · {formatPostDate(pubDate)}</p>
+    <p class="eyebrow"><span>{categoryLabel}</span> · {formatPostDate(pubDate)}</p>
     <h2 class="post-card__title"><a href={getPostUrl(post)}>{title}</a></h2>
     <p class="post-card__description">{description}</p>
     {tags.length > 0 && (

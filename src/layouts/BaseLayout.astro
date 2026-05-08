@@ -1,4 +1,4 @@
----
+﻿---
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -11,9 +11,9 @@ interface Props {
 }
 
 const siteName = '清夏玖的博客';
-const defaultDescription = '清夏玖的战术终端式个人博客，记录生活档案、技术文章、灵感仓库和个人简介。';
+const defaultDescription = '清夏玖的高级沉浸式私人档案终端，记录生活档案、技术文章、灵感实验和个人简介。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
-const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Tactical Archive`;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Private Archive Terminal`;
 ---
 
 <!doctype html>
@@ -23,7 +23,7 @@ const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Tactical A
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0f1115" />
+    <meta name="theme-color" content="#07090d" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
   </head>
@@ -32,9 +32,9 @@ const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Tactical A
       <span class="glow glow--peach"></span>
       <span class="glow glow--blue"></span>
       <span class="glow glow--mint"></span>
-      <span class="floaty floaty--one">01</span>
-      <span class="floaty floaty--two">RI</span>
-      <span class="floaty floaty--three">//</span>
+      <span class="floaty floaty--one">ARCHIVE</span>
+      <span class="floaty floaty--two">QX</span>
+      <span class="floaty floaty--three">09</span>
     </div>
     <PlayfulOrnaments />
     <SiteHeader />

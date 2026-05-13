@@ -116,7 +116,7 @@ a:hover {
 .glow {
   position: absolute;
   border-radius: 999px;
-  filter: blur(40px);
+  filter: blur(28px);
   opacity: 0.22;
 }
 
@@ -180,6 +180,12 @@ a:hover {
   box-shadow: 0 0 24px rgba(216, 164, 95, 0.42), 0 0 30px rgba(134, 211, 255, 0.24);
 }
 
+html[data-motion-mode='lite'] .ambient-canvas,
+html[data-motion-mode='lite'] .immersive-layer,
+html[data-motion-mode='lite'] .soft-stage {
+  display: none;
+}
+
 @supports (animation-timeline: scroll()) {
   .scan-progress {
     animation: page-progress linear both;
@@ -201,7 +207,6 @@ a:hover {
   font: 800 0.68rem/1 var(--font-display);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  animation: stream-drift 18s linear infinite;
 }
 
 .data-stream--one {
@@ -260,7 +265,6 @@ a:hover {
   background: rgba(7, 9, 13, 0.72);
   box-shadow: var(--shadow-soft);
   padding: 13px 14px;
-  backdrop-filter: blur(22px) saturate(1.25);
 }
 
 .brand {
@@ -367,7 +371,6 @@ a:hover {
     radial-gradient(circle at 0 0, rgba(216, 164, 95, 0.1), transparent 30rem);
   box-shadow: var(--shadow);
   overflow: hidden;
-  backdrop-filter: blur(18px) saturate(1.16);
 }
 
 .hero__copy::before,
@@ -587,7 +590,6 @@ p {
 .core-ring {
   border: 1px solid rgba(216, 164, 95, 0.42);
   border-radius: 50%;
-  animation: core-rotate 18s linear infinite;
 }
 
 .core-ring--outer {
@@ -600,8 +602,6 @@ p {
   width: min(58%, 270px);
   aspect-ratio: 1;
   border-color: rgba(134, 211, 255, 0.34);
-  animation-duration: 12s;
-  animation-direction: reverse;
 }
 
 .core-ring--inner {
@@ -617,7 +617,6 @@ p {
   border-radius: 50%;
   background: radial-gradient(circle, #fff6dc 0 8%, var(--amber-strong) 9% 34%, rgba(216, 164, 95, 0.18) 35% 100%);
   box-shadow: 0 0 48px rgba(216, 164, 95, 0.44), 0 0 120px rgba(134, 211, 255, 0.16);
-  animation: core-pulse 3.4s ease-in-out infinite;
 }
 
 .core-axis {
@@ -1238,51 +1237,12 @@ p {
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  filter: blur(10px);
-  transition: opacity 820ms ease, transform 820ms cubic-bezier(0.18, 0.82, 0.22, 1), filter 820ms ease;
+  transition: opacity 620ms ease, transform 620ms cubic-bezier(0.18, 0.82, 0.22, 1);
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
-}
-
-.entry-grid .entry-card,
-.posts-grid .post-card,
-.lab-grid .toy-card,
-.inspiration-grid .inspiration-card {
-  animation: item-rise 760ms cubic-bezier(0.18, 0.82, 0.22, 1) both;
-}
-
-.entry-grid .entry-card:nth-child(2),
-.posts-grid .post-card:nth-child(2),
-.lab-grid .toy-card:nth-child(2),
-.inspiration-grid .inspiration-card:nth-child(2) {
-  animation-delay: 90ms;
-}
-
-.entry-grid .entry-card:nth-child(3),
-.posts-grid .post-card:nth-child(3),
-.lab-grid .toy-card:nth-child(3),
-.inspiration-grid .inspiration-card:nth-child(3) {
-  animation-delay: 180ms;
-}
-
-.entry-grid .entry-card:nth-child(4),
-.lab-grid .toy-card:nth-child(4) {
-  animation-delay: 270ms;
-}
-
-@keyframes item-rise {
-  from {
-    opacity: 0;
-    transform: translateY(18px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 @keyframes page-progress {
@@ -1291,34 +1251,6 @@ p {
   }
   to {
     transform: scaleX(1);
-  }
-}
-
-@keyframes stream-drift {
-  0%, 100% {
-    transform: translate3d(0, 0, 0);
-    opacity: 0.28;
-  }
-  50% {
-    transform: translate3d(18px, -16px, 0);
-    opacity: 0.56;
-  }
-}
-
-@keyframes core-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes core-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.92;
-  }
-  50% {
-    transform: scale(1.08);
-    opacity: 1;
   }
 }
 
@@ -1446,6 +1378,25 @@ p {
   .data-stream {
     display: none;
   }
+
+  .site-header__inner,
+  .hero__copy,
+  .hero-core,
+  .mission-index,
+  .post-card,
+  .profile-panel,
+  .profile-card,
+  .inspiration-card,
+  .about-card,
+  .profile-slip,
+  .article-shell,
+  .post-nav__item,
+  .empty-state,
+  .toy-card,
+  .page-hero,
+  .record-column {
+    backdrop-filter: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1480,6 +1431,25 @@ p {
 
   .magnetic-card::before {
     display: none;
+  }
+
+  .site-header__inner,
+  .hero__copy,
+  .hero-core,
+  .mission-index,
+  .post-card,
+  .profile-panel,
+  .profile-card,
+  .inspiration-card,
+  .about-card,
+  .profile-slip,
+  .article-shell,
+  .post-nav__item,
+  .empty-state,
+  .toy-card,
+  .page-hero,
+  .record-column {
+    backdrop-filter: none;
   }
 }
 

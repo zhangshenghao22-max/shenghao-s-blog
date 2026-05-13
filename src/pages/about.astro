@@ -1,31 +1,146 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const animeItems = [
+  { title: '罪恶王冠', code: 'GC', href: 'https://www.bilibili.com/bangumi/media/md1588/' },
+  { title: '紫罗兰永恒花园', code: 'VEG', href: 'https://www.bilibili.com/bangumi/media/md8892/' },
+  { title: '银魂', code: 'GIN', href: 'https://www.bilibili.com/bangumi/media/md28233839/' },
+  { title: '刀剑神域', code: 'SAO', href: 'https://www.bilibili.com/bangumi/media/md24755609/' },
+  { title: 'Ｄｒ．ＳＴＯＮＥ 石纪元', code: 'DRS', href: 'https://www.bilibili.com/bangumi/media/md28221387/' },
+];
+
+const gameItems = [
+  {
+    title: '赛博朋克2077',
+    code: 'CP77',
+    href: 'https://www.cyberpunk.net/',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg',
+  },
+  {
+    title: 'Counter-Strike 2',
+    code: 'CS2',
+    href: 'https://www.counter-strike.net/cs2',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+  },
+  {
+    title: '空洞骑士系列',
+    code: 'HK',
+    href: 'https://www.hollowknight.com/',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg',
+  },
+  {
+    title: 'Factorio',
+    code: 'FCT',
+    href: 'https://factorio.com/',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/427520/header.jpg',
+  },
+  {
+    title: '艾尔登法环',
+    code: 'ER',
+    href: 'https://en.bandainamcoent.eu/elden-ring/elden-ring',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg',
+  },
+  {
+    title: '星露谷物语',
+    code: 'SDV',
+    href: 'https://www.stardewvalley.net/',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg',
+  },
+  {
+    title: '黑神话悟空',
+    code: 'BMW',
+    href: 'https://www.heishenhua.com/',
+    image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/2358720/header.jpg',
+  },
+];
 ---
 
-<BaseLayout title="关于" description="关于清夏玖的私人档案终端。">
-  <section class="about-layout section-shell reveal">
-    <div class="about-card">
-      <p class="eyebrow">PROFILE DOSSIER</p>
-      <h1>这里是清夏玖的私人档案。</h1>
+<BaseLayout
+  title="关于"
+  description="清夏玖的个人资料、工程方向、番剧和游戏兴趣档案。"
+  pageClass="about-page"
+>
+  <section class="about-hero section-shell reveal">
+    <div class="about-hero__copy">
+      <p class="eyebrow">PROFILE DOSSIER / QINGXIAJIU</p>
+      <h1>清夏玖的个人档案。</h1>
       <p>
-        我把这个博客当作长期运行的个人终端：记录生活切片、技术复盘、页面实验和灵感线索。它不只是展示文章，而是持续构建一个可以回看、可以扩展的私人系统。
+        工科生，20岁，专业方向是嵌入式工程师。这里记录生活、技术、兴趣和灵感，也记录一个长期打磨个人系统的过程。
       </p>
-      <p>
-        这里的视觉会保持冷静、精密和有秩序；内容则保留生活的温度、技术的密度，以及每一次想法出现时的即时记录。
-      </p>
-      <div class="contact-row" aria-label="联系方式">
-        <a href="mailto:hello@example.com">Email</a>
-        <a href="https://github.com/zhangshenghao22-max">GitHub</a>
-        <a href="/inspiration/">灵感实验室</a>
-      </div>
     </div>
-    <aside class="profile-slip" aria-label="个人档案卡片">
-      <p class="profile-slip__label">PRIVATE CARD</p>
-      <dl>
-        <div><dt>常写</dt><dd>生活档案、前端工程、AI Coding</dd></div>
-        <div><dt>偏好</dt><dd>精密界面、冷光氛围、长期主义</dd></div>
-        <div><dt>目标</dt><dd>把博客打磨成可持续更新的个人档案系统</dd></div>
-      </dl>
+    <aside class="about-hero__badge" aria-label="个人状态">
+      <span>QXJ</span>
+      <strong>Embedded Engineer</strong>
+      <small>ISTP / Performer</small>
     </aside>
+  </section>
+
+  <section class="about-grid section-shell section-block reveal" aria-label="基础资料">
+    <article class="identity-card identity-card--primary">
+      <p class="profile-slip__label">IDENTITY</p>
+      <dl class="identity-list">
+        <div><dt>名字</dt><dd>清夏玖</dd></div>
+        <div><dt>年龄</dt><dd>20岁</dd></div>
+        <div><dt>身份</dt><dd>工科生</dd></div>
+        <div><dt>专业</dt><dd>嵌入式工程师</dd></div>
+      </dl>
+    </article>
+
+    <article class="identity-card motto-card">
+      <p class="profile-slip__label">MOTTO</p>
+      <blockquote>不试试怎么知道。</blockquote>
+      <p>保持动手、验证和复盘，把想法从脑子里推进到真实世界。</p>
+    </article>
+
+    <article class="identity-card mbti-card">
+      <p class="profile-slip__label">MBTI</p>
+      <h2>ISTP / 演奏家</h2>
+      <p>
+        偏向观察、拆解、动手和快速试错，喜欢在系统与现实之间找到可以落地的解法。
+      </p>
+      <small>
+        在
+        <a href="https://www.16personalities.com" target="_blank" rel="noopener noreferrer">16personalities</a>
+        了解更多关于
+        <a href="https://www.16personalities.com/istp-personality" target="_blank" rel="noopener noreferrer">演奏家</a>
+      </small>
+    </article>
+  </section>
+
+  <section class="section-shell section-block reveal" aria-label="喜欢的番剧">
+    <div class="section-heading section-heading--split">
+      <div>
+        <p class="eyebrow">ANIME SIGNALS</p>
+        <h2>喜欢的番剧。</h2>
+      </div>
+      <p>把这些作品做成终端式交互按钮，点击后跳转到 Bilibili 番剧主页。</p>
+    </div>
+    <div class="anime-grid">
+      {animeItems.map((item) => (
+        <a class="anime-chip" href={item.href} target="_blank" rel="noopener noreferrer">
+          <span>{item.code}</span>
+          <strong>{item.title}</strong>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-shell section-block reveal" aria-label="喜欢的游戏">
+    <div class="section-heading section-heading--split">
+      <div>
+        <p class="eyebrow">GAME ARCHIVE</p>
+        <h2>喜欢的游戏。</h2>
+      </div>
+      <p>用代表性视觉图组成游戏档案墙，点击卡片可以进入对应官网。</p>
+    </div>
+    <div class="game-gallery">
+      {gameItems.map((item) => (
+        <a class="game-card" href={item.href} target="_blank" rel="noopener noreferrer" data-code={item.code}>
+          <img src={item.image} alt={`${item.title} 代表图`} loading="lazy" />
+          <span>{item.code}</span>
+          <strong>{item.title}</strong>
+        </a>
+      ))}
+    </div>
   </section>
 </BaseLayout>

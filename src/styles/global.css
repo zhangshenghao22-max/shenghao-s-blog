@@ -1088,7 +1088,7 @@ p {
 
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.95fr) minmax(0, 1fr);
+  grid-template-columns: minmax(430px, 1.28fr) minmax(320px, 0.9fr) minmax(0, 1fr);
   grid-template-areas:
     "identity steam motto"
     "identity mbti mbti";
@@ -1103,7 +1103,7 @@ p {
 
 .identity-card--primary {
   grid-area: identity;
-  min-height: 470px;
+  min-height: 560px;
   background:
     radial-gradient(circle at 78% 16%, rgba(134, 211, 255, 0.16), transparent 18rem),
     radial-gradient(circle at 16% 72%, rgba(216, 164, 95, 0.16), transparent 19rem),
@@ -1113,10 +1113,10 @@ p {
 .identity-card--primary::after {
   content: "QXJ";
   position: absolute;
-  right: -10px;
-  bottom: 0;
-  color: rgba(244, 239, 230, 0.06);
-  font: 950 clamp(6.8rem, 16vw, 12rem)/0.75 var(--font-display);
+  right: -18px;
+  bottom: 4px;
+  color: rgba(244, 239, 230, 0.045);
+  font: 950 clamp(7.8rem, 15vw, 12.8rem)/0.72 var(--font-display);
   letter-spacing: -0.02em;
   pointer-events: none;
 }
@@ -1126,34 +1126,39 @@ p {
   align-content: stretch;
 }
 
-.identity-dossier__plate {
+.identity-license {
   position: relative;
   z-index: 1;
-  display: grid;
-  min-height: 340px;
+  display: flex;
+  min-height: 440px;
+  flex-direction: column;
+  justify-content: space-between;
   margin-top: 22px;
-  padding: clamp(18px, 3vw, 30px);
+  padding: clamp(24px, 3.2vw, 40px);
   border: 1px solid rgba(244, 239, 230, 0.12);
   background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.055), transparent 34%),
+    linear-gradient(90deg, rgba(244, 239, 230, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(244, 239, 230, 0.045) 1px, transparent 1px),
+    linear-gradient(120deg, rgba(134, 211, 255, 0.08), transparent 34%),
     linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.18));
+  background-size: 36px 36px, 36px 36px, auto, auto;
   clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px));
 }
 
-.identity-dossier__plate::before,
-.identity-dossier__plate::after {
+.identity-license::before,
+.identity-license::after {
   content: "";
   position: absolute;
   pointer-events: none;
 }
 
-.identity-dossier__plate::before {
+.identity-license::before {
   inset: 18px;
-  border: 1px solid rgba(134, 211, 255, 0.12);
-  clip-path: polygon(0 0, 62% 0, 62% 1px, 0 1px, 0 100%, 1px 100%, 1px 0);
+  border: 1px solid rgba(134, 211, 255, 0.14);
+  clip-path: polygon(0 0, 72% 0, 72% 1px, 0 1px, 0 100%, 1px 100%, 1px 0);
 }
 
-.identity-dossier__plate::after {
+.identity-license::after {
   inset: 0;
   background: linear-gradient(105deg, transparent 24%, rgba(255, 255, 255, 0.13) 45%, transparent 62%);
   opacity: 0;
@@ -1161,51 +1166,48 @@ p {
   transition: opacity 220ms ease, transform 620ms ease;
 }
 
-.identity-dossier:hover .identity-dossier__plate::after {
+.identity-dossier:hover .identity-license::after {
   opacity: 0.42;
   transform: translateX(42%);
 }
 
-.identity-rail {
-  position: absolute;
-  top: 28px;
-  bottom: 28px;
-  left: 24px;
+.identity-license__topline {
+  position: relative;
+  z-index: 2;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-columns: auto minmax(34px, 1fr) auto;
   align-items: center;
-  justify-items: center;
-  width: 42px;
+  gap: 14px;
   color: var(--amber-strong);
-}
-
-.identity-rail span,
-.identity-rail small {
-  writing-mode: vertical-rl;
-  font: 900 0.66rem/1 var(--font-display);
-  letter-spacing: 0.18em;
+  font: 900 0.72rem/1 var(--font-display);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.identity-rail i {
+.identity-license__topline i {
   display: block;
-  width: 1px;
-  height: 100%;
-  margin: 16px 0;
-  background: linear-gradient(180deg, transparent, rgba(216, 164, 95, 0.8), transparent);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(216, 164, 95, 0.7), transparent);
   box-shadow: 0 0 18px rgba(216, 164, 95, 0.24);
 }
 
-.identity-core {
-  position: absolute;
-  top: 52%;
-  left: 50%;
+.identity-license__name {
+  position: relative;
   z-index: 2;
-  width: min(78%, 330px);
-  transform: translate(-50%, -50%);
+  margin: clamp(28px, 5vw, 56px) 0 clamp(26px, 4vw, 44px);
 }
 
-.identity-core span {
+.identity-license__name::before {
+  content: "LICENSE";
+  position: absolute;
+  right: 0;
+  top: -1.35rem;
+  color: rgba(244, 239, 230, 0.08);
+  font: 950 clamp(2rem, 5vw, 3.4rem)/1 var(--font-display);
+  letter-spacing: 0.12em;
+}
+
+.identity-license__name span {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -1215,7 +1217,7 @@ p {
   text-transform: uppercase;
 }
 
-.identity-core span::before {
+.identity-license__name span::before {
   content: "";
   width: 8px;
   height: 8px;
@@ -1224,78 +1226,57 @@ p {
   box-shadow: 0 0 18px rgba(134, 211, 255, 0.72);
 }
 
-.identity-core strong {
+.identity-license__name strong {
   display: block;
-  margin-top: 0.7rem;
+  margin-top: 1rem;
   color: var(--text-strong);
-  font: 950 clamp(3.4rem, 7vw, 5.8rem)/0.9 var(--font-display);
-  letter-spacing: 0.08em;
-  text-shadow: 0 0 34px rgba(244, 239, 230, 0.12);
+  font: 950 clamp(4.4rem, 9vw, 7.6rem)/0.82 var(--font-display);
+  letter-spacing: 0.06em;
+  text-wrap: balance;
+  text-shadow: 0 0 34px rgba(244, 239, 230, 0.14);
 }
 
-.identity-core small {
+.identity-license__name small {
   display: block;
-  max-width: 270px;
-  margin-top: 0.8rem;
+  max-width: 420px;
+  margin-top: 1.05rem;
   color: var(--text-muted);
-  font: 800 0.72rem/1.45 var(--font-display);
+  font: 800 clamp(0.72rem, 1.2vw, 0.84rem)/1.45 var(--font-display);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.identity-orbit {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
+.identity-license__stats {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
   margin: 0;
 }
 
-.identity-node {
-  position: absolute;
-  min-width: 118px;
+.identity-license__stats div {
+  min-width: 0;
   border: 1px solid rgba(244, 239, 230, 0.13);
   background:
     linear-gradient(145deg, rgba(244, 239, 230, 0.08), rgba(255, 255, 255, 0.025)),
     rgba(8, 11, 16, 0.58);
-  padding: 12px 14px;
+  padding: 14px;
   box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
   transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
 }
 
-.identity-node::before {
+.identity-license__stats div::before {
   content: "";
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
+  display: block;
+  width: 22px;
+  height: 2px;
+  margin-bottom: 12px;
   background: var(--amber);
-  box-shadow: 0 0 16px rgba(216, 164, 95, 0.64);
+  box-shadow: 0 0 16px rgba(216, 164, 95, 0.42);
 }
 
-.identity-node--name {
-  top: 28px;
-  right: 30px;
-}
-
-.identity-node--age {
-  top: 110px;
-  left: 72px;
-}
-
-.identity-node--role {
-  right: 42px;
-  bottom: 92px;
-}
-
-.identity-node--major {
-  left: 82px;
-  bottom: 34px;
-  min-width: 180px;
-}
-
-.identity-node dt {
+.identity-license__stats dt {
   color: var(--amber-strong);
   font-size: 0.68rem;
   font-weight: 900;
@@ -1303,24 +1284,24 @@ p {
   text-transform: uppercase;
 }
 
-.identity-node dd {
+.identity-license__stats dd {
   margin: 0.42rem 0 0;
   color: var(--text-strong);
-  font: 900 clamp(1.08rem, 1.8vw, 1.45rem)/1 var(--font-display);
+  font: 900 clamp(1rem, 1.6vw, 1.34rem)/1.05 var(--font-display);
   letter-spacing: 0.04em;
 }
 
-.identity-dossier:hover .identity-node {
+.identity-dossier:hover .identity-license__stats div {
   border-color: rgba(216, 164, 95, 0.24);
   background:
     linear-gradient(145deg, rgba(244, 239, 230, 0.1), rgba(255, 255, 255, 0.035)),
     rgba(10, 14, 20, 0.7);
 }
 
-.identity-dossier:hover .identity-node:hover {
+.identity-dossier:hover .identity-license__stats div:hover {
   border-color: rgba(134, 211, 255, 0.36);
   box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34), 0 0 24px rgba(134, 211, 255, 0.1);
-  transform: translateY(-6px);
+  transform: translateY(-4px);
 }
 
 .identity-status {
@@ -1897,32 +1878,12 @@ p {
     min-height: 0;
   }
 
-  .identity-dossier__plate {
-    min-height: 390px;
+  .identity-license {
+    min-height: 460px;
   }
 
-  .identity-core {
-    width: min(72%, 360px);
-  }
-
-  .identity-node--name {
-    top: 28px;
-    right: 32px;
-  }
-
-  .identity-node--age {
-    top: 118px;
-    left: 82px;
-  }
-
-  .identity-node--role {
-    right: 44px;
-    bottom: 104px;
-  }
-
-  .identity-node--major {
-    left: 92px;
-    bottom: 38px;
+  .identity-license__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .media-showcase {
@@ -2036,81 +1997,46 @@ p {
     min-height: 260px;
   }
 
-  .identity-dossier__plate {
-    display: grid;
-    gap: 16px;
+  .identity-license {
     min-height: 0;
     padding: 20px;
     clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
   }
 
-  .identity-dossier__plate::before {
+  .identity-license::before {
     inset: 12px;
   }
 
-  .identity-rail {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    left: auto;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto;
-    justify-items: stretch;
-    width: auto;
-    min-width: 0;
+  .identity-license__topline {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 
-  .identity-rail span,
-  .identity-rail small {
-    writing-mode: horizontal-tb;
-    white-space: nowrap;
+  .identity-license__topline i {
+    width: 100%;
   }
 
-  .identity-rail i {
-    width: auto;
-    height: 1px;
-    margin: 0 12px;
-    align-self: center;
-    background: linear-gradient(90deg, transparent, rgba(216, 164, 95, 0.8), transparent);
+  .identity-license__name {
+    margin: 34px 0 28px;
   }
 
-  .identity-core,
-  .identity-orbit,
-  .identity-node,
-  .identity-node--name,
-  .identity-node--age,
-  .identity-node--role,
-  .identity-node--major {
-    position: relative;
-    inset: auto;
-    top: auto;
+  .identity-license__name::before {
     right: auto;
-    bottom: auto;
-    left: auto;
-    width: auto;
-    min-width: 0;
-    transform: none;
+    left: 0;
+    top: -1.2rem;
+    font-size: clamp(1.6rem, 12vw, 2.8rem);
   }
 
-  .identity-core {
-    padding: 12px 0;
+  .identity-license__name strong {
+    font-size: clamp(3.4rem, 20vw, 5.4rem);
   }
 
-  .identity-core strong {
-    font-size: clamp(3rem, 16vw, 4.2rem);
-  }
-
-  .identity-orbit {
-    display: grid;
+  .identity-license__stats {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  .identity-node {
-    padding: 14px;
-  }
-
-  .identity-dossier:hover .identity-node:hover {
+  .identity-dossier:hover .identity-license__stats div:hover {
     transform: none;
   }
 
@@ -2191,12 +2117,12 @@ p {
     display: none;
   }
 
-  .identity-dossier__plate::after {
+  .identity-license::after {
     display: none;
   }
 
-  .identity-dossier:hover .identity-node,
-  .identity-dossier:hover .identity-node:hover {
+  .identity-dossier:hover .identity-license__stats div,
+  .identity-dossier:hover .identity-license__stats div:hover {
     transform: none;
     box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
   }

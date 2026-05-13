@@ -2,11 +2,41 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const animeItems = [
-  { title: '罪恶王冠', code: 'GC', href: 'https://www.bilibili.com/bangumi/media/md1588/' },
-  { title: '紫罗兰永恒花园', code: 'VEG', href: 'https://www.bilibili.com/bangumi/media/md8892/' },
-  { title: '银魂', code: 'GIN', href: 'https://www.bilibili.com/bangumi/media/md28233839/' },
-  { title: '刀剑神域', code: 'SAO', href: 'https://www.bilibili.com/bangumi/media/md24755609/' },
-  { title: 'Ｄｒ．ＳＴＯＮＥ 石纪元', code: 'DRS', href: 'https://www.bilibili.com/bangumi/media/md28221387/' },
+  {
+    title: '罪恶王冠',
+    code: 'GC',
+    href: 'https://www.bilibili.com/bangumi/media/md1588/',
+    image: 'https://i0.hdslb.com/bfs/bangumi/image/93e0aaf760327bbf074aff33f6ea3adf2c84ab5c.jpg',
+    hint: 'Bilibili 番剧主页',
+  },
+  {
+    title: '紫罗兰永恒花园',
+    code: 'VEG',
+    href: 'https://www.bilibili.com/bangumi/media/md8892/',
+    image: 'https://i0.hdslb.com/bfs/bangumi/image/6565f297b31fb4a4a0337557033426930c3b88c0.png',
+    hint: 'Bilibili 番剧主页',
+  },
+  {
+    title: '银魂',
+    code: 'GIN',
+    href: 'https://www.bilibili.com/bangumi/media/md28233839/',
+    image: 'https://i0.hdslb.com/bfs/bangumi/image/087b862b772ee4e644478a36c757a26db476193d.png',
+    hint: 'Bilibili 番剧主页',
+  },
+  {
+    title: '刀剑神域',
+    code: 'SAO',
+    href: 'https://www.bilibili.com/bangumi/media/md24755609/',
+    image: 'https://i0.hdslb.com/bfs/bangumi/fcdb9db0cc3f5c0c3aaa4ca1a9ddea6c121db471.jpg',
+    hint: 'Bilibili 番剧主页',
+  },
+  {
+    title: 'Ｄｒ．ＳＴＯＮＥ 石纪元',
+    code: 'DRS',
+    href: 'https://www.bilibili.com/bangumi/media/md28221387/',
+    image: 'https://i0.hdslb.com/bfs/bangumi/image/ae05a72b11d7f409bbff9475afb13dfca081ffd1.jpg',
+    hint: 'Bilibili 番剧主页',
+  },
 ];
 
 const gameItems = [
@@ -15,44 +45,54 @@ const gameItems = [
     code: 'CP77',
     href: 'https://www.cyberpunk.net/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: 'Counter-Strike 2',
     code: 'CS2',
     href: 'https://www.counter-strike.net/cs2',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: '空洞骑士系列',
     code: 'HK',
     href: 'https://www.hollowknight.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: 'Factorio',
     code: 'FCT',
     href: 'https://factorio.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/427520/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: '艾尔登法环',
     code: 'ER',
     href: 'https://en.bandainamcoent.eu/elden-ring/elden-ring',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: '星露谷物语',
     code: 'SDV',
     href: 'https://www.stardewvalley.net/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg',
+    hint: '游戏官网',
   },
   {
     title: '黑神话悟空',
     code: 'BMW',
     href: 'https://www.heishenhua.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/2358720/header.jpg',
+    hint: '游戏官网',
   },
 ];
+
+const steamFriendCode = '1075784939';
+const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFriendCode}`;
 ---
 
 <BaseLayout
@@ -75,7 +115,7 @@ const gameItems = [
     </aside>
   </section>
 
-  <section class="about-grid section-shell section-block reveal" aria-label="基础资料">
+  <section class="about-grid about-grid--mosaic section-shell section-block reveal" aria-label="基础资料">
     <article class="identity-card identity-card--primary">
       <p class="profile-slip__label">IDENTITY</p>
       <dl class="identity-list">
@@ -85,6 +125,13 @@ const gameItems = [
         <div><dt>专业</dt><dd>嵌入式工程师</dd></div>
       </dl>
     </article>
+
+    <a class="identity-card steam-card" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
+      <p class="profile-slip__label">ONLINE BEACON</p>
+      <span>Steam Friend Code</span>
+      <strong>{steamFriendCode}</strong>
+      <small>点击在 Steam 搜索，或者直接复制这串好友代码。</small>
+    </a>
 
     <article class="identity-card motto-card">
       <p class="profile-slip__label">MOTTO</p>
@@ -113,13 +160,15 @@ const gameItems = [
         <p class="eyebrow">ANIME SIGNALS</p>
         <h2>喜欢的番剧。</h2>
       </div>
-      <p>把这些作品做成终端式交互按钮，点击后跳转到 Bilibili 番剧主页。</p>
+      <p>封面会先保持折叠状态，鼠标扫过时展开成一张完整的番剧档案。</p>
     </div>
-    <div class="anime-grid">
+    <div class="collapsible-showcase media-showcase media-showcase--anime">
       {animeItems.map((item) => (
-        <a class="anime-chip" href={item.href} target="_blank" rel="noopener noreferrer">
+        <a class="media-card media-card--anime" href={item.href} target="_blank" rel="noopener noreferrer">
+          <img src={item.image} alt={`${item.title} 封面图`} loading="lazy" referrerpolicy="no-referrer" />
           <span>{item.code}</span>
           <strong>{item.title}</strong>
+          <small>{item.hint}</small>
         </a>
       ))}
     </div>
@@ -131,14 +180,15 @@ const gameItems = [
         <p class="eyebrow">GAME ARCHIVE</p>
         <h2>喜欢的游戏。</h2>
       </div>
-      <p>用代表性视觉图组成游戏档案墙，点击卡片可以进入对应官网。</p>
+      <p>游戏展柜默认压缩成一排视觉切片，鼠标停留时会打开当前档案。</p>
     </div>
-    <div class="game-gallery">
+    <div class="collapsible-showcase media-showcase media-showcase--games">
       {gameItems.map((item) => (
-        <a class="game-card" href={item.href} target="_blank" rel="noopener noreferrer" data-code={item.code}>
+        <a class="media-card media-card--game" href={item.href} target="_blank" rel="noopener noreferrer" data-code={item.code}>
           <img src={item.image} alt={`${item.title} 代表图`} loading="lazy" />
           <span>{item.code}</span>
           <strong>{item.title}</strong>
+          <small>{item.hint}</small>
         </a>
       ))}
     </div>

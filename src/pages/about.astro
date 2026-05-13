@@ -128,9 +128,12 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
 
     <a class="identity-card steam-card" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
       <p class="profile-slip__label">ONLINE BEACON</p>
-      <span>Steam Friend Code</span>
-      <strong>{steamFriendCode}</strong>
+      <div>
+        <span>Steam Friend Code</span>
+        <strong>{steamFriendCode}</strong>
+      </div>
       <small>点击在 Steam 搜索，或者直接复制这串好友代码。</small>
+      <em>SEARCH STEAM</em>
     </a>
 
     <article class="identity-card motto-card">

@@ -1087,7 +1087,10 @@ p {
 
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.04fr) minmax(250px, 0.78fr) minmax(260px, 0.9fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.95fr) minmax(0, 1fr);
+  grid-template-areas:
+    "identity steam motto"
+    "identity mbti mbti";
   gap: 22px;
   align-items: stretch;
 }
@@ -1098,13 +1101,30 @@ p {
 }
 
 .identity-card--primary {
-  grid-row: span 2;
+  grid-area: identity;
+  min-height: 470px;
+  background:
+    radial-gradient(circle at 24% 24%, rgba(244, 239, 230, 0.08), transparent 20rem),
+    linear-gradient(145deg, rgba(22, 27, 36, 0.84), rgba(6, 8, 12, 0.76));
+}
+
+.identity-card--primary::after {
+  content: "ID";
+  position: absolute;
+  right: 28px;
+  bottom: 12px;
+  color: rgba(244, 239, 230, 0.08);
+  font: 950 clamp(8rem, 18vw, 14rem)/0.8 var(--font-display);
+  letter-spacing: 0.02em;
+  pointer-events: none;
 }
 
 .steam-card {
+  grid-area: steam;
   display: grid;
   align-content: space-between;
-  min-height: 260px;
+  gap: 18px;
+  min-height: 250px;
   background:
     radial-gradient(circle at 80% 12%, rgba(134, 211, 255, 0.22), transparent 18rem),
     linear-gradient(145deg, rgba(25, 44, 58, 0.84), rgba(6, 8, 12, 0.78));
@@ -1114,7 +1134,8 @@ p {
 
 .steam-card span,
 .steam-card strong,
-.steam-card small {
+.steam-card small,
+.steam-card em {
   position: relative;
   z-index: 1;
   display: block;
@@ -1128,16 +1149,30 @@ p {
 }
 
 .steam-card strong {
-  margin-top: 1rem;
+  max-width: 100%;
+  margin-top: 0.8rem;
   color: var(--text-strong);
-  font: 950 clamp(2.4rem, 5vw, 4.4rem)/0.9 var(--font-display);
-  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+  font: 950 clamp(2.6rem, 4.2vw, 4.2rem)/0.95 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
 .steam-card small {
   max-width: 280px;
-  margin-top: 1rem;
   color: var(--text-muted);
+}
+
+.steam-card em {
+  justify-self: start;
+  border: 1px solid rgba(134, 211, 255, 0.42);
+  background: rgba(134, 211, 255, 0.08);
+  color: var(--cyan);
+  padding: 0.48rem 0.72rem;
+  font: 900 0.74rem/1 var(--font-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-style: normal;
 }
 
 .steam-card:hover {
@@ -1156,7 +1191,7 @@ p {
 .identity-list div {
   border: 1px solid rgba(244, 239, 230, 0.11);
   background: rgba(255, 255, 255, 0.035);
-  padding: 18px;
+  padding: 16px;
 }
 
 .identity-list dt {
@@ -1175,10 +1210,26 @@ p {
 }
 
 .motto-card blockquote {
-  margin: 1.2rem 0 0.8rem;
+  margin: 0.9rem 0 0.8rem;
   color: var(--text-strong);
-  font: 950 clamp(2rem, 4vw, 3.5rem)/1.02 var(--font-display);
+  font: 950 clamp(2rem, 4vw, 3.25rem)/1.02 var(--font-display);
   letter-spacing: 0.03em;
+}
+
+.motto-card {
+  grid-area: motto;
+  min-height: 250px;
+  align-self: start;
+}
+
+.mbti-card {
+  grid-area: mbti;
+  min-height: 270px;
+  max-width: 760px;
+  justify-self: stretch;
+  background:
+    radial-gradient(circle at 16% 14%, rgba(134, 211, 255, 0.18), transparent 18rem),
+    linear-gradient(145deg, rgba(21, 31, 45, 0.88), rgba(6, 8, 12, 0.78));
 }
 
 .motto-card p,
@@ -1592,6 +1643,14 @@ p {
     grid-template-columns: 1fr;
   }
 
+  .about-grid {
+    grid-template-areas:
+      "identity"
+      "steam"
+      "motto"
+      "mbti";
+  }
+
   .hero,
   .hero__copy,
   .hero-core {
@@ -1630,6 +1689,7 @@ p {
 
   .identity-card--primary {
     grid-row: auto;
+    min-height: 0;
   }
 
   .media-showcase {
@@ -1742,6 +1802,20 @@ p {
 
   .about-hero__badge {
     min-height: 260px;
+  }
+
+  .steam-card {
+    gap: 14px;
+  }
+
+  .steam-card strong {
+    font-size: clamp(2.35rem, 15vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  .motto-card,
+  .mbti-card {
+    min-height: 0;
   }
 
   .media-showcase {

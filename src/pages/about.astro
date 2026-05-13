@@ -116,14 +116,42 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
   </section>
 
   <section class="about-grid about-grid--mosaic section-shell section-block reveal" aria-label="基础资料">
-    <article class="identity-card identity-card--primary">
+    <article class="identity-card identity-card--primary identity-dossier">
       <p class="profile-slip__label">IDENTITY</p>
-      <dl class="identity-list">
-        <div><dt>名字</dt><dd>清夏玖</dd></div>
-        <div><dt>年龄</dt><dd>20岁</dd></div>
-        <div><dt>身份</dt><dd>工科生</dd></div>
-        <div><dt>专业</dt><dd>嵌入式工程师</dd></div>
-      </dl>
+      <div class="identity-dossier__plate">
+        <div class="identity-rail" aria-hidden="true">
+          <span>QXJ-20</span>
+          <i></i>
+          <small>PRIVATE DOSSIER</small>
+        </div>
+        <div class="identity-core">
+          <span>OPERATOR ID</span>
+          <strong>清夏玖</strong>
+          <small>Engineering Student / Embedded Engineer</small>
+        </div>
+        <dl class="identity-orbit">
+          <div class="identity-node identity-node--name">
+            <dt>名字</dt>
+            <dd>清夏玖</dd>
+          </div>
+          <div class="identity-node identity-node--age">
+            <dt>年龄</dt>
+            <dd>20岁</dd>
+          </div>
+          <div class="identity-node identity-node--role">
+            <dt>身份</dt>
+            <dd>工科生</dd>
+          </div>
+          <div class="identity-node identity-node--major">
+            <dt>专业</dt>
+            <dd>嵌入式工程师</dd>
+          </div>
+        </dl>
+      </div>
+      <div class="identity-status" aria-hidden="true">
+        <span>SYNCED</span>
+        <span>ARCHIVE NODE 04</span>
+      </div>
     </article>
 
     <a class="identity-card steam-card" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>

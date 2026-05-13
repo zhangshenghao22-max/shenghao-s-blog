@@ -12,6 +12,7 @@
   --amber-strong: #f2bd73;
   --cyan: #86d3ff;
   --mint: #8dffc0;
+  --terminal-green: #8dffc0;
   --line: rgba(236, 225, 204, 0.16);
   --line-strong: rgba(216, 164, 95, 0.42);
   --black-glass: rgba(5, 8, 12, 0.72);
@@ -1104,19 +1105,251 @@ p {
   grid-area: identity;
   min-height: 470px;
   background:
-    radial-gradient(circle at 24% 24%, rgba(244, 239, 230, 0.08), transparent 20rem),
-    linear-gradient(145deg, rgba(22, 27, 36, 0.84), rgba(6, 8, 12, 0.76));
+    radial-gradient(circle at 78% 16%, rgba(134, 211, 255, 0.16), transparent 18rem),
+    radial-gradient(circle at 16% 72%, rgba(216, 164, 95, 0.16), transparent 19rem),
+    linear-gradient(145deg, rgba(24, 29, 38, 0.9), rgba(5, 7, 11, 0.82));
 }
 
 .identity-card--primary::after {
-  content: "ID";
+  content: "QXJ";
   position: absolute;
-  right: 28px;
-  bottom: 12px;
-  color: rgba(244, 239, 230, 0.08);
-  font: 950 clamp(8rem, 18vw, 14rem)/0.8 var(--font-display);
-  letter-spacing: 0.02em;
+  right: -10px;
+  bottom: 0;
+  color: rgba(244, 239, 230, 0.06);
+  font: 950 clamp(6.8rem, 16vw, 12rem)/0.75 var(--font-display);
+  letter-spacing: -0.02em;
   pointer-events: none;
+}
+
+.identity-dossier {
+  display: grid;
+  align-content: stretch;
+}
+
+.identity-dossier__plate {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-height: 340px;
+  margin-top: 22px;
+  padding: clamp(18px, 3vw, 30px);
+  border: 1px solid rgba(244, 239, 230, 0.12);
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.055), transparent 34%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.18));
+  clip-path: polygon(0 0, calc(100% - 34px) 0, 100% 34px, 100% 100%, 34px 100%, 0 calc(100% - 34px));
+}
+
+.identity-dossier__plate::before,
+.identity-dossier__plate::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.identity-dossier__plate::before {
+  inset: 18px;
+  border: 1px solid rgba(134, 211, 255, 0.12);
+  clip-path: polygon(0 0, 62% 0, 62% 1px, 0 1px, 0 100%, 1px 100%, 1px 0);
+}
+
+.identity-dossier__plate::after {
+  inset: 0;
+  background: linear-gradient(105deg, transparent 24%, rgba(255, 255, 255, 0.13) 45%, transparent 62%);
+  opacity: 0;
+  transform: translateX(-42%);
+  transition: opacity 220ms ease, transform 620ms ease;
+}
+
+.identity-dossier:hover .identity-dossier__plate::after {
+  opacity: 0.42;
+  transform: translateX(42%);
+}
+
+.identity-rail {
+  position: absolute;
+  top: 28px;
+  bottom: 28px;
+  left: 24px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  justify-items: center;
+  width: 42px;
+  color: var(--amber-strong);
+}
+
+.identity-rail span,
+.identity-rail small {
+  writing-mode: vertical-rl;
+  font: 900 0.66rem/1 var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.identity-rail i {
+  display: block;
+  width: 1px;
+  height: 100%;
+  margin: 16px 0;
+  background: linear-gradient(180deg, transparent, rgba(216, 164, 95, 0.8), transparent);
+  box-shadow: 0 0 18px rgba(216, 164, 95, 0.24);
+}
+
+.identity-core {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  z-index: 2;
+  width: min(78%, 330px);
+  transform: translate(-50%, -50%);
+}
+
+.identity-core span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--cyan);
+  font: 900 0.72rem/1 var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.identity-core span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 18px rgba(134, 211, 255, 0.72);
+}
+
+.identity-core strong {
+  display: block;
+  margin-top: 0.7rem;
+  color: var(--text-strong);
+  font: 950 clamp(3.4rem, 7vw, 5.8rem)/0.9 var(--font-display);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 34px rgba(244, 239, 230, 0.12);
+}
+
+.identity-core small {
+  display: block;
+  max-width: 270px;
+  margin-top: 0.8rem;
+  color: var(--text-muted);
+  font: 800 0.72rem/1.45 var(--font-display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.identity-orbit {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+}
+
+.identity-node {
+  position: absolute;
+  min-width: 118px;
+  border: 1px solid rgba(244, 239, 230, 0.13);
+  background:
+    linear-gradient(145deg, rgba(244, 239, 230, 0.08), rgba(255, 255, 255, 0.025)),
+    rgba(8, 11, 16, 0.58);
+  padding: 12px 14px;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.identity-node::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--amber);
+  box-shadow: 0 0 16px rgba(216, 164, 95, 0.64);
+}
+
+.identity-node--name {
+  top: 28px;
+  right: 30px;
+}
+
+.identity-node--age {
+  top: 110px;
+  left: 72px;
+}
+
+.identity-node--role {
+  right: 42px;
+  bottom: 92px;
+}
+
+.identity-node--major {
+  left: 82px;
+  bottom: 34px;
+  min-width: 180px;
+}
+
+.identity-node dt {
+  color: var(--amber-strong);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.identity-node dd {
+  margin: 0.42rem 0 0;
+  color: var(--text-strong);
+  font: 900 clamp(1.08rem, 1.8vw, 1.45rem)/1 var(--font-display);
+  letter-spacing: 0.04em;
+}
+
+.identity-dossier:hover .identity-node {
+  border-color: rgba(216, 164, 95, 0.24);
+  background:
+    linear-gradient(145deg, rgba(244, 239, 230, 0.1), rgba(255, 255, 255, 0.035)),
+    rgba(10, 14, 20, 0.7);
+}
+
+.identity-dossier:hover .identity-node:hover {
+  border-color: rgba(134, 211, 255, 0.36);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34), 0 0 24px rgba(134, 211, 255, 0.1);
+  transform: translateY(-6px);
+}
+
+.identity-status {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 18px;
+  color: rgba(244, 239, 230, 0.58);
+  font: 900 0.68rem/1 var(--font-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.identity-status span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.identity-status span::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--terminal-green);
+  box-shadow: 0 0 14px rgba(143, 255, 199, 0.46);
 }
 
 .steam-card {
@@ -1179,34 +1412,6 @@ p {
   border-color: rgba(134, 211, 255, 0.48);
   box-shadow: 0 28px 76px rgba(0, 0, 0, 0.44), 0 0 30px rgba(134, 211, 255, 0.12);
   transform: translateY(-5px);
-}
-
-.identity-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  margin: 22px 0 0;
-}
-
-.identity-list div {
-  border: 1px solid rgba(244, 239, 230, 0.11);
-  background: rgba(255, 255, 255, 0.035);
-  padding: 16px;
-}
-
-.identity-list dt {
-  color: var(--amber-strong);
-  font-size: 0.78rem;
-  font-weight: 900;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.identity-list dd {
-  margin: 0.45rem 0 0;
-  color: var(--text-strong);
-  font: 900 clamp(1.3rem, 2.3vw, 2rem)/1 var(--font-display);
-  letter-spacing: 0.04em;
 }
 
 .motto-card blockquote {
@@ -1692,6 +1897,34 @@ p {
     min-height: 0;
   }
 
+  .identity-dossier__plate {
+    min-height: 390px;
+  }
+
+  .identity-core {
+    width: min(72%, 360px);
+  }
+
+  .identity-node--name {
+    top: 28px;
+    right: 32px;
+  }
+
+  .identity-node--age {
+    top: 118px;
+    left: 82px;
+  }
+
+  .identity-node--role {
+    right: 44px;
+    bottom: 104px;
+  }
+
+  .identity-node--major {
+    left: 92px;
+    bottom: 38px;
+  }
+
   .media-showcase {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1773,7 +2006,6 @@ p {
   .entry-grid,
   .lab-grid,
   .inspiration-grid,
-  .identity-list,
   .post-nav {
     grid-template-columns: 1fr;
   }
@@ -1802,6 +2034,84 @@ p {
 
   .about-hero__badge {
     min-height: 260px;
+  }
+
+  .identity-dossier__plate {
+    display: grid;
+    gap: 16px;
+    min-height: 0;
+    padding: 20px;
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+  }
+
+  .identity-dossier__plate::before {
+    inset: 12px;
+  }
+
+  .identity-rail {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto;
+    justify-items: stretch;
+    width: auto;
+    min-width: 0;
+  }
+
+  .identity-rail span,
+  .identity-rail small {
+    writing-mode: horizontal-tb;
+    white-space: nowrap;
+  }
+
+  .identity-rail i {
+    width: auto;
+    height: 1px;
+    margin: 0 12px;
+    align-self: center;
+    background: linear-gradient(90deg, transparent, rgba(216, 164, 95, 0.8), transparent);
+  }
+
+  .identity-core,
+  .identity-orbit,
+  .identity-node,
+  .identity-node--name,
+  .identity-node--age,
+  .identity-node--role,
+  .identity-node--major {
+    position: relative;
+    inset: auto;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    min-width: 0;
+    transform: none;
+  }
+
+  .identity-core {
+    padding: 12px 0;
+  }
+
+  .identity-core strong {
+    font-size: clamp(3rem, 16vw, 4.2rem);
+  }
+
+  .identity-orbit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .identity-node {
+    padding: 14px;
+  }
+
+  .identity-dossier:hover .identity-node:hover {
+    transform: none;
   }
 
   .steam-card {
@@ -1879,6 +2189,16 @@ p {
 
   .magnetic-card::before {
     display: none;
+  }
+
+  .identity-dossier__plate::after {
+    display: none;
+  }
+
+  .identity-dossier:hover .identity-node,
+  .identity-dossier:hover .identity-node:hover {
+    transform: none;
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.22);
   }
 
   .media-showcase {

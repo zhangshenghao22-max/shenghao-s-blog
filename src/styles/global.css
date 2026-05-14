@@ -1461,7 +1461,21 @@ p {
 }
 
 .media-showcase--anime {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   min-height: 430px;
+}
+
+.media-showcase--anime .media-card,
+.media-showcase--anime .media-card:first-child,
+.media-showcase--anime:hover .media-card,
+.media-showcase--anime .media-card:hover {
+  flex: none;
+  opacity: 1;
+}
+
+.media-showcase--anime .media-card {
+  min-height: 360px;
 }
 
 .media-showcase--games {

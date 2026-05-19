@@ -107,17 +107,20 @@ a:hover {
 
 .ambient-canvas {
   z-index: 1;
-  opacity: 0.78;
+  opacity: 0.54;
 }
 
 .soft-stage {
   overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(216, 164, 95, 0.08), transparent 32rem),
+    radial-gradient(circle at 80% 18%, rgba(134, 211, 255, 0.08), transparent 30rem),
+    radial-gradient(circle at 50% 82%, rgba(141, 255, 192, 0.05), transparent 24rem);
 }
 
 .glow {
   position: absolute;
   border-radius: 999px;
-  filter: blur(28px);
   opacity: 0.22;
 }
 
@@ -187,6 +190,15 @@ html[data-motion-mode='lite'] .soft-stage {
   display: none;
 }
 
+@media (max-width: 1280px) {
+  .ambient-canvas,
+  .immersive-layer,
+  .soft-stage,
+  .scan-progress {
+    display: none;
+  }
+}
+
 @supports (animation-timeline: scroll()) {
   .scan-progress {
     animation: page-progress linear both;
@@ -248,6 +260,11 @@ html[data-motion-mode='lite'] .soft-stage {
 .site-footer__inner {
   width: min(calc(100% - 36px), var(--max-width));
   margin-inline: auto;
+}
+
+.section-shell {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 760px;
 }
 
 .site-header {
@@ -673,10 +690,13 @@ p {
 .mission-index {
   margin-top: 70px;
   padding: clamp(26px, 4vw, 48px);
+  contain-intrinsic-size: 1px 420px;
 }
 
 .section-block {
   margin-top: 104px;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 680px;
 }
 
 .section-heading {
@@ -1006,6 +1026,7 @@ p {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
   gap: 26px;
   align-items: stretch;
+  contain-intrinsic-size: 1px 520px;
 }
 
 .about-hero__copy,
@@ -1457,7 +1478,7 @@ p {
   min-width: 0;
   color: var(--text);
   text-decoration: none;
-  transition: flex-basis 360ms cubic-bezier(0.18, 0.82, 0.22, 1), flex-grow 360ms cubic-bezier(0.18, 0.82, 0.22, 1), transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+  transition: flex-basis 240ms ease, flex-grow 240ms ease, transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .media-showcase--anime {
@@ -1560,7 +1581,7 @@ p {
 
 .media-card:hover {
   border-color: rgba(216, 164, 95, 0.5);
-  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.44), 0 0 30px rgba(216, 164, 95, 0.12);
+  box-shadow: 0 18px 52px rgba(0, 0, 0, 0.34), 0 0 20px rgba(216, 164, 95, 0.08);
   transform: translateY(-5px);
 }
 
@@ -1816,7 +1837,7 @@ p {
 .reveal {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 620ms ease, transform 620ms cubic-bezier(0.18, 0.82, 0.22, 1);
+  transition: opacity 420ms ease, transform 420ms cubic-bezier(0.18, 0.82, 0.22, 1);
 }
 
 .reveal.is-visible {

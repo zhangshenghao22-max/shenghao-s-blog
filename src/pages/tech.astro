@@ -8,7 +8,6 @@ const techPosts = await getPostsByCategory('tech');
 
 <BaseLayout title="技术记录" description="清夏玖的技术记录，整理前端工程、Astro、自动化和 AI Coding。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">CODE DOSSIER</p>
     <h1>技术记录</h1>
     <p>把工程经验、自动化流程、AI Coding 实践和踩坑复盘沉淀成结构清晰的技术档案。</p>
   </section>
@@ -20,7 +19,6 @@ const techPosts = await getPostsByCategory('tech');
       </div>
     ) : (
       <div class="empty-state">
-        <p class="eyebrow">NO FILE</p>
         <h2>还没有技术记录</h2>
         <p>进入发布后台，写下第一篇技术笔记。</p>
         <a class="button" href="/admin/">发表文章</a>

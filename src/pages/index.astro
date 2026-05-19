@@ -10,18 +10,12 @@ const techPosts = await getPostsByCategory('tech');
 const featuredRecords = allPosts.slice(0, 3);
 
 const entryItems = [
-  { href: '/life/', code: 'L-01', title: '生活档案', text: '把日常、照片、散步和心情碎片整理成私人记录。', status: 'LIFE' },
-  { href: '/tech/', code: 'T-02', title: '技术记录', text: '前端工程、Astro、AI Coding 与每一次复盘。', status: 'TECH' },
-  { href: adminUrl, code: 'P-03', title: '发布后台', text: '进入专属 CMS 写作，提交后自动部署上线。', status: 'OWNER' },
-  { href: '/about/', code: 'O-04', title: '个人档案', text: '身份、偏好、作品方向与长期更新计划。', status: 'PROFILE' },
-  { href: '/inspiration/', code: 'I-05', title: '灵感实验室', text: '收藏短句、设计片段、工具和未来功能。', status: 'LAB' },
-  { href: '/archive/', code: 'A-06', title: '全量索引', text: '按时间检索所有已发布的生活与技术档案。', status: 'INDEX' },
-];
-
-const systemStats = [
-  { label: 'Archive Mode', value: 'Private' },
-  { label: 'Deploy Chain', value: 'GitHub Pages' },
-  { label: 'Writing Gate', value: 'Owner Only' },
+  { href: '/life/', title: '生活档案', text: '把日常、照片、散步和心情碎片整理成私人记录。' },
+  { href: '/tech/', title: '技术记录', text: '前端工程、Astro、AI Coding 与每一次复盘。' },
+  { href: adminUrl, title: '发布后台', text: '进入专属 CMS 写作，提交后自动部署上线。' },
+  { href: '/about/', title: '个人档案', text: '身份、偏好、作品方向与长期更新计划。' },
+  { href: '/inspiration/', title: '灵感实验室', text: '收藏短句、设计片段、工具和未来功能。' },
+  { href: '/archive/', title: '全量索引', text: '按时间检索所有已发布的生活与技术档案。' },
 ];
 
 const labItems = [
@@ -41,7 +35,6 @@ const inspirationItems = [
 <BaseLayout pageClass="home-page">
   <section class="hero hero--immersive section-shell">
     <div class="hero__copy reveal">
-      <p class="eyebrow">QINGXIAJIU / PRIVATE TERMINAL</p>
       <h1>在秩序与灵感之间，建立自己的宇宙。</h1>
       <p class="hero__lead">
         这里是清夏玖的私人档案终端：生活被整理成可回看的切片，技术被沉淀成清晰的记录，灵感被暂存为下一次行动的坐标。
@@ -49,11 +42,6 @@ const inspirationItems = [
       <div class="hero__actions">
         <a class="button" href="#entry">进入任务索引</a>
         <a class="button button--ghost" href="/archive/">浏览全量档案</a>
-      </div>
-      <div class="hero__meta" aria-label="系统状态">
-        {systemStats.map((item) => (
-          <span><b>{item.label}</b>{item.value}</span>
-        ))}
       </div>
     </div>
 
@@ -65,14 +53,6 @@ const inspirationItems = [
         <span class="core-orb"></span>
         <i class="core-axis core-axis--one"></i>
         <i class="core-axis core-axis--two"></i>
-        <div class="core-readout">
-          <strong>QXJ-09</strong>
-          <small>PRIVATE ARCHIVE ONLINE</small>
-        </div>
-      </div>
-      <div class="core-status">
-        <span>Signal integrity 98%</span>
-        <span>Life / Code / Intel synchronized</span>
       </div>
     </aside>
   </section>
@@ -80,15 +60,12 @@ const inspirationItems = [
   <section id="entry" class="section-shell mission-index reveal" aria-label="任务索引">
     <div class="section-heading section-heading--split">
       <div>
-        <p class="eyebrow">MISSION INDEX</p>
         <h2>把入口变成一张任务地图。</h2>
       </div>
-      <p>不再堆叠普通卡片，而是把写作、阅读、归档和灵感入口组织成一个清晰的私人控制台。</p>
     </div>
     <div class="entry-grid entry-grid--premium">
       {entryItems.map((item) => (
-        <a class="entry-card" href={item.href} data-status={item.status}>
-          <span>{item.code}</span>
+        <a class="entry-card" href={item.href}>
           <strong>{item.title}</strong>
           <p>{item.text}</p>
         </a>
@@ -99,7 +76,6 @@ const inspirationItems = [
   <section class="section-shell section-block reveal" aria-label="精选档案">
     <div class="section-heading section-heading--split">
       <div>
-        <p class="eyebrow">FEATURED RECORDS</p>
         <h2>最近写下的记录。</h2>
       </div>
       <a class="text-link" href="/archive/">打开全部归档</a>
@@ -113,7 +89,6 @@ const inspirationItems = [
     <div class="record-column">
       <div class="section-heading section-heading--compact">
         <div>
-          <p class="eyebrow">LIFE STREAM</p>
           <h2>生活档案</h2>
         </div>
         <a class="text-link" href="/life/">进入生活页</a>
@@ -126,7 +101,6 @@ const inspirationItems = [
     <div class="record-column record-column--tech">
       <div class="section-heading section-heading--compact">
         <div>
-          <p class="eyebrow">CODE DOSSIER</p>
           <h2>技术记录</h2>
         </div>
         <a class="text-link" href="/tech/">进入技术页</a>
@@ -139,7 +113,6 @@ const inspirationItems = [
 
   <section class="section-shell section-block profile-panel reveal" aria-label="个人档案">
     <div>
-      <p class="eyebrow">PROFILE DOSSIER</p>
       <h2>一个持续进化的私人档案系统。</h2>
       <p>
         这个站点会逐渐沉淀为个人作品、生活切片、技术复盘和灵感实验的集合。它不追求一次完成，而是保持可扩展、可更新、可回看的状态。
@@ -150,11 +123,8 @@ const inspirationItems = [
       </div>
     </div>
     <div class="profile-card" aria-label="个人关键词">
-      <span class="avatar-bubble">QX</span>
       <dl>
-        <div><dt>System</dt><dd>Life / Code / Intel</dd></div>
         <div><dt>Signal</dt><dd>克制、清晰、长期主义</dd></div>
-        <div><dt>Status</dt><dd>Archive expanding</dd></div>
       </dl>
     </div>
   </section>
@@ -162,15 +132,13 @@ const inspirationItems = [
   <section class="section-shell section-block inspiration-lab reveal" aria-label="灵感实验室">
     <div class="section-heading section-heading--split">
       <div>
-        <p class="eyebrow">INSPIRATION LAB</p>
         <h2>为下一次更新预留能量。</h2>
       </div>
       <a class="text-link" href="/inspiration/">进入灵感实验室</a>
     </div>
     <div class="lab-grid">
       {labItems.map((item) => (
-        <article class="toy-card" data-status={item.code}>
-          <span>{item.code}</span>
+        <article class="toy-card">
           <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>
@@ -179,7 +147,6 @@ const inspirationItems = [
     <div class="inspiration-grid inspiration-grid--compact">
       {inspirationItems.map((item) => (
         <article class="inspiration-card">
-          <span>//</span>
           <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>

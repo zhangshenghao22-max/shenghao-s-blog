@@ -1,6 +1,6 @@
 ﻿---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { categoryLabels, formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
+import { formatPostDate, getPostUrl, getPublishedPosts } from '../lib/posts';
 
 const posts = await getPublishedPosts();
 const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) => {
@@ -13,7 +13,6 @@ const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) =
 
 <BaseLayout title="归档" description="清夏玖的博客全部生活与技术档案索引。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">ARCHIVE INDEX</p>
     <h1>全量档案索引</h1>
     <p>按时间收束所有生活记录和技术文章，让每一次写下的内容都能被重新检索。</p>
   </section>
@@ -27,7 +26,6 @@ const groupedPosts = posts.reduce<Record<string, typeof posts>>((groups, post) =
             <li>
               <time datetime={post.data.pubDate.toISOString()}>{formatPostDate(post.data.pubDate)}</time>
               <a href={getPostUrl(post)}>{post.data.title}</a>
-              <span>{categoryLabels[post.data.category]}</span>
               <p>{post.data.description}</p>
             </li>
           ))}

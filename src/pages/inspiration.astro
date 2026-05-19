@@ -2,18 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const inspirationItems = [
-  { code: 'W-01', title: '组件备忘', text: '记录想做成终端模块、卡片系统或交互装置的点子。' },
-  { code: 'D-02', title: '视觉抽屉', text: '收集配色、版式、光影、边框和喜欢的信息面板。' },
-  { code: 'T-03', title: '工具链', text: '整理让写作和开发更顺手的小工具与工作流。' },
-  { code: 'P-04', title: '影像墙', text: '为未来的生活照片和旅行记录预留档案入口。' },
-  { code: 'B-05', title: '声音片段', text: '记录最近循环的歌、播客和当下的能量来源。' },
-  { code: 'N-06', title: '未来功能', text: '把想做但还没做的小想法先放进待处理队列。' },
+  { title: '组件备忘', text: '记录想做成终端模块、卡片系统或交互装置的点子。' },
+  { title: '视觉抽屉', text: '收集配色、版式、光影、边框和喜欢的信息面板。' },
+  { title: '工具链', text: '整理让写作和开发更顺手的小工具与工作流。' },
+  { title: '影像墙', text: '为未来的生活照片和旅行记录预留档案入口。' },
+  { title: '声音片段', text: '记录最近循环的歌、播客和当下的能量来源。' },
+  { title: '未来功能', text: '把想做但还没做的小想法先放进待处理队列。' },
 ];
 ---
 
 <BaseLayout title="灵感实验室" description="清夏玖的灵感实验室，收藏短想法、设计片段和未来功能。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">INSPIRATION LAB</p>
     <h1>灵感实验室</h1>
     <p>不追求完整，只负责把突然出现的想法、喜欢的细节和未来功能暂存下来。</p>
   </section>
@@ -21,8 +20,7 @@ const inspirationItems = [
   <section class="section-shell section-block reveal" aria-label="灵感列表">
     <div class="inspiration-grid">
       {inspirationItems.map((item) => (
-        <article class="inspiration-card" data-status={item.code}>
-          <span>{item.code}</span>
+        <article class="inspiration-card">
           <h3>{item.title}</h3>
           <p>{item.text}</p>
         </article>

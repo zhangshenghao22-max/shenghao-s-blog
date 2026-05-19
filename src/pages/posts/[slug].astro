@@ -1,7 +1,7 @@
 ﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { render } from 'astro:content';
-import { categoryLabels, formatPostDate, getPostSlug, getPostUrl, getPublishedPosts } from '../../lib/posts';
+import { formatPostDate, getPostSlug, getPostUrl, getPublishedPosts } from '../../lib/posts';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -22,7 +22,7 @@ const { Content } = await render(post);
 <BaseLayout title={post.data.title} description={post.data.description} pageClass="article-page">
   <article class="article-shell section-shell reveal">
     <header class="article-header">
-      <p class="eyebrow"><span>{categoryLabels[post.data.category]}</span> · {formatPostDate(post.data.pubDate)}</p>
+      <time class="article-date" datetime={post.data.pubDate.toISOString()}>{formatPostDate(post.data.pubDate)}</time>
       <h1>{post.data.title}</h1>
       <p class="article-description">{post.data.description}</p>
       {post.data.tags.length > 0 && (

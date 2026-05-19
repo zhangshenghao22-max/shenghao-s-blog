@@ -8,7 +8,6 @@ const lifePosts = await getPostsByCategory('life');
 
 <BaseLayout title="生活档案" description="清夏玖的生活档案，记录日常、散步、照片和心情切片。">
   <section class="page-hero section-shell reveal">
-    <p class="eyebrow">LIFE STREAM</p>
     <h1>生活档案</h1>
     <p>把日常里短暂出现的光、声音、地点和情绪整理成可以回看的私人记录。</p>
   </section>
@@ -20,7 +19,6 @@ const lifePosts = await getPostsByCategory('life');
       </div>
     ) : (
       <div class="empty-state">
-        <p class="eyebrow">NO RECORD</p>
         <h2>还没有生活档案</h2>
         <p>进入发布后台，写下第一条生活切片。</p>
         <a class="button" href="/admin/">发表文章</a>

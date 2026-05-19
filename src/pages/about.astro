@@ -4,132 +4,96 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const animeItems = [
   {
     title: '罪恶王冠',
-    code: 'GC',
     href: 'https://www.bilibili.com/bangumi/media/md1588/',
     image: 'https://i0.hdslb.com/bfs/bangumi/image/93e0aaf760327bbf074aff33f6ea3adf2c84ab5c.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '紫罗兰永恒花园',
-    code: 'VEG',
     href: 'https://www.bilibili.com/bangumi/media/md8892/',
     image: 'https://i0.hdslb.com/bfs/bangumi/image/6565f297b31fb4a4a0337557033426930c3b88c0.png',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '银魂',
-    code: 'GIN',
     href: 'https://www.bilibili.com/bangumi/media/md28233839/',
     image: 'https://i0.hdslb.com/bfs/bangumi/image/087b862b772ee4e644478a36c757a26db476193d.png',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '刀剑神域',
-    code: 'SAO',
     href: 'https://www.bilibili.com/bangumi/media/md24755609/',
     image: 'https://i0.hdslb.com/bfs/bangumi/fcdb9db0cc3f5c0c3aaa4ca1a9ddea6c121db471.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: 'Ｄｒ．ＳＴＯＮＥ 石纪元',
-    code: 'DRS',
     href: 'https://www.bilibili.com/bangumi/media/md28221387/',
     image: 'https://i0.hdslb.com/bfs/bangumi/image/ae05a72b11d7f409bbff9475afb13dfca081ffd1.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: 'EVA 新世纪福音战士',
-    code: 'EVA',
     href: 'https://www.bilibili.com/bangumi/media/md1635/',
     image: 'https://i0.hdslb.com/bfs/bangumi/03cd3e02df47b9200cf566c1d4048baf26f504c8.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: 'Fate/Zero 第一季',
-    code: 'FZ',
     href: 'https://www.bilibili.com/bangumi/media/md1650/',
     image: 'https://i0.hdslb.com/bfs/bangumi/46a9b18f6f7b08e30a781cf1b44594f1fb2c9e64.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '鬼灭之刃',
-    code: 'KNY',
     href: 'https://www.bilibili.com/bangumi/media/md22718131/',
     image: 'https://i0.hdslb.com/bfs/bangumi/9d9cd5a6a48428fe2e4b6ed17025707696eab47b.png',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '魔法禁书目录',
-    code: 'INDEX',
     href: 'https://www.bilibili.com/bangumi/media/md963/',
     image: 'https://i0.hdslb.com/bfs/bangumi/85ecf86a69c6f337ec7762922471eaf63020b26f.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '某科学的超电磁炮',
-    code: 'RAIL',
     href: 'https://www.bilibili.com/bangumi/media/md425/',
     image: 'https://i0.hdslb.com/bfs/bangumi/image/aad797f1f0212aba5578a1ed1c992ef1b9ff7c4b.jpg',
-    hint: 'Bilibili 番剧主页',
   },
   {
     title: '关于我转生变成史莱姆这件事',
-    code: 'SLIME',
     href: 'https://www.bilibili.com/bangumi/media/md28230008',
     image: 'https://i0.hdslb.com/bfs/bangumi/a6ff96dc0ee78b47d5198cc84acf1b524084db21.png',
-    hint: 'Bilibili 番剧主页',
   },
 ];
 
 const gameItems = [
   {
     title: '赛博朋克2077',
-    code: 'CP77',
     href: 'https://www.cyberpunk.net/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: 'Counter-Strike 2',
-    code: 'CS2',
     href: 'https://www.counter-strike.net/cs2',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/730/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: '空洞骑士系列',
-    code: 'HK',
     href: 'https://www.hollowknight.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/367520/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: 'Factorio',
-    code: 'FCT',
     href: 'https://factorio.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/427520/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: '艾尔登法环',
-    code: 'ER',
     href: 'https://en.bandainamcoent.eu/elden-ring/elden-ring',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/1245620/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: '星露谷物语',
-    code: 'SDV',
     href: 'https://www.stardewvalley.net/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/413150/header.jpg',
-    hint: '游戏官网',
   },
   {
     title: '黑神话悟空',
-    code: 'BMW',
     href: 'https://www.heishenhua.com/',
     image: 'https://cdn.cloudflare.steamstatic.com/steam/apps/2358720/header.jpg',
-    hint: '游戏官网',
   },
 ];
 
@@ -144,14 +108,12 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
 >
   <section class="about-hero section-shell reveal">
     <div class="about-hero__copy">
-      <p class="eyebrow">PROFILE DOSSIER / QINGXIAJIU</p>
       <h1>清夏玖的个人档案。</h1>
       <p>
         工科生，20岁，专业方向是嵌入式工程师。这里记录生活、技术、兴趣和灵感，也记录一个长期打磨个人系统的过程。
       </p>
     </div>
     <aside class="about-hero__badge" aria-label="个人状态">
-      <span>QXJ</span>
       <strong>Embedded Engineer</strong>
       <small>ISTP / Performer</small>
     </aside>
@@ -159,15 +121,8 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
 
   <section class="about-grid about-grid--mosaic section-shell section-block reveal" aria-label="基础资料">
     <article class="identity-card identity-card--primary identity-dossier">
-      <p class="profile-slip__label">IDENTITY</p>
       <div class="identity-license">
-        <div class="identity-license__topline" aria-hidden="true">
-          <span>QXJ-20</span>
-          <i></i>
-          <span>PRIVATE DOSSIER</span>
-        </div>
         <div class="identity-license__name">
-          <span>OPERATOR ID</span>
           <strong>清夏玖</strong>
           <small>Engineering Student / Embedded Engineer</small>
         </div>
@@ -190,30 +145,20 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
           </div>
         </dl>
       </div>
-      <div class="identity-status" aria-hidden="true">
-        <span>SYNCED</span>
-        <span>ARCHIVE NODE 04</span>
-      </div>
     </article>
 
     <a class="identity-card steam-card" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
-      <p class="profile-slip__label">ONLINE BEACON</p>
       <div>
-        <span>Steam Friend Code</span>
         <strong>{steamFriendCode}</strong>
       </div>
-      <small>点击在 Steam 搜索，或者直接复制这串好友代码。</small>
-      <em>SEARCH STEAM</em>
     </a>
 
     <article class="identity-card motto-card">
-      <p class="profile-slip__label">MOTTO</p>
       <blockquote>不试试怎么知道。</blockquote>
       <p>保持动手、验证和复盘，把想法从脑子里推进到真实世界。</p>
     </article>
 
     <article class="identity-card mbti-card">
-      <p class="profile-slip__label">MBTI</p>
       <h2>ISTP / 演奏家</h2>
       <p>
         偏向观察、拆解、动手和快速试错，喜欢在系统与现实之间找到可以落地的解法。
@@ -230,18 +175,14 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
   <section class="section-shell section-block reveal" aria-label="喜欢的番剧">
     <div class="section-heading section-heading--split">
       <div>
-        <p class="eyebrow">ANIME SIGNALS</p>
         <h2>喜欢的番剧。</h2>
       </div>
-      <p>封面会先保持折叠状态，鼠标扫过时展开成一张完整的番剧档案。</p>
     </div>
     <div class="collapsible-showcase media-showcase media-showcase--anime">
       {animeItems.map((item) => (
         <a class="media-card media-card--anime" href={item.href} target="_blank" rel="noopener noreferrer">
           <img src={item.image} alt={`${item.title} 封面图`} loading="lazy" referrerpolicy="no-referrer" />
-          <span>{item.code}</span>
           <strong>{item.title}</strong>
-          <small>{item.hint}</small>
         </a>
       ))}
     </div>
@@ -250,18 +191,14 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
   <section class="section-shell section-block reveal" aria-label="喜欢的游戏">
     <div class="section-heading section-heading--split">
       <div>
-        <p class="eyebrow">GAME ARCHIVE</p>
         <h2>喜欢的游戏。</h2>
       </div>
-      <p>游戏展柜默认压缩成一排视觉切片，鼠标停留时会打开当前档案。</p>
     </div>
     <div class="collapsible-showcase media-showcase media-showcase--games">
       {gameItems.map((item) => (
-        <a class="media-card media-card--game" href={item.href} target="_blank" rel="noopener noreferrer" data-code={item.code}>
+        <a class="media-card media-card--game" href={item.href} target="_blank" rel="noopener noreferrer">
           <img src={item.image} alt={`${item.title} 代表图`} loading="lazy" />
-          <span>{item.code}</span>
           <strong>{item.title}</strong>
-          <small>{item.hint}</small>
         </a>
       ))}
     </div>

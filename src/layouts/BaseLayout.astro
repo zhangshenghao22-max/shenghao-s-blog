@@ -11,9 +11,9 @@ interface Props {
 }
 
 const siteName = '清夏玖的博客';
-const defaultDescription = '清夏玖的高级沉浸式私人档案终端，记录生活档案、技术文章、灵感实验和个人简介。';
+const defaultDescription = '清夏玖的深色私人档案站，记录生活档案、技术文章、灵感实验和个人简介。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
-const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · Private Archive Terminal`;
+const pageTitle = title ? `${title} · ${siteName}` : siteName;
 ---
 
 <!doctype html>

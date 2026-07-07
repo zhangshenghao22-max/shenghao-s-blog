@@ -12,16 +12,35 @@
 
       document.documentElement.dataset.motionMode = reduceMotion ? 'reduced' : liteMode ? 'lite' : 'full';
 
+      const sequenceGroups = document.querySelectorAll('.entry-grid, .posts-grid, .stacked-posts, .lab-grid, .inspiration-grid, .media-showcase, .archive-list, .post-nav, .identity-license__stats');
+      sequenceGroups.forEach((group) => {
+        Array.from(group.children).forEach((item, index) => {
+          if (item instanceof HTMLElement) {
+            item.style.setProperty('--motion-index', String(Math.min(index, 10)));
+          }
+        });
+      });
+
       const revealItems = document.querySelectorAll('.reveal');
+      revealItems.forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          item.classList.add('is-visible', 'is-active');
+          item.classList.remove('is-idle');
+        }
+      });
+
       if ('IntersectionObserver' in window && !reduceMotion) {
         const observer = new IntersectionObserver((entries) => {
           for (const entry of entries) {
             entry.target.classList.toggle('is-visible', entry.isIntersecting);
+            entry.target.classList.toggle('is-active', entry.isIntersecting);
+            entry.target.classList.toggle('is-idle', !entry.isIntersecting);
           }
-        }, { threshold: 0.02, rootMargin: '0px 0px -6% 0px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
         revealItems.forEach((item) => observer.observe(item));
       } else {
-        revealItems.forEach((item) => item.classList.add('is-visible'));
+        revealItems.forEach((item) => item.classList.add('is-visible', 'is-active'));
       }
 
       const pointer = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.3 };
@@ -30,7 +49,7 @@
         document.documentElement.style.setProperty('--cursor-y', `${pointer.y}px`);
       };
 
-      const magneticSelector = '.entry-card, .post-card, .inspiration-card, .toy-card, .hero-core';
+      const magneticSelector = '.entry-card, .post-card, .inspiration-card, .toy-card, .media-card, .post-nav__item, .hero-core';
       if (!reduceMotion && finePointer && !liteMode) {
         let activeCard = null;
         let activeRect = null;
@@ -140,15 +159,15 @@
       let running = true;
       let idleId = 0;
 
-      const frameStep = 1000 / 18;
-      const gridSpacing = 108;
-      const linkMax = 96;
+      const frameStep = 1000 / 20;
+      const gridSpacing = 112;
+      const linkMax = 104;
       const linkMaxSq = linkMax * linkMax;
 
       const spawnParticles = () => {
         const area = width * height;
-        const baseCount = Math.floor(area / 110000);
-        const count = Math.min(18, Math.max(8, baseCount));
+        const baseCount = Math.floor(area / 98000);
+        const count = Math.min(22, Math.max(10, baseCount));
 
         particles.length = 0;
 
@@ -156,9 +175,9 @@
           particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.1,
-            vy: (Math.random() - 0.5) * 0.1,
-            size: Math.random() * 1 + 0.42,
+            vx: (Math.random() - 0.5) * 0.12,
+            vy: (Math.random() - 0.5) * 0.12,
+            size: Math.random() * 1.1 + 0.42,
             pulse: Math.random() * Math.PI * 2,
           });
         }
@@ -213,8 +232,8 @@
 
       const drawParticles = () => {
         for (const particle of particles) {
-          particle.x += particle.vx + (pointer.x / Math.max(1, width) - 0.5) * 0.028;
-          particle.y += particle.vy + (pointer.y / Math.max(1, height) - 0.5) * 0.028;
+          particle.x += particle.vx + (pointer.x / Math.max(1, width) - 0.5) * 0.034;
+          particle.y += particle.vy + (pointer.y / Math.max(1, height) - 0.5) * 0.032;
           particle.pulse += 0.012;
 
           if (particle.x < -20) particle.x = width + 20;
@@ -233,7 +252,7 @@
             const distSq = dx * dx + dy * dy;
 
             if (distSq < linkMaxSq) {
-              const alpha = (1 - distSq / linkMaxSq) * 0.05;
+              const alpha = (1 - distSq / linkMaxSq) * 0.065;
 
               if (alpha <= 0) {
                 continue;
@@ -250,7 +269,7 @@
         }
 
         for (const particle of particles) {
-          const alpha = 0.2 + Math.sin(particle.pulse) * 0.06;
+          const alpha = 0.22 + Math.sin(particle.pulse) * 0.07;
           ctx.fillStyle = `rgba(241, 188, 118, ${alpha})`;
           ctx.beginPath();
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
@@ -310,7 +329,7 @@
           if (!document.hidden) {
             stop();
           }
-        }, 1600);
+        }, 2200);
       };
 
       const wakeAnimation = () => {

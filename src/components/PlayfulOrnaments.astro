@@ -1,377 +1,40 @@
-<canvas class="ambient-canvas" data-ambient-canvas aria-hidden="true"></canvas>
-<div class="scan-progress" aria-hidden="true"></div>
+<div class="ambient-layer" aria-hidden="true"></div>
 
 <script is:inline>
   (() => {
-    const boot = () => {
+    const start = () => {
+      const root = document.documentElement;
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      const lowHardware = (navigator.hardwareConcurrency ?? 8) <= 4 || (navigator.deviceMemory ?? 8) <= 4;
-      const compactViewport = window.innerWidth < 1280;
-      const liteMode = !reduceMotion && (compactViewport || lowHardware);
-
-      document.documentElement.dataset.motionMode = reduceMotion ? 'reduced' : liteMode ? 'lite' : 'full';
-
-      const sequenceGroups = document.querySelectorAll('.entry-grid, .posts-grid, .stacked-posts, .lab-grid, .inspiration-grid, .media-showcase, .archive-list, .post-nav, .identity-license__stats');
-      sequenceGroups.forEach((group) => {
-        Array.from(group.children).forEach((item, index) => {
-          if (item instanceof HTMLElement) {
-            item.style.setProperty('--motion-index', String(Math.min(index, 10)));
-          }
-        });
-      });
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4;
+      if (reduceMotion || lowPower) root.dataset.motion = 'reduced';
 
       const revealItems = document.querySelectorAll('.reveal');
-      revealItems.forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          item.classList.add('is-visible', 'is-active');
-          item.classList.remove('is-idle');
-        }
-      });
-
       if ('IntersectionObserver' in window && !reduceMotion) {
         const observer = new IntersectionObserver((entries) => {
-          for (const entry of entries) {
-            entry.target.classList.toggle('is-visible', entry.isIntersecting);
-            entry.target.classList.toggle('is-active', entry.isIntersecting);
-            entry.target.classList.toggle('is-idle', !entry.isIntersecting);
-          }
-        }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+          entries.forEach((entry) => entry.target.classList.toggle('is-visible', entry.isIntersecting));
+        }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
         revealItems.forEach((item) => observer.observe(item));
       } else {
-        revealItems.forEach((item) => item.classList.add('is-visible', 'is-active'));
+        revealItems.forEach((item) => item.classList.add('is-visible'));
       }
 
-      const pointer = { x: window.innerWidth * 0.5, y: window.innerHeight * 0.3 };
-      const updateCursor = () => {
-        document.documentElement.style.setProperty('--cursor-x', `${pointer.x}px`);
-        document.documentElement.style.setProperty('--cursor-y', `${pointer.y}px`);
-      };
-
-      const magneticSelector = '.entry-card, .post-card, .inspiration-card, .toy-card, .media-card, .post-nav__item, .hero-core';
-      if (!reduceMotion && finePointer && !liteMode) {
-        let activeCard = null;
-        let activeRect = null;
-        let updatePending = false;
-
-        const clearActiveCard = () => {
-          if (!activeCard) {
-            return;
-          }
-
-          activeCard.classList.remove('magnetic-card');
-          activeCard.style.removeProperty('--magnet-x');
-          activeCard.style.removeProperty('--magnet-y');
-          activeCard.style.removeProperty('--shine-x');
-          activeCard.style.removeProperty('--shine-y');
-          activeCard = null;
-          activeRect = null;
-        };
-
-        const applyMagnet = () => {
-          updatePending = false;
-
-          if (!activeCard || !activeRect) {
-            document.documentElement.style.setProperty('--cursor-x', `${pointer.x}px`);
-            document.documentElement.style.setProperty('--cursor-y', `${pointer.y}px`);
-            return;
-          }
-
-          activeRect = activeCard.getBoundingClientRect();
-          const localX = pointer.x - activeRect.left;
-          const localY = pointer.y - activeRect.top;
-          const tx = ((localX / activeRect.width) - 0.5) * 5.5;
-          const ty = ((localY / activeRect.height) - 0.5) * 5.5;
-
-          activeCard.style.setProperty('--magnet-x', `${tx.toFixed(2)}px`);
-          activeCard.style.setProperty('--magnet-y', `${ty.toFixed(2)}px`);
-          activeCard.style.setProperty('--shine-x', `${localX.toFixed(0)}px`);
-          activeCard.style.setProperty('--shine-y', `${localY.toFixed(0)}px`);
-          document.documentElement.style.setProperty('--cursor-x', `${pointer.x}px`);
-          document.documentElement.style.setProperty('--cursor-y', `${pointer.y}px`);
-        };
-
-        const scheduleMagnet = () => {
-          if (updatePending) {
-            return;
-          }
-
-          updatePending = true;
-          window.requestAnimationFrame(applyMagnet);
-        };
-
-        document.addEventListener('pointermove', (event) => {
-          pointer.x = event.clientX;
-          pointer.y = event.clientY;
-          const target = event.target instanceof Element ? event.target.closest(magneticSelector) : null;
-
-          if (target !== activeCard) {
-            clearActiveCard();
-
-            if (target) {
-              activeCard = target;
-              activeCard.classList.add('magnetic-card');
-              activeRect = activeCard.getBoundingClientRect();
-            }
-          }
-
-          updateCursor();
-
-          if (activeCard) {
-            scheduleMagnet();
-          }
-        }, { passive: true });
-
-        document.addEventListener('pointerout', (event) => {
-          if (event.relatedTarget instanceof Element && event.relatedTarget.closest(magneticSelector)) {
-            return;
-          }
-
-          clearActiveCard();
-        }, true);
-
-        window.addEventListener('blur', clearActiveCard);
-        document.addEventListener('visibilitychange', () => {
-          if (document.hidden) {
-            clearActiveCard();
-          }
-        });
-      }
-
-      const canvas = document.querySelector('[data-ambient-canvas]');
-      if (!canvas || reduceMotion || liteMode) {
-        return;
-      }
-
-      const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
-      if (!ctx) {
-        return;
-      }
-
-      const particles = [];
-      let width = 0;
-      let height = 0;
-      let pixelRatio = 1;
-      let rafId = 0;
-      let resizeId = 0;
-      let lastFrame = 0;
-      let running = true;
-      let idleId = 0;
-
-      const frameStep = 1000 / 20;
-      const gridSpacing = 112;
-      const linkMax = 104;
-      const linkMaxSq = linkMax * linkMax;
-
-      const spawnParticles = () => {
-        const area = width * height;
-        const baseCount = Math.floor(area / 98000);
-        const count = Math.min(22, Math.max(10, baseCount));
-
-        particles.length = 0;
-
-        for (let i = 0; i < count; i += 1) {
-          particles.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            vx: (Math.random() - 0.5) * 0.12,
-            vy: (Math.random() - 0.5) * 0.12,
-            size: Math.random() * 1.1 + 0.42,
-            pulse: Math.random() * Math.PI * 2,
+      if (!reduceMotion && canHover && !lowPower) {
+        let frame = 0;
+        let x = 50;
+        let y = 30;
+        window.addEventListener('pointermove', (event) => {
+          x = (event.clientX / window.innerWidth) * 100;
+          y = (event.clientY / window.innerHeight) * 100;
+          if (!frame) frame = requestAnimationFrame(() => {
+            root.style.setProperty('--pointer-x', `${x}%`);
+            root.style.setProperty('--pointer-y', `${y}%`);
+            frame = 0;
           });
-        }
-      };
-
-      const resizeCanvas = () => {
-        resizeId = 0;
-        pixelRatio = Math.min(window.devicePixelRatio || 1, 1.2);
-        width = window.innerWidth;
-        height = window.innerHeight;
-
-        canvas.width = Math.floor(width * pixelRatio);
-        canvas.height = Math.floor(height * pixelRatio);
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-
-        spawnParticles();
-      };
-
-      const scheduleResize = () => {
-        if (resizeId) {
-          return;
-        }
-
-        resizeId = window.requestAnimationFrame(resizeCanvas);
-      };
-
-      const drawGrid = (time) => {
-        const drift = (time * 0.0035) % gridSpacing;
-
-        ctx.save();
-        ctx.strokeStyle = 'rgba(190, 210, 220, 0.09)';
-        ctx.lineWidth = 1;
-
-        for (let x = -gridSpacing + drift; x < width + gridSpacing; x += gridSpacing) {
-          ctx.beginPath();
-          ctx.moveTo(x, 0);
-          ctx.lineTo(x + pointer.x * 0.02, height);
-          ctx.stroke();
-        }
-
-        for (let y = -gridSpacing + drift; y < height + gridSpacing; y += gridSpacing) {
-          ctx.beginPath();
-          ctx.moveTo(0, y);
-          ctx.lineTo(width, y + pointer.y * 0.018);
-          ctx.stroke();
-        }
-
-        ctx.restore();
-      };
-
-      const drawParticles = () => {
-        for (const particle of particles) {
-          particle.x += particle.vx + (pointer.x / Math.max(1, width) - 0.5) * 0.034;
-          particle.y += particle.vy + (pointer.y / Math.max(1, height) - 0.5) * 0.032;
-          particle.pulse += 0.012;
-
-          if (particle.x < -20) particle.x = width + 20;
-          if (particle.x > width + 20) particle.x = -20;
-          if (particle.y < -20) particle.y = height + 20;
-          if (particle.y > height + 20) particle.y = -20;
-        }
-
-        for (let i = 0; i < particles.length; i += 1) {
-          const a = particles[i];
-
-          for (let j = i + 1; j < particles.length; j += 1) {
-            const b = particles[j];
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
-            const distSq = dx * dx + dy * dy;
-
-            if (distSq < linkMaxSq) {
-              const alpha = (1 - distSq / linkMaxSq) * 0.065;
-
-              if (alpha <= 0) {
-                continue;
-              }
-
-              ctx.strokeStyle = `rgba(134, 211, 255, ${alpha})`;
-              ctx.lineWidth = 1;
-              ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.stroke();
-            }
-          }
-        }
-
-        for (const particle of particles) {
-          const alpha = 0.22 + Math.sin(particle.pulse) * 0.07;
-          ctx.fillStyle = `rgba(241, 188, 118, ${alpha})`;
-          ctx.beginPath();
-          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      };
-
-      const tick = (time) => {
-        if (!running) {
-          return;
-        }
-
-        rafId = window.requestAnimationFrame(tick);
-
-        if (time - lastFrame < frameStep) {
-          return;
-        }
-
-        lastFrame = time;
-        ctx.clearRect(0, 0, width, height);
-        drawGrid(time);
-        drawParticles();
-      };
-
-      const start = () => {
-        if (running) {
-          return;
-        }
-
-        running = true;
-        lastFrame = 0;
-        rafId = window.requestAnimationFrame(tick);
-      };
-
-      const stop = () => {
-        if (idleId) {
-          window.clearTimeout(idleId);
-          idleId = 0;
-        }
-
-        running = false;
-
-        if (rafId) {
-          window.cancelAnimationFrame(rafId);
-          rafId = 0;
-        }
-      };
-
-      const scheduleIdleStop = () => {
-        if (idleId) {
-          window.clearTimeout(idleId);
-        }
-
-        idleId = window.setTimeout(() => {
-          idleId = 0;
-
-          if (!document.hidden) {
-            stop();
-          }
-        }, 2200);
-      };
-
-      const wakeAnimation = () => {
-        if (document.hidden) {
-          return;
-        }
-
-        if (!running) {
-          start();
-        }
-
-        scheduleIdleStop();
-      };
-
-      window.addEventListener('resize', scheduleResize, { passive: true });
-      window.addEventListener('scroll', wakeAnimation, { passive: true });
-      window.addEventListener('pointerdown', wakeAnimation, { passive: true });
-      window.addEventListener('wheel', wakeAnimation, { passive: true });
-      window.addEventListener('touchstart', wakeAnimation, { passive: true });
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          stop();
-        } else {
-          wakeAnimation();
-        }
-      });
-      window.addEventListener('pagehide', stop);
-      window.addEventListener('pageshow', () => {
-        if (!document.hidden) {
-          wakeAnimation();
-        }
-      });
-
-      resizeCanvas();
-      rafId = window.requestAnimationFrame(tick);
-      scheduleIdleStop();
+        }, { passive: true });
+      }
     };
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', boot, { once: true });
-    } else {
-      boot();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+    else start();
   })();
 </script>

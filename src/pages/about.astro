@@ -102,69 +102,29 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
 ---
 
 <BaseLayout
-  title="关于"
-  description="清夏玖的个人资料、工程方向、番剧和游戏兴趣档案。"
+  title="我是谁？"
+  description="清夏玖的个人资料、番剧和游戏。"
   pageClass="about-page"
 >
-  <section class="about-hero section-shell reveal">
-    <div class="about-hero__copy">
-      <h1>清夏玖的个人档案。</h1>
-      <p>
-        工科生，20岁，专业方向是嵌入式工程师。这里记录生活、技术、兴趣和灵感，也记录一个长期打磨个人系统的过程。
-      </p>
-    </div>
-    <aside class="about-hero__badge" aria-label="个人状态">
-      <strong>嵌入式工程师</strong>
-      <small>ISTP / 演奏家</small>
-    </aside>
+  <section class="page-heading section-shell reveal">
+    <h1>我是谁？</h1>
+    <p>清夏玖，一个喜欢试试看的工科生。</p>
   </section>
 
-  <section class="about-grid about-grid--mosaic section-shell section-block reveal" aria-label="基础资料">
-    <article class="identity-card identity-card--primary identity-dossier">
-      <div class="identity-license">
-        <div class="identity-license__name">
-          <strong>清夏玖</strong>
-          <small>工科生 / 嵌入式工程师</small>
-        </div>
-        <dl class="identity-license__stats">
-          <div>
-            <dt>名字</dt>
-            <dd>清夏玖</dd>
-          </div>
-          <div>
-            <dt>年龄</dt>
-            <dd>20岁</dd>
-          </div>
-          <div>
-            <dt>身份</dt>
-            <dd>工科生</dd>
-          </div>
-          <div>
-            <dt>专业</dt>
-            <dd>嵌入式工程师</dd>
-          </div>
-        </dl>
-      </div>
+  <section class="profile-grid section-shell section-space" aria-label="个人资料">
+    <article class="profile-name reveal">
+      <span class="profile-name__flower" aria-hidden="true">✳</span>
+      <h2>清夏玖</h2>
+      <dl><div><dt>年龄</dt><dd>20岁</dd></div><div><dt>身份</dt><dd>工科生</dd></div></dl>
     </article>
-
-    <a class="identity-card steam-card" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
-      <div>
-        <span>Steam 好友代码</span>
-        <strong>{steamFriendCode}</strong>
-        <small>用于添加好友和联机邀请。</small>
-      </div>
+    <a class="steam-card reveal" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
+      <span>Steam 好友代码</span><strong>{steamFriendCode}</strong><span class="text-link">一起玩 <span aria-hidden="true">↗</span></span>
     </a>
-
-    <article class="identity-card motto-card">
+    <article class="motto-card reveal">
       <blockquote>不试试怎么知道。</blockquote>
-      <p>保持动手、验证和复盘，把想法从脑子里推进到真实世界。</p>
     </article>
-
-    <article class="identity-card mbti-card">
+    <article class="mbti-card reveal">
       <h2>ISTP / 演奏家</h2>
-      <p>
-        偏向观察、拆解、动手和快速试错，喜欢在系统与现实之间找到可以落地的解法。
-      </p>
       <small>
         在
         <a href="https://www.16personalities.com" target="_blank" rel="noopener noreferrer">16personalities</a>
@@ -174,15 +134,11 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
     </article>
   </section>
 
-  <section class="section-shell section-block reveal" aria-label="喜欢的番剧">
-    <div class="section-heading section-heading--split">
-      <div>
-        <h2>喜欢的番剧。</h2>
-      </div>
-    </div>
-    <div class="collapsible-showcase media-showcase media-showcase--anime">
+  <section class="section-shell section-space" aria-label="喜欢的番剧">
+    <div class="section-heading reveal"><h2>喜欢的番剧</h2></div>
+    <div class="media-showcase media-showcase--anime">
       {animeItems.map((item) => (
-        <a class="media-card media-card--anime" href={item.href} target="_blank" rel="noopener noreferrer">
+        <a class="media-card media-card--anime reveal" href={item.href} target="_blank" rel="noopener noreferrer">
           <img src={item.image} alt={`${item.title} 封面图`} loading="lazy" referrerpolicy="no-referrer" />
           <strong>{item.title}</strong>
         </a>
@@ -190,15 +146,11 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
     </div>
   </section>
 
-  <section class="section-shell section-block reveal" aria-label="喜欢的游戏">
-    <div class="section-heading section-heading--split">
-      <div>
-        <h2>喜欢的游戏。</h2>
-      </div>
-    </div>
-    <div class="collapsible-showcase media-showcase media-showcase--games">
+  <section class="section-shell section-space" aria-label="喜欢的游戏">
+    <div class="section-heading reveal"><h2>喜欢的游戏</h2></div>
+    <div class="media-showcase media-showcase--games">
       {gameItems.map((item) => (
-        <a class="media-card media-card--game" href={item.href} target="_blank" rel="noopener noreferrer">
+        <a class="media-card media-card--game reveal" href={item.href} target="_blank" rel="noopener noreferrer">
           <img src={item.image} alt={`${item.title} 代表图`} loading="lazy" />
           <strong>{item.title}</strong>
         </a>

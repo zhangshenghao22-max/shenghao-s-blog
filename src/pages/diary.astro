@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPublishedDiaries } from '../lib/diary';
+const diaries = await getPublishedDiaries();
+---
+
+<BaseLayout title="日日不记" description="清夏玖偶尔写下的日常。" pageClass="diary-page">
+  <section class="page-heading section-shell reveal"><h1>日日不记</h1><p>偶尔写下，慢慢收藏。</p><a class="text-link" href="/admin/">写日记 <span aria-hidden="true">↗</span></a></section>
+  <section class="section-shell section-space diary-grid" aria-label="日记列表">
+    {diaries.length ? diaries.map((diary, index) => <div class="reveal"><PostCard diary={diary} featured={index === 0} /></div>) : <p class="empty-state">还没有写下的日记。</p>}
+  </section>
+</BaseLayout>

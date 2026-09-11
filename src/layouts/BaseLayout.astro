@@ -10,8 +10,8 @@ interface Props {
   pageClass?: string;
 }
 
-const siteName = '清夏玖的博客';
-const defaultDescription = '清夏玖的深色私人档案站，记录生活档案、技术文章、灵感实验和个人简介。';
+const siteName = '清夏玖的个人网站';
+const defaultDescription = '清夏玖的个人网站，分享生活、记忆和日常。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
 const pageTitle = title ? `${title} · ${siteName}` : siteName;
 ---
@@ -23,16 +23,11 @@ const pageTitle = title ? `${title} · ${siteName}` : siteName;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#07090d" />
+    <meta name="theme-color" content="#fbfcff" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
   </head>
   <body class={pageClass}>
-    <div class="soft-stage" aria-hidden="true">
-      <span class="glow glow--peach"></span>
-      <span class="glow glow--blue"></span>
-      <span class="glow glow--mint"></span>
-    </div>
     <PlayfulOrnaments />
     <SiteHeader />
     <main id="content" class="site-main">

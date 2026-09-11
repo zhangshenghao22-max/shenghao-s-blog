@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { render } from 'astro:content';
+import { formatDate, getDiarySlug, getDiaryUrl, getPublishedDiaries } from '../../lib/diary';
+
+export async function getStaticPaths() {
+  const diaries = await getPublishedDiaries();
+  return diaries.map((diary) => ({ params: { slug: getDiarySlug(diary) }, props: { diary } }));
+}
+
+const { diary } = Astro.props;
+const diaries = await getPublishedDiaries();
+const currentIndex = diaries.findIndex((entry) => entry.id === diary.id);
+const previous = diaries[currentIndex + 1];
+const next = diaries[currentIndex - 1];
+const { Content } = await render(diary);
+---
+
+<BaseLayout title={diary.data.title} description={diary.data.description} pageClass="article-page">
+  <article class="article-shell">
+    <header class="article-header reveal"><a class="text-link" href="/diary/">← 日日不记</a><time datetime={diary.data.pubDate.toISOString()}>{formatDate(diary.data.pubDate)}</time><h1>{diary.data.title}</h1><p>{diary.data.description}</p></header>
+    {diary.data.cover && <img class="article-cover reveal" src={diary.data.cover} alt={diary.data.coverAlt ?? ''} />}
+    <div class="article-content reveal"><Content /></div>
+    {diary.data.tags.length > 0 && <ul class="tag-list" aria-label="标签">{diary.data.tags.map((tag: string) => <li>{tag}</li>)}</ul>}
+  </article>
+  <nav class="diary-nav section-shell" aria-label="日记导航">{previous ? <a href={getDiaryUrl(previous)}>← {previous.data.title}</a> : <span></span>}{next && <a href={getDiaryUrl(next)}>{next.data.title} →</a>}</nav>
+</BaseLayout>

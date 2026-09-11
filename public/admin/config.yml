@@ -5,20 +5,17 @@ backend:
   base_url: https://decap-oauth.zhangshenghao22.workers.dev
   auth_endpoint: auth
   auth_scope: public_repo
-
 site_url: https://www.zhangshenghao.com
 display_url: https://www.zhangshenghao.com
 logo_url: /favicon.svg
 locale: zh_Hans
-
-media_folder: public/images
-public_folder: /images
-
+media_folder: public/memories/assets
+public_folder: /memories/assets
 collections:
-  - name: posts
-    label: 文章
-    label_singular: 文章
-    folder: src/content/posts
+  - name: diary
+    label: 日日不记
+    label_singular: 日记
+    folder: src/content/diary
     create: true
     delete: true
     extension: md
@@ -27,56 +24,41 @@ collections:
     identifier_field: title
     editor:
       preview: false
-    summary: "{{title}}"
     fields:
-      - label: 标题
-        name: title
-        widget: string
-      - label: 摘要
-        name: description
-        widget: text
-      - label: 发布日期
-        name: pubDate
-        widget: date
-        format: YYYY-MM-DD
-      - label: 更新日期
-        name: updatedDate
-        widget: date
-        format: YYYY-MM-DD
-        required: false
-      - label: 分类
-        name: category
-        widget: select
-        default: life
-        options:
-          - label: 生活
-            value: life
-          - label: 技术
-            value: tech
-      - label: 标签
-        name: tags
+      - { label: 标题, name: title, widget: string }
+      - { label: 摘要, name: description, widget: text }
+      - { label: 日期, name: pubDate, widget: date, format: YYYY-MM-DD }
+      - { label: 封面图, name: cover, widget: image, required: false }
+      - { label: 封面说明, name: coverAlt, widget: string, required: false }
+      - { label: 标签, name: tags, widget: list, required: false, default: [] }
+      - { label: 草稿, name: draft, widget: boolean, required: false, default: false }
+      - { label: 正文, name: body, widget: markdown }
+  - name: memories
+    label: 记忆
+    label_singular: 记忆
+    folder: src/content/memories
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    identifier_field: title
+    editor:
+      preview: false
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 日期, name: date, widget: date, format: YYYY-MM-DD }
+      - { label: 介绍, name: description, widget: text }
+      - { label: 封面图, name: cover, widget: image, required: false }
+      - { label: 封面说明, name: coverAlt, widget: string, required: false }
+      - label: 媒体
+        name: items
         widget: list
-        default: []
         required: false
-        allow_add: true
-        field:
-          label: 标签
-          name: tag
-          widget: string
-      - label: 封面图路径
-        name: cover
-        widget: string
-        required: false
-        hint: "填写 /images/xxx.svg 或 /images/uploads/xxx.png；上传图片后会保存在 public/images。"
-      - label: 封面说明
-        name: coverAlt
-        widget: string
-        required: false
-      - label: 草稿
-        name: draft
-        widget: boolean
-        default: false
-        required: false
-      - label: 正文
-        name: body
-        widget: markdown
+        fields:
+          - { label: 类型, name: type, widget: select, options: [{ label: 图片, value: image }, { label: 视频, value: video }] }
+          - { label: 文件或视频地址, name: src, widget: file, choose_url: true }
+          - { label: 视频封面, name: poster, widget: image, required: false }
+          - { label: 图片或视频说明, name: alt, widget: string, required: false }
+          - { label: 文字介绍, name: caption, widget: string, required: false }
+      - { label: 草稿, name: draft, widget: boolean, required: false, default: false }

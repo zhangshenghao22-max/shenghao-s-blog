@@ -1,9 +1,9 @@
 ﻿---
 const navItems = [
   { href: '/', label: '首页' },
-  { href: '/life/', label: '生活' },
-  { href: '/tech/', label: '技术' },
-  { href: '/about/', label: '关于' },
+  { href: '/about/', label: '我是谁？' },
+  { href: '/memories/', label: '与你分享的记忆' },
+  { href: '/diary/', label: '日日不记' },
 ];
 const pathname = Astro.url.pathname;
 ---
@@ -11,11 +11,9 @@ const pathname = Astro.url.pathname;
 <header class="site-header">
   <a class="skip-link" href="#content">跳到正文</a>
   <div class="site-header__inner">
-    <a class="brand" href="/" aria-label="清夏玖的博客首页">
-      <span class="brand__mark" aria-hidden="true">QX</span>
-      <span>
-        <span class="brand__name">清夏玖的博客</span>
-      </span>
+    <a class="brand" href="/" aria-label="清夏玖的个人网站首页">
+      <span class="brand__mark" aria-hidden="true">清</span>
+      <span class="brand__name">清夏玖</span>
     </a>
     <nav class="nav" aria-label="主导航">
       {navItems.map((item) => (

@@ -1,4 +1,7 @@
-<div class="ambient-layer" aria-hidden="true"></div>
+<div class="ambient-layer" aria-hidden="true">
+  <canvas class="ambient-canvas" data-ambient-canvas></canvas>
+  <div class="ambient-ripples" data-ambient-ripples></div>
+</div>
 
 <script is:inline>
   (() => {
@@ -7,6 +10,8 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4;
+      let pointerX = 0.5;
+      let pointerY = 0.3;
       if (reduceMotion || lowPower) root.dataset.motion = 'reduced';
 
       const revealItems = document.querySelectorAll('.reveal');
@@ -26,6 +31,8 @@
         window.addEventListener('pointermove', (event) => {
           x = (event.clientX / window.innerWidth) * 100;
           y = (event.clientY / window.innerHeight) * 100;
+          pointerX = x / 100;
+          pointerY = y / 100;
           if (!frame) frame = requestAnimationFrame(() => {
             root.style.setProperty('--pointer-x', `${x}%`);
             root.style.setProperty('--pointer-y', `${y}%`);
@@ -33,6 +40,127 @@
           });
         }, { passive: true });
       }
+
+      if (!reduceMotion && !lowPower) {
+        const rippleLayer = document.querySelector('[data-ambient-ripples]');
+        let rippleCount = 0;
+
+        document.addEventListener('pointerdown', (event) => {
+          if (!rippleLayer || rippleCount >= 3) return;
+          rippleCount += 1;
+          const ripple = document.createElement('span');
+          ripple.className = 'ambient-ripple';
+          ripple.style.left = `${event.clientX}px`;
+          ripple.style.top = `${event.clientY}px`;
+          rippleLayer.append(ripple);
+          window.setTimeout(() => {
+            ripple.remove();
+            rippleCount = Math.max(0, rippleCount - 1);
+          }, 850);
+        }, { passive: true });
+      }
+
+      const canvas = document.querySelector('[data-ambient-canvas]');
+      const reducedCanvas = reduceMotion || lowPower || !canHover || window.innerWidth <= 720 || window.matchMedia('(prefers-reduced-data: reduce)').matches;
+      if (!(canvas instanceof HTMLCanvasElement) || reducedCanvas) return;
+
+      const context = canvas.getContext('2d', { alpha: true, desynchronized: true });
+      if (!context) return;
+
+      const nodes = Array.from({ length: 16 }, (_, index) => ({
+        seed: index * 1.731,
+        x: 0,
+        y: 0,
+      }));
+      let width = 0;
+      let height = 0;
+      let resizeFrame = 0;
+      let animationFrame = 0;
+      let lastFrame = 0;
+      let active = !document.hidden;
+
+      const resize = () => {
+        resizeFrame = 0;
+        const ratio = Math.min(window.devicePixelRatio || 1, 1.25);
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = Math.floor(width * ratio);
+        canvas.height = Math.floor(height * ratio);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(ratio, 0, 0, ratio, 0, 0);
+        nodes.forEach((node, index) => {
+          node.x = width * (0.08 + (index % 8) * 0.12);
+          node.y = height * (0.14 + Math.floor(index / 8) * 0.42);
+        });
+      };
+
+      const scheduleResize = () => {
+        if (!resizeFrame) resizeFrame = requestAnimationFrame(resize);
+      };
+
+      const stop = () => {
+        active = false;
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      };
+
+      const start = () => {
+        if (active || document.hidden) return;
+        active = true;
+        lastFrame = 0;
+        animationFrame = requestAnimationFrame(draw);
+      };
+
+      const draw = (time) => {
+        if (!active || document.hidden) return;
+        animationFrame = requestAnimationFrame(draw);
+        if (time - lastFrame < 34) return;
+        lastFrame = time;
+        context.clearRect(0, 0, width, height);
+
+        nodes.forEach((node) => {
+          const wave = time * 0.00012 + node.seed;
+          node.x += Math.sin(wave) * 0.12 + (pointerX - 0.5) * 0.06;
+          node.y += Math.cos(wave * 0.8) * 0.08 + (pointerY - 0.5) * 0.04;
+          if (node.x < -40) node.x = width + 40;
+          if (node.x > width + 40) node.x = -40;
+          if (node.y < -40) node.y = height + 40;
+          if (node.y > height + 40) node.y = -40;
+        });
+
+        context.lineWidth = 1;
+        for (let index = 0; index < nodes.length - 1; index += 1) {
+          const first = nodes[index];
+          const second = nodes[index + 1];
+          context.strokeStyle = index % 2 ? 'rgba(161, 181, 220, .13)' : 'rgba(221, 190, 157, .12)';
+          context.beginPath();
+          context.moveTo(first.x, first.y);
+          context.quadraticCurveTo((first.x + second.x) / 2, (first.y + second.y) / 2 - 22, second.x, second.y);
+          context.stroke();
+        }
+
+        nodes.forEach((node, index) => {
+          context.fillStyle = index % 2 ? 'rgba(144, 170, 218, .32)' : 'rgba(215, 178, 137, .3)';
+          context.beginPath();
+          context.arc(node.x, node.y, index % 3 === 0 ? 2.2 : 1.2, 0, Math.PI * 2);
+          context.fill();
+        });
+      };
+
+      resize();
+      const readPointer = () => {
+        pointerX = (parseFloat(getComputedStyle(root).getPropertyValue('--pointer-x')) || 50) / 100;
+        pointerY = (parseFloat(getComputedStyle(root).getPropertyValue('--pointer-y')) || 30) / 100;
+      };
+      readPointer();
+      window.addEventListener('resize', scheduleResize, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) stop();
+        else start();
+      });
+      window.addEventListener('pagehide', stop, { once: true });
+      if (active) animationFrame = requestAnimationFrame(draw);
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
     else start();

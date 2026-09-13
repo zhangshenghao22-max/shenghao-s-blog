@@ -28,14 +28,20 @@
         let frame = 0;
         let x = 50;
         let y = 30;
+        let clientX = window.innerWidth / 2;
+        let clientY = window.innerHeight * .3;
         window.addEventListener('pointermove', (event) => {
-          x = (event.clientX / window.innerWidth) * 100;
-          y = (event.clientY / window.innerHeight) * 100;
+          clientX = event.clientX;
+          clientY = event.clientY;
+          x = (clientX / window.innerWidth) * 100;
+          y = (clientY / window.innerHeight) * 100;
           pointerX = x / 100;
           pointerY = y / 100;
           if (!frame) frame = requestAnimationFrame(() => {
             root.style.setProperty('--pointer-x', `${x}%`);
             root.style.setProperty('--pointer-y', `${y}%`);
+            root.style.setProperty('--pointer-shift-x', `${(clientX - window.innerWidth / 2) * 0.08}px`);
+            root.style.setProperty('--pointer-shift-y', `${(clientY - window.innerHeight / 2) * 0.06}px`);
             frame = 0;
           });
         }, { passive: true });
@@ -121,8 +127,8 @@
 
         nodes.forEach((node) => {
           const wave = time * 0.00012 + node.seed;
-          node.x += Math.sin(wave) * 0.12 + (pointerX - 0.5) * 0.06;
-          node.y += Math.cos(wave * 0.8) * 0.08 + (pointerY - 0.5) * 0.04;
+          node.x += Math.sin(wave) * 0.2 + (pointerX - 0.5) * 0.12;
+          node.y += Math.cos(wave * 0.8) * 0.14 + (pointerY - 0.5) * 0.08;
           if (node.x < -40) node.x = width + 40;
           if (node.x > width + 40) node.x = -40;
           if (node.y < -40) node.y = height + 40;
@@ -133,7 +139,7 @@
         for (let index = 0; index < nodes.length - 1; index += 1) {
           const first = nodes[index];
           const second = nodes[index + 1];
-          context.strokeStyle = index % 2 ? 'rgba(161, 181, 220, .13)' : 'rgba(221, 190, 157, .12)';
+          context.strokeStyle = index % 2 ? 'rgba(114, 151, 226, .24)' : 'rgba(210, 157, 111, .2)';
           context.beginPath();
           context.moveTo(first.x, first.y);
           context.quadraticCurveTo((first.x + second.x) / 2, (first.y + second.y) / 2 - 22, second.x, second.y);
@@ -141,9 +147,9 @@
         }
 
         nodes.forEach((node, index) => {
-          context.fillStyle = index % 2 ? 'rgba(144, 170, 218, .32)' : 'rgba(215, 178, 137, .3)';
+          context.fillStyle = index % 2 ? 'rgba(92, 139, 236, .68)' : 'rgba(214, 145, 88, .62)';
           context.beginPath();
-          context.arc(node.x, node.y, index % 3 === 0 ? 2.2 : 1.2, 0, Math.PI * 2);
+          context.arc(node.x, node.y, index % 3 === 0 ? 3.5 : 2, 0, Math.PI * 2);
           context.fill();
         });
       };

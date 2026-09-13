@@ -73,11 +73,12 @@
       const context = canvas.getContext('2d', { alpha: true, desynchronized: true });
       if (!context) return;
 
-      const nodes = Array.from({ length: 16 }, (_, index) => ({
-        seed: index * 1.731,
-        x: 0,
-        y: 0,
-      }));
+      const pointerRipples = [];
+      const addCanvasRipple = (x, y, strength = 1) => {
+        pointerRipples.push({ x, y, born: performance.now(), strength });
+        if (pointerRipples.length > 6) pointerRipples.shift();
+      };
+      let lastPointerRipple = 0;
       let width = 0;
       let height = 0;
       let resizeFrame = 0;
@@ -95,10 +96,6 @@
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
         context.setTransform(ratio, 0, 0, ratio, 0, 0);
-        nodes.forEach((node, index) => {
-          node.x = width * (0.08 + (index % 8) * 0.12);
-          node.y = height * (0.14 + Math.floor(index / 8) * 0.42);
-        });
       };
 
       const scheduleResize = () => {
@@ -125,33 +122,66 @@
         lastFrame = time;
         context.clearRect(0, 0, width, height);
 
-        nodes.forEach((node) => {
-          const wave = time * 0.00012 + node.seed;
-          node.x += Math.sin(wave) * 0.2 + (pointerX - 0.5) * 0.12;
-          node.y += Math.cos(wave * 0.8) * 0.14 + (pointerY - 0.5) * 0.08;
-          if (node.x < -40) node.x = width + 40;
-          if (node.x > width + 40) node.x = -40;
-          if (node.y < -40) node.y = height + 40;
-          if (node.y > height + 40) node.y = -40;
-        });
+        const horizon = height * .38;
+        const drawWave = (base, amplitude, length, speed, phase, color, lineWidth, alpha = 1, fillColor = '', fillDepth = 0) => {
+          const drawPath = () => {
+            context.beginPath();
+            for (let x = -40; x <= width + 40; x += 18) {
+              const progress = x / Math.max(width, 1);
+              const primary = Math.sin(progress * length + time * speed + phase);
+              const secondary = Math.sin(progress * length * 2.1 - time * speed * .62 + phase * 1.7) * .28;
+              const pointerLift = Math.exp(-Math.pow((progress - pointerX) * 4.6, 2)) * (pointerY - .5) * 42;
+              const y = base + primary * amplitude + secondary * amplitude + pointerLift;
+              if (x === -40) context.moveTo(x, y);
+              else context.lineTo(x, y);
+            }
+          };
 
-        context.lineWidth = 1;
-        for (let index = 0; index < nodes.length - 1; index += 1) {
-          const first = nodes[index];
-          const second = nodes[index + 1];
-          context.strokeStyle = index % 2 ? 'rgba(114, 151, 226, .24)' : 'rgba(210, 157, 111, .2)';
-          context.beginPath();
-          context.moveTo(first.x, first.y);
-          context.quadraticCurveTo((first.x + second.x) / 2, (first.y + second.y) / 2 - 22, second.x, second.y);
+          if (fillColor && fillDepth > 0) {
+            drawPath();
+            context.lineTo(width + 40, base + fillDepth);
+            context.lineTo(-40, base + fillDepth);
+            context.closePath();
+            context.globalAlpha = alpha;
+            context.fillStyle = fillColor;
+            context.fill();
+          }
+
+          drawPath();
+          context.globalAlpha = alpha;
+          context.strokeStyle = color;
+          context.lineWidth = lineWidth;
+          context.lineCap = 'round';
+          context.lineJoin = 'round';
           context.stroke();
-        }
+          context.globalAlpha = 1;
+        };
 
-        nodes.forEach((node, index) => {
-          context.fillStyle = index % 2 ? 'rgba(92, 139, 236, .68)' : 'rgba(214, 145, 88, .62)';
+        drawWave(horizon - 34, 15, 11, .0009, .7, 'rgba(118, 174, 220, .2)', 1.2, .62, 'rgba(164, 216, 239, .08)', 20);
+        drawWave(horizon + 6, 22, 8.5, .0011, 2.4, 'rgba(85, 151, 211, .3)', 1.8, .78, 'rgba(96, 176, 222, .11)', 28);
+        drawWave(horizon + 78, 31, 7.2, .00125, 4.1, 'rgba(53, 129, 202, .32)', 2, .84, 'rgba(54, 142, 204, .13)', 34);
+        drawWave(horizon + 164, 40, 5.8, .0014, 1.2, 'rgba(64, 145, 207, .38)', 2.4, .86, 'rgba(66, 153, 211, .15)', 42);
+        drawWave(horizon + height * .38, 52, 4.8, .00155, 3.5, 'rgba(104, 176, 220, .26)', 2.6, .72, 'rgba(104, 177, 220, .1)', 54);
+
+        const now = time;
+        for (let index = pointerRipples.length - 1; index >= 0; index -= 1) {
+          const ripple = pointerRipples[index];
+          const age = now - ripple.born;
+          if (age > 1500) {
+            pointerRipples.splice(index, 1);
+            continue;
+          }
+          const progress = age / 1500;
+          const radius = 24 + progress * Math.min(width, height) * .28 * ripple.strength;
+          const fade = (1 - progress) * .34;
+          context.globalAlpha = fade;
+          context.strokeStyle = 'rgba(83, 157, 216, 1)';
+          context.lineWidth = 1.5;
           context.beginPath();
-          context.arc(node.x, node.y, index % 3 === 0 ? 3.5 : 2, 0, Math.PI * 2);
-          context.fill();
-        });
+          context.ellipse(ripple.x, ripple.y, radius, radius * .28, 0, 0, Math.PI * 2);
+          context.stroke();
+          context.globalAlpha = 1;
+        }
       };
 
       resize();
@@ -161,6 +191,15 @@
       };
       readPointer();
       window.addEventListener('resize', scheduleResize, { passive: true });
+      window.addEventListener('pointermove', (event) => {
+        const now = performance.now();
+        if (now - lastPointerRipple < 110) return;
+        lastPointerRipple = now;
+        addCanvasRipple(event.clientX, Math.max(event.clientY, height * .28), .42);
+      }, { passive: true });
+      window.addEventListener('pointerdown', (event) => {
+        addCanvasRipple(event.clientX, event.clientY, 1.15);
+      }, { passive: true });
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) stop();
         else start();

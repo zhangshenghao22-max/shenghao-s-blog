@@ -35,7 +35,7 @@ h1, h2, h3 { font-weight: 600; line-height: 1.3; }
 
 .ambient-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: #bce8ec; }
 .ambient-layer::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(255,255,255,.22), transparent 36%, rgba(255,248,215,.08)); }
-.ambient-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .82; image-rendering: pixelated; image-rendering: crisp-edges; }
+.ambient-canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .82; image-rendering: auto; }
 
 .site-header { position: relative; z-index: 20; border-bottom: 1px solid rgba(100, 117, 149, .06); }
 .site-header__inner { width: min(1360px, calc(100% - 80px)); margin: auto; min-height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }

@@ -7,12 +7,14 @@
     const boot = () => {
       const canvas = document.querySelector('[data-ambient-canvas]');
       if (!(canvas instanceof HTMLCanvasElement)) return;
+
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const reducedData = window.matchMedia('(prefers-reduced-data: reduce)').matches;
       const lowPower = (navigator.hardwareConcurrency ?? 8) <= 4;
       const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       const context = canvas.getContext('2d', { alpha: true, desynchronized: true });
       if (!context) return;
+
       const revealItems = document.querySelectorAll('.reveal');
       if ('IntersectionObserver' in window && !reduceMotion) {
         const observer = new IntersectionObserver((entries) => entries.forEach((entry) => entry.target.classList.toggle('is-visible', entry.isIntersecting)), { threshold: .12, rootMargin: '0px 0px -8% 0px' });
@@ -22,278 +24,413 @@
       const TAU = Math.PI * 2;
       let width = 0;
       let height = 0;
-      let pixelSize = 3;
+      let dpr = 1;
       let resizeFrame = 0;
       let animationFrame = 0;
       let lastFrame = 0;
+      let lastSimulation = 0;
       let active = false;
-      let pointer = { x: -100, y: -100, moved: false };
+      let quality = 'full';
+      let gradients = {};
       const ripples = [];
-      const foamRemnants = Array.from({ length: 40 }, (_, index) => ({ seed: index * 13.71, x: (Math.sin(index * 8.13) * .5 + .5), offset: .05 + (index % 7) * .017 }));
-      const sandMarks = Array.from({ length: 34 }, (_, index) => ({ seed: index * 17.22, x: Math.sin(index * 2.3) * .5 + .5, y: .72 + (Math.sin(index * 4.4) * .5 + .5) * .25 }));
+      const foamRemnants = Array.from({ length: 34 }, (_, index) => ({
+        seed: index * 13.71,
+        x: (Math.sin(index * 8.13) * .5 + .5),
+        depth: .03 + (index % 7) * .018,
+        length: 8 + (index % 6) * 4,
+      }));
+      const sandMarks = Array.from({ length: 38 }, (_, index) => ({
+        seed: index * 17.22,
+        x: Math.sin(index * 2.3) * .5 + .5,
+        y: .72 + (Math.sin(index * 4.4) * .5 + .5) * .25,
+      }));
       const birds = [
-        { offset: .06, speed: .000035, phase: .2, scale: 1.15 },
-        { offset: .55, speed: -.000025, phase: 2.5, scale: .85 },
-        { offset: .86, speed: .000019, phase: 4.2, scale: .7 },
+        { offset: .06, speed: .000035, phase: .2, scale: 1.2, altitude: .12 },
+        { offset: .55, speed: -.000025, phase: 2.5, scale: .9, altitude: .22 },
+        { offset: .86, speed: .000019, phase: 4.2, scale: .72, altitude: .08 },
       ];
       const crabs = [
-        { x: .19, offset: .12, direction: 1, speed: .000022, phase: .4, panic: 0 },
-        { x: .57, offset: .18, direction: -1, speed: .000018, phase: 2.2, panic: 0 },
-        { x: .84, offset: .1, direction: -1, speed: .000024, phase: 4.7, panic: 0 },
+        { x: .19, lane: .12, direction: 1, speed: .000022, phase: .4, panicUntil: 0, turnAt: 0, footprints: [] },
+        { x: .57, lane: .18, direction: -1, speed: .000018, phase: 2.2, panicUntil: 0, turnAt: 0, footprints: [] },
+        { x: .84, lane: .1, direction: -1, speed: .000024, phase: 4.7, panicUntil: 0, turnAt: 0, footprints: [] },
       ];
 
-      const shoreY = (x, time, tide = 0) => height * (.49 + x * .23) + Math.sin(x * 8.4 + time * .00018) * 7 + Math.sin(x * 20 - time * .00027) * 2.5 + tide;
-      const seaY = (x, time, distance) => shoreY(x, time) - distance + Math.sin(x * 16 - time * .00032) * 5;
+      const shoreY = (x, time, tide = 0) => (
+        height * (.43 + x * .27)
+        + Math.sin(x * 8.4 + time * .00012) * 6
+        + Math.sin(x * 20 - time * .00019) * 2.3
+        + tide
+      );
+      const seaY = (x, time, distance) => (
+        shoreY(x, time) - distance
+        + Math.sin(x * 16 - time * .00022) * 4
+        + Math.sin(x * 34 + time * .00015) * 1.4
+      );
+      const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
       const resize = () => {
         resizeFrame = 0;
-        pixelSize = window.innerWidth > 1100 ? 3 : 2;
-        width = Math.ceil(window.innerWidth / pixelSize);
-        height = Math.ceil(window.innerHeight / pixelSize);
-        canvas.width = Math.max(1, width);
-        canvas.height = Math.max(1, height);
-        canvas.style.width = `${window.innerWidth}px`;
-        canvas.style.height = `${window.innerHeight}px`;
+        width = Math.max(1, window.innerWidth);
+        height = Math.max(1, window.innerHeight);
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        quality = lowPower ? 'low' : width < 720 ? 'mobile' : 'full';
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.imageSmoothingEnabled = false;
+        gradients.sea = context.createLinearGradient(0, 0, 0, height * .74);
+        gradients.sea.addColorStop(0, '#8edce1');
+        gradients.sea.addColorStop(.42, '#3da6b5');
+        gradients.sea.addColorStop(1, '#087f9c');
+        gradients.sand = context.createLinearGradient(0, height * .42, 0, height);
+        gradients.sand.addColorStop(0, '#f9e4ae');
+        gradients.sand.addColorStop(.48, '#eac982');
+        gradients.sand.addColorStop(1, '#bd8b5e');
+        gradients.sun = context.createLinearGradient(width * .45, 0, width, height * .48);
+        gradients.sun.addColorStop(0, 'rgba(255, 255, 220, 0)');
+        gradients.sun.addColorStop(.72, 'rgba(255, 249, 191, .22)');
+        gradients.sun.addColorStop(1, 'rgba(255, 238, 169, 0)');
       };
       const scheduleResize = () => { if (!resizeFrame) resizeFrame = requestAnimationFrame(resize); };
-      const toWorld = (event) => ({ x: event.clientX / pixelSize, y: event.clientY / pixelSize });
+      const toWorld = (event) => ({ x: event.clientX, y: event.clientY });
+
       const addRipple = (event, strength = 1) => {
         const point = toWorld(event);
-        if (ripples.length >= 4) ripples.shift();
-        ripples.push({ x: point.x, y: point.y, born: performance.now(), strength });
+        const now = performance.now();
+        const x = clamp(point.x / width, 0, 1);
+        if (point.y > shoreY(x, now) + 34 || point.y < 20) return;
+        if (ripples.length >= 5) ripples.shift();
+        ripples.push({ x: point.x, y: point.y, born: now, strength });
         crabs.forEach((crab) => {
           const crabX = crab.x * width;
-          const crabY = shoreY(crab.x, performance.now()) + crab.offset * height;
-          if (Math.hypot(crabX - point.x, crabY - point.y) < width * .22) {
-            crab.panic = performance.now() + 1300;
+          const crabY = shoreY(crab.x, now) + crab.lane * height;
+          if (Math.hypot(crabX - point.x, crabY - point.y) < width * .17) {
+            crab.panicUntil = now + 1400;
             crab.direction = crabX < point.x ? -1 : 1;
           }
         });
       };
 
-      const fillScene = (time) => {
-        const sky = context.createLinearGradient(0, 0, 0, height * .7);
-        sky.addColorStop(0, '#c7eef2');
-        sky.addColorStop(.45, '#84cfda');
-        sky.addColorStop(1, '#258eaa');
-        context.fillStyle = sky;
+      const drawSkyAndBeach = (time, tide) => {
+        context.fillStyle = gradients.sea;
         context.fillRect(0, 0, width, height);
-        const sand = context.createLinearGradient(0, height * .55, 0, height);
-        sand.addColorStop(0, '#f7dfa9');
-        sand.addColorStop(.55, '#e9c785');
-        sand.addColorStop(1, '#c99862');
-        context.fillStyle = sand;
+
+        context.fillStyle = 'rgba(239, 255, 235, .11)';
+        context.fillRect(0, 0, width, height * .16);
+        context.fillStyle = gradients.sun;
+        context.fillRect(width * .38, 0, width * .62, height * .54);
+
+        context.fillStyle = gradients.sand;
         context.beginPath();
-        context.moveTo(0, shoreY(0, time));
-        for (let x = 0; x <= width; x += 4) context.lineTo(x, shoreY(x / width, time));
+        context.moveTo(0, shoreY(0, time, tide));
+        for (let x = 0; x <= width; x += 12) context.lineTo(x, shoreY(x / width, time, tide));
         context.lineTo(width, height);
         context.lineTo(0, height);
         context.closePath();
         context.fill();
 
-        context.globalAlpha = .16;
-        context.fillStyle = '#fff4ba';
-        context.beginPath();
-        context.arc(width * .82, height * .18, Math.max(14, width * .035), 0, TAU);
-        context.fill();
-        context.globalAlpha = .08;
-        context.fillRect(width * .68, height * .18, width * .28, 2);
-        context.globalAlpha = .06;
-        context.fillRect(width * .58, height * .25, width * .38, 2);
+        context.globalAlpha = .23;
+        context.fillStyle = '#fff6c5';
+        context.fillRect(width * .72, height * .14, width * .15, 2);
+        context.fillRect(width * .77, height * .17, width * .1, 1);
+        context.fillRect(width * .6, height * .25, width * .18, 1);
         context.globalAlpha = 1;
 
-        sandMarks.forEach((mark) => {
+        sandMarks.forEach((mark, index) => {
           const x = mark.x * width;
-          const y = Math.max(shoreY(mark.x, time) + 24, mark.y * height);
-          context.globalAlpha = .07 + (mark.seed % 3) * .015;
-          context.fillStyle = mark.seed % 2 ? '#9e7048' : '#fff2c5';
-          context.fillRect(x, y, 3 + (mark.seed % 6), 1);
-          context.fillRect(x + 7, y + 2, 2, 1);
+          const y = Math.max(shoreY(mark.x, time, tide) + 28, mark.y * height);
+          context.globalAlpha = .08 + (index % 3) * .018;
+          context.fillStyle = index % 2 ? '#9e7048' : '#fff1be';
+          context.fillRect(Math.round(x), Math.round(y), 3 + (index % 5), 1);
+          context.fillRect(Math.round(x + 8), Math.round(y + 3), 2, 1);
         });
         context.globalAlpha = 1;
       };
 
-      const drawSeaTexture = (time) => {
-        const bands = 7;
-        for (let band = 0; band < bands; band += 1) {
-          const distance = 38 + band * 34;
-          const flow = time * (.008 + band * .001) + band * 46;
-          for (let x = -40; x < width + 40; x += 7) {
-            const drift = ((x + flow) % 86 + 86) % 86;
-            if (drift > 34) continue;
-            const progress = Math.max(0, Math.min(1, x / width));
-            const y = seaY(progress, time, distance) + Math.sin(x * .05 + band) * 2;
-            context.globalAlpha = .08 + (band % 3) * .018;
-            context.fillStyle = band % 2 ? '#bff3ee' : '#076f91';
-            context.fillRect(x, y, 10 + band, 1 + (band % 2));
-            if (drift < 10) context.fillRect(x + 4, y + 2, 4, 1);
+      const drawOpenWater = (time) => {
+        const bandCount = quality === 'mobile' ? 6 : 9;
+        for (let band = 0; band < bandCount; band += 1) {
+          const distance = 58 + band * 35;
+          const flow = time * (.006 + band * .0008) + band * 53;
+          const light = band % 3 === 0;
+          context.globalAlpha = light ? .17 : .1;
+          context.fillStyle = light ? '#c9f7e7' : '#086f91';
+          for (let x = -42; x < width + 42; x += quality === 'mobile' ? 34 : 27) {
+            const drift = ((x + flow) % 132 + 132) % 132;
+            if (drift > 79) continue;
+            const progress = clamp(x / width, 0, 1);
+            const y = seaY(progress, time, distance) + Math.sin(x * .036 + band) * 2;
+            const length = 12 + (band % 5) * 5 + (drift < 18 ? 8 : 0);
+            context.fillRect(Math.round(x), Math.round(y), length, light ? 2 : 1);
+            if (drift < 15) context.fillRect(Math.round(x + length - 3), Math.round(y + 3), 4, 1);
           }
+        }
+
+        const glints = quality === 'mobile' ? 18 : 31;
+        for (let index = 0; index < glints; index += 1) {
+          const x = ((index * 137) % 1000) / 1000 * width;
+          const progress = x / width;
+          const y = seaY(progress, time, 28 + (index % 6) * 30);
+          const drift = Math.sin(time * .00022 + index * 4.3) * 16;
+          context.globalAlpha = .12 + (index % 4) * .035;
+          context.fillStyle = index % 2 ? '#d9fae8' : '#0c718d';
+          context.fillRect(Math.round(x + drift), Math.round(y), 5 + (index % 8), 1);
         }
         context.globalAlpha = 1;
       };
 
       const drawBreaker = (time, distance, phase, opacity) => {
-        const push = Math.sin(time * .00016 + phase) * 18 + Math.sin(time * .000065 + phase) * 10;
-        for (let x = -8; x < width + 8; x += 5) {
-          const progress = Math.max(0, Math.min(1, x / width));
-          const y = shoreY(progress, time, push) - distance + Math.sin(progress * 19 + phase) * 3;
-          const foam = (Math.sin(x * .045 - time * .00033 + phase) * .5 + .5) * opacity;
-          context.globalAlpha = .1 + foam * .25;
-          context.fillStyle = '#e6fbf4';
-          context.fillRect(x, y, 3 + (x % 9), 1);
-          if (foam > .4) context.fillRect(x + 2, y - 2, 2, 1);
+        const push = Math.sin(time * .00014 + phase) * 15 + Math.sin(time * .000055 + phase) * 9;
+        const step = quality === 'mobile' ? 14 : 10;
+        for (let x = -step; x < width + step; x += step) {
+          const progress = clamp(x / width, 0, 1);
+          const y = seaY(progress, time, distance) + push + Math.sin(progress * 21 + phase) * 3;
+          const crest = (Math.sin(x * .043 - time * .00029 + phase) * .5 + .5) * opacity;
+          context.globalAlpha = .12 + crest * .34;
+          context.fillStyle = '#e8fff1';
+          context.fillRect(Math.round(x), Math.round(y), 5 + Math.round(crest * 11), crest > .58 ? 2 : 1);
+          if (crest > .64) {
+            context.fillRect(Math.round(x + 4), Math.round(y - 3), 3, 1);
+            context.fillRect(Math.round(x + 11), Math.round(y + 3), 4, 1);
+          }
         }
         context.globalAlpha = 1;
       };
 
-      const drawWash = (time, tide) => {
+      const drawShoreWash = (time, tide) => {
+        const pulse = (Math.sin(time * .00016) * .5 + .5);
+        const front = 18 + pulse * 26;
+        const step = quality === 'mobile' ? 15 : 10;
         for (let pass = 0; pass < 3; pass += 1) {
-          const push = tide + pass * 15;
+          const depth = front + pass * 13;
           context.beginPath();
-          context.moveTo(-8, shoreY(0, time, push));
-          for (let x = 0; x <= width + 8; x += 4) context.lineTo(x, shoreY(x / width, time, push));
-          for (let x = width + 8; x >= -8; x -= 4) context.lineTo(x, shoreY(x / width, time, push) + 4 + pass * 3);
+          context.moveTo(-step, shoreY(0, time, tide));
+          for (let x = 0; x <= width + step; x += step) {
+            const progress = clamp(x / width, 0, 1);
+            const local = depth + Math.sin(progress * 16 + time * .00022 + pass) * 8;
+            context.lineTo(x, shoreY(progress, time, tide) + local);
+          }
+          for (let x = width + step; x >= -step; x -= step) {
+            const progress = clamp(x / width, 0, 1);
+            context.lineTo(x, shoreY(progress, time, tide) + pass * 5);
+          }
           context.closePath();
-          context.globalAlpha = [.28, .5, .23][pass];
-          context.fillStyle = pass === 1 ? '#fffef0' : '#d9f6eb';
+          context.globalAlpha = [.18, .3, .14][pass];
+          context.fillStyle = pass === 1 ? '#fffdeb' : '#d6faeb';
           context.fill();
         }
+
+        const foamStep = quality === 'mobile' ? 20 : 14;
+        for (let x = -foamStep; x < width + foamStep; x += foamStep) {
+          const progress = clamp(x / width, 0, 1);
+          const y = shoreY(progress, time, tide) + front + Math.sin(progress * 16 + time * .00022) * 8;
+          const foam = Math.sin(x * .05 - time * .00045) * .5 + .5;
+          context.globalAlpha = .34 + foam * .28;
+          context.fillStyle = '#fffceb';
+          context.fillRect(Math.round(x), Math.round(y), 7 + Math.round(foam * 10), foam > .5 ? 2 : 1);
+          if (foam > .73) context.fillRect(Math.round(x + 4), Math.round(y + 4), 3, 1);
+        }
         context.globalAlpha = 1;
+
         foamRemnants.forEach((foam, index) => {
           const x = foam.x * width;
-          const y = shoreY(foam.x, time, tide) + foam.offset * height;
-          const drift = Math.sin(time * .00013 + foam.seed) * 4;
+          const y = shoreY(foam.x, time, tide) + foam.depth * height + Math.sin(time * .0001 + foam.seed) * 3;
           context.globalAlpha = .12 + (index % 4) * .025;
-          context.fillStyle = '#fffced';
-          context.fillRect(x + drift, y, 5 + (index % 8), 2);
-          if (index % 3 === 0) context.fillRect(x + drift + 8, y + 3, 3, 1);
+          context.fillStyle = '#fff7da';
+          context.fillRect(Math.round(x), Math.round(y), foam.length, 1);
+          if (index % 3 === 0) context.fillRect(Math.round(x + foam.length + 4), Math.round(y + 3), 3, 1);
         });
         context.globalAlpha = 1;
       };
 
+      const drawSunBeams = (time) => {
+        context.globalAlpha = .08;
+        context.fillStyle = '#fff8cf';
+        const shift = Math.sin(time * .00004) * width * .04;
+        context.beginPath();
+        context.moveTo(width * .76 + shift, 0);
+        context.lineTo(width * .91 + shift, 0);
+        context.lineTo(width * .62, height * .56);
+        context.lineTo(width * .5, height * .56);
+        context.closePath();
+        context.fill();
+        context.globalAlpha = 1;
+      };
+
       const drawBird = (bird, time) => {
-        const path = (time * bird.speed + bird.offset) % 1;
-        const x = (path * 1.24 - .12) * width;
-        const y = height * (.13 + Math.sin(path * TAU * 1.7 + bird.phase) * .065) + Math.sin(time * .0007 + bird.phase) * 2;
-        const s = bird.scale;
+        const path = ((time * bird.speed + bird.offset) % 1 + 1) % 1;
+        const x = (path * 1.28 - .14) * width;
+        const y = height * (bird.altitude + Math.sin(path * TAU * 1.7 + bird.phase) * .035);
+        const scale = bird.scale;
         const flap = Math.sin(time * .004 + bird.phase);
         context.save();
-        context.translate(x, y);
-        context.scale(s, s);
-        context.globalAlpha = .16;
-        context.fillStyle = '#397a87';
-        context.fillRect(-9, 18, 18, 2);
-        context.globalAlpha = .84;
-        context.fillStyle = '#294e5b';
-        context.fillRect(-2, -1, 6, 3);
-        context.fillRect(4, -2, 3, 2);
-        context.fillRect(7, -1, 2, 1);
-        const wingY = flap > 0 ? -5 : -1;
-        context.fillRect(-7, wingY, 5, 2);
-        context.fillRect(-11, wingY - (flap > 0 ? 2 : -1), 4, 2);
-        context.fillRect(-14, wingY - (flap > 0 ? 3 : -2), 3, 1);
-        context.fillRect(8, wingY, 5, 2);
-        context.fillRect(13, wingY - (flap > 0 ? 2 : -1), 4, 2);
-        context.fillRect(17, wingY - (flap > 0 ? 3 : -2), 3, 1);
-        context.fillStyle = '#efffff';
-        context.fillRect(-4, 0, 4, 1);
-        context.fillStyle = '#e9bf66';
-        context.fillRect(9, -1, 2, 1);
+        context.translate(Math.round(x), Math.round(y));
+        context.scale(scale, scale);
+        context.globalAlpha = .14;
+        context.fillStyle = '#295f71';
+        context.fillRect(-11, 13, 22, 2);
+        context.globalAlpha = .95;
+        context.fillStyle = '#28515f';
+        context.fillRect(-3, -1, 7, 3);
+        context.fillRect(4, -2, 4, 2);
+        context.fillRect(8, -1, 3, 1);
+        const wingY = flap > 0 ? -6 : -1;
+        context.fillRect(-8, wingY, 6, 2);
+        context.fillRect(-13, wingY - (flap > 0 ? 3 : 1), 5, 2);
+        context.fillRect(-17, wingY - (flap > 0 ? 5 : 2), 3, 1);
+        context.fillRect(9, wingY, 6, 2);
+        context.fillRect(14, wingY - (flap > 0 ? 3 : 1), 5, 2);
+        context.fillRect(19, wingY - (flap > 0 ? 5 : 2), 3, 1);
+        context.fillStyle = '#f7fff4';
+        context.fillRect(-4, 0, 5, 1);
+        context.fillStyle = '#e6bb61';
+        context.fillRect(10, -1, 3, 1);
         context.restore();
       };
 
+      const updateCrab = (crab, time) => {
+        if (!crab.turnAt) crab.turnAt = time + 1700 + (crab.phase * 400);
+        const fleeing = crab.panicUntil > time;
+        const delta = Math.min(.05, lastSimulation ? (time - lastSimulation) / 1000 : .03);
+        if (time > crab.turnAt && !fleeing) {
+          crab.direction *= -1;
+          crab.turnAt = time + 1700 + Math.abs(Math.sin(time + crab.phase)) * 2800;
+        }
+        crab.x += crab.direction * (fleeing ? .09 : .024) * delta;
+        if (crab.x < .06 || crab.x > .94) crab.direction *= -1;
+        crab.x = clamp(crab.x, .045, .955);
+        if (fleeing) crab.lane += Math.sin(time * .002 + crab.phase) * .0004;
+        crab.lane = clamp(crab.lane, .07, .28);
+        if (!fleeing && Math.floor(time / 900) !== Math.floor((time - Math.max(16, delta * 1000)) / 900)) {
+          crab.footprints.push({ x: crab.x, y: crab.lane, born: time });
+          if (crab.footprints.length > 8) crab.footprints.shift();
+        }
+      };
+
       const drawCrab = (crab, time) => {
-        const now = performance.now();
-        const fleeing = crab.panic > now;
+        updateCrab(crab, time);
+        const fleeing = crab.panicUntil > time;
         const wobble = Math.sin(time * .003 + crab.phase) * .7;
-        crab.x += crab.direction * (fleeing ? .00008 : crab.speed) * 42;
-        if (crab.x < .04 || crab.x > .96) crab.direction *= -1;
         const x = crab.x * width;
-        const y = shoreY(crab.x, time) + crab.offset * height + wobble;
-        const step = Math.sin(time * .007 + crab.phase) > 0 ? 1 : -1;
+        const y = shoreY(crab.x, time) + crab.lane * height + wobble;
+        crab.footprints.forEach((mark, index) => {
+          const age = (time - mark.born) / 5000;
+          if (age >= 1) return;
+          context.globalAlpha = (1 - age) * .18;
+          context.fillStyle = '#9b714f';
+          context.fillRect(Math.round(mark.x * width - 5 - index * 2), Math.round(shoreY(mark.x, time) + mark.y * height), 2, 1);
+          context.fillRect(Math.round(mark.x * width + 5 + index * 2), Math.round(shoreY(mark.x, time) + mark.y * height + 3), 2, 1);
+        });
         context.save();
-        context.translate(x, y);
+        context.translate(Math.round(x), Math.round(y));
+        context.scale(crab.direction, 1);
         context.globalAlpha = .28;
-        context.fillStyle = '#704a37';
-        context.fillRect(-8, 6, 17, 2);
-        context.globalAlpha = .78;
-          context.fillStyle = fleeing ? '#d56b4d' : '#a9543e';
-          context.fillRect(-6, -3, 13, 7);
-          context.fillRect(-4, -5, 9, 2);
-          context.fillRect(-8, -4, 2, 3);
-          context.fillRect(7, -4, 2, 3);
-          context.fillStyle = '#663c38';
-          context.fillRect(-3, -6, 2, 2);
-          context.fillRect(3, -6, 2, 2);
-          context.fillStyle = '#f4d68d';
-          context.fillRect(-3, -4, 1, 1);
-          context.fillRect(3, -4, 1, 1);
+        context.fillStyle = '#6d4939';
+        context.fillRect(-11, 7, 22, 2);
+        context.globalAlpha = .94;
+        context.fillStyle = fleeing ? '#db7050' : '#a84f3b';
+        context.fillRect(-7, -4, 14, 8);
+        context.fillRect(-5, -6, 10, 2);
+        context.fillRect(-10, -4, 3, 3);
+        context.fillRect(7, -4, 3, 3);
+        context.fillStyle = '#693c38';
+        context.fillRect(-4, -7, 2, 2);
+        context.fillRect(3, -7, 2, 2);
+        context.fillStyle = '#f4d58c';
+        context.fillRect(-3, -5, 1, 1);
+        context.fillRect(3, -5, 1, 1);
         context.strokeStyle = '#713c35';
         context.lineWidth = 1;
         for (let side = -1; side <= 1; side += 2) {
           context.beginPath();
-          context.moveTo(side * 4, 0); context.lineTo(side * (10 + step), -5);
-          context.moveTo(side * 4, 2); context.lineTo(side * (12 - step), 2);
-          context.moveTo(side * 3, 3); context.lineTo(side * (9 + step), 8);
+          context.moveTo(side * 4, 0); context.lineTo(side * 11, -6);
+          context.moveTo(side * 5, 2); context.lineTo(side * 13, 2);
+          context.moveTo(side * 4, 3); context.lineTo(side * 10, 8);
           context.stroke();
         }
         context.restore();
       };
 
       const drawRipples = (time) => {
-        ripples.forEach((ripple, index) => {
+        for (let index = ripples.length - 1; index >= 0; index -= 1) {
+          const ripple = ripples[index];
           const progress = Math.min(1, (time - ripple.born) / 1500);
-          if (progress >= 1) { ripples.splice(index, 1); return; }
-          context.globalAlpha = (1 - progress) * .42;
-          context.strokeStyle = '#effff7';
+          if (progress >= 1) { ripples.splice(index, 1); continue; }
+          const fade = (1 - progress) * ripple.strength;
+          context.globalAlpha = fade * .48;
+          context.strokeStyle = '#effff2';
           context.lineWidth = 1;
           context.beginPath();
-          context.ellipse(ripple.x, ripple.y, 8 + progress * 62, 3 + progress * 22, -.12, 0, TAU);
+          context.ellipse(ripple.x, ripple.y, 8 + progress * 68, 3 + progress * 25, -.12, 0, TAU);
           context.stroke();
-        });
+          context.globalAlpha = fade * .2;
+          context.beginPath();
+          context.ellipse(ripple.x, ripple.y, 18 + progress * 86, 6 + progress * 31, -.12, 0, TAU);
+          context.stroke();
+        }
         context.globalAlpha = 1;
       };
 
       const render = (time) => {
-        const tide = Math.sin(time * .00016) * 10 + Math.sin(time * .00006) * 5;
+        const tide = Math.sin(time * .00016) * 9 + Math.sin(time * .00006) * 5;
         context.clearRect(0, 0, width, height);
-        fillScene(time);
-        drawSeaTexture(time);
-        drawBreaker(time, 36, 1.1, .75);
-        drawBreaker(time, 72, 3.6, .58);
-        drawBreaker(time, 112, 5.4, .44);
-        drawWash(time, tide);
+        drawSkyAndBeach(time, tide);
+        drawOpenWater(time);
+        drawBreaker(time, 42, 1.1, .8);
+        drawBreaker(time, 82, 3.6, .58);
+        drawBreaker(time, 124, 5.4, .4);
+        drawShoreWash(time, tide);
+        drawSunBeams(time);
         birds.forEach((bird) => drawBird(bird, time));
         crabs.forEach((crab) => drawCrab(crab, time));
         drawRipples(time);
+        lastSimulation = time;
       };
       const draw = (time) => {
         if (!active || document.hidden) return;
-        if (time - lastFrame < 34) { animationFrame = requestAnimationFrame(draw); return; }
+        const frameInterval = quality === 'mobile' ? 48 : 32;
+        if (time - lastFrame < frameInterval) { animationFrame = requestAnimationFrame(draw); return; }
         lastFrame = time;
         render(time);
         animationFrame = requestAnimationFrame(draw);
       };
-      const stop = () => { active = false; if (animationFrame) cancelAnimationFrame(animationFrame); animationFrame = 0; };
-      const resume = () => { if (active || document.hidden) return; active = true; lastFrame = 0; animationFrame = requestAnimationFrame(draw); };
+      const stop = () => {
+        active = false;
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      };
+      const resume = () => {
+        if (active || document.hidden || reduceMotion || reducedData || lowPower) return;
+        active = true;
+        lastFrame = 0;
+        lastSimulation = performance.now();
+        animationFrame = requestAnimationFrame(draw);
+      };
 
       resize();
       window.addEventListener('resize', scheduleResize, { passive: true });
       let lastHoverRipple = 0;
-      window.addEventListener('pointermove', (event) => {
-        pointer = toWorld(event);
-        pointer.moved = true;
-        const now = performance.now();
-        if (now - lastHoverRipple > 220 && event.clientY < window.innerHeight * .7) {
-          lastHoverRipple = now;
-          addRipple(event, .24);
-        }
-      }, { passive: true });
+      if (canHover && !lowPower) {
+        window.addEventListener('pointermove', (event) => {
+          const now = performance.now();
+          if (now - lastHoverRipple > 260 && event.clientY < height * .72) {
+            lastHoverRipple = now;
+            addRipple(event, .2);
+          }
+        }, { passive: true });
+      }
       window.addEventListener('pointerdown', addRipple, { passive: true });
       document.addEventListener('visibilitychange', () => document.hidden ? stop() : resume());
       window.addEventListener('pagehide', stop, { once: true });
-      const animate = !reduceMotion && !reducedData && !lowPower && canHover && window.innerWidth > 720;
-      if (animate) { active = true; animationFrame = requestAnimationFrame(draw); }
-      else { render(0); }
+      const animate = !reduceMotion && !reducedData && !lowPower && width > 480;
+      if (animate) {
+        active = true;
+        animationFrame = requestAnimationFrame(draw);
+      } else {
+        render(0);
+      }
     };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
     else boot();

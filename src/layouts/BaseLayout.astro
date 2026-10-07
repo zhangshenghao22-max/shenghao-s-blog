@@ -23,11 +23,15 @@ const pageTitle = title ? `${title} · ${siteName}` : siteName;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#fbfcff" />
+    <meta name="theme-color" content="#0a1115" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
   </head>
   <body class={pageClass}>
+    <div class="boot-screen" data-boot-screen aria-hidden="true">
+      <span class="boot-screen__mark">清</span>
+      <span class="boot-screen__line"></span>
+    </div>
     <PlayfulOrnaments />
     <SiteHeader />
     <main id="content" class="site-main">
@@ -36,3 +40,23 @@ const pageTitle = title ? `${title} · ${siteName}` : siteName;
     <SiteFooter />
   </body>
 </html>
+
+<script is:inline>
+  (() => {
+    const finishBoot = () => document.querySelector('[data-boot-screen]')?.classList.add('is-done');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      finishBoot();
+      return;
+    }
+    document.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target.closest('a') : null;
+      if (!target || target.target === '_blank' || target.hasAttribute('download')) return;
+      const url = new URL(target.href, window.location.href);
+      if (url.origin !== window.location.origin || (url.pathname === window.location.pathname && url.hash)) return;
+      event.preventDefault();
+      document.body.classList.add('page-leaving');
+      window.setTimeout(() => { window.location.href = url.href; }, 220);
+    });
+    window.setTimeout(finishBoot, 520);
+  })();
+</script>

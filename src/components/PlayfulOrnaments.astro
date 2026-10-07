@@ -242,7 +242,7 @@
               const modulation = .72 + Math.sin(row * .61 + col * .27 + time * .00045) * .18;
               const radius = (1.05 + (1 - radial) * 1.15) * (mobile ? .78 : 1);
               context.globalAlpha = clamp(fade * modulation, 0, .46);
-              context.fillStyle = (row + col + fieldIndex) % 9 === 0 ? '#09b8d0' : '#17212a';
+              context.fillStyle = (row + col + fieldIndex) % 9 === 0 ? '#5bd8e4' : '#759198';
               context.beginPath();
               context.arc(Math.round(x), Math.round(y), radius, 0, TAU);
               context.fill();
@@ -349,7 +349,7 @@
         pointer.x += (pointer.targetX - pointer.x) * .09;
         pointer.y += (pointer.targetY - pointer.y) * .09;
         context.clearRect(0, 0, width, height);
-        context.fillStyle = '#fbfcff';
+        context.fillStyle = '#091115';
         context.fillRect(0, 0, width, height);
         drawGeometry(time);
         drawHalftone(time);

@@ -12,7 +12,7 @@ const pathname = Astro.url.pathname;
   <a class="skip-link" href="#content">跳到正文</a>
   <div class="site-header__inner">
     <a class="brand" href="/" aria-label="清夏玖的个人网站首页">
-      <span class="brand__mark" aria-hidden="true">清</span>
+      <span class="brand__mark" aria-hidden="true"><span>清</span></span>
       <span class="brand__name">清夏玖</span>
     </a>
     <nav class="nav" aria-label="主导航">
@@ -22,5 +22,6 @@ const pathname = Astro.url.pathname;
         </a>
       ))}
     </nav>
+    <span class="site-header__signal" aria-hidden="true"></span>
   </div>
 </header>

@@ -71,6 +71,151 @@
         context.fill();
       };
 
+      const drawStructureGrid = (time) => {
+        const left = width * (mobile ? .69 : .66);
+        const top = height * .08;
+        const right = width * 1.02;
+        const bottom = height * .58;
+        const drift = Math.sin(time * .00018) * (mobile ? 2 : 7);
+        context.save();
+        context.beginPath();
+        context.moveTo(left, 0);
+        context.lineTo(right, 0);
+        context.lineTo(right, bottom);
+        context.lineTo(left + width * .16, top);
+        context.closePath();
+        context.clip();
+        context.globalAlpha = .1;
+        context.strokeStyle = '#26333d';
+        context.lineWidth = 1;
+        for (let x = left + drift; x < right; x += mobile ? 30 : 38) {
+          context.beginPath();
+          context.moveTo(Math.round(x), 0);
+          context.lineTo(Math.round(x - width * .12), bottom);
+          context.stroke();
+        }
+        for (let y = top; y < bottom; y += mobile ? 28 : 34) {
+          context.beginPath();
+          context.moveTo(left, Math.round(y));
+          context.lineTo(right, Math.round(y + height * .045));
+          context.stroke();
+        }
+        context.globalAlpha = .18;
+        context.strokeStyle = '#08abc4';
+        context.beginPath();
+        context.moveTo(left + width * .08, 0);
+        context.lineTo(left - width * .02, bottom);
+        context.stroke();
+        context.restore();
+        context.globalAlpha = 1;
+      };
+
+      const drawOrbitDetails = (time) => {
+        const centerX = width * .78 + Math.sin(time * .0002) * (mobile ? 2 : 6);
+        const centerY = height * .42;
+        const radius = Math.min(width * .11, height * .16);
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(-.18);
+        context.globalAlpha = .18;
+        context.strokeStyle = '#18242d';
+        context.lineWidth = 1;
+        context.beginPath();
+        context.ellipse(0, 0, radius, radius * .34, 0, 0, TAU);
+        context.stroke();
+        context.globalAlpha = .34;
+        context.strokeStyle = '#08b5ce';
+        context.beginPath();
+        context.ellipse(0, 0, radius * .72, radius * .22, 0, -.55, 1.25);
+        context.stroke();
+        context.fillStyle = '#08b5ce';
+        context.fillRect(radius * .65, -2, 5, 4);
+        context.globalAlpha = .22;
+        context.fillStyle = '#17212a';
+        context.fillRect(-2, -2, 4, 4);
+        context.restore();
+        context.globalAlpha = 1;
+      };
+
+      const drawEdgeRails = (time) => {
+        const pulse = (Math.sin(time * .0011) + 1) * .5;
+        context.globalAlpha = .24;
+        context.fillStyle = '#18242d';
+        context.fillRect(width * .94, height * .12, 1, height * .3);
+        context.fillRect(width * .955, height * .12, 1, height * .17);
+        context.fillStyle = '#08b5ce';
+        context.fillRect(width * .94 - 2, height * (.18 + pulse * .16), 5, 2);
+        context.fillRect(width * .955 - 2, height * (.23 + pulse * .1), 5, 2);
+        context.globalAlpha = .16;
+        for (let index = 0; index < 6; index += 1) {
+          const y = height * .14 + index * (mobile ? 22 : 27);
+          context.fillStyle = index % 2 ? '#17212a' : '#08b5ce';
+          context.fillRect(width * .968, y, 5 + (index % 3) * 4, 1);
+        }
+        context.globalAlpha = 1;
+      };
+
+      const drawFloatingFragments = (time) => {
+        const fragments = mobile ? 10 : 18;
+        for (let index = 0; index < fragments; index += 1) {
+          const seed = index * 31.7;
+          const x = width * (.36 + ((Math.sin(seed) + 1) * .5) * .58);
+          const y = height * (.06 + ((Math.sin(seed * .7) + 1) * .5) * .82);
+          const drift = Math.sin(time * .00035 + seed) * (mobile ? 3 : 8);
+          const size = 2 + index % 4;
+          context.globalAlpha = .12 + (index % 4) * .025;
+          context.fillStyle = index % 6 === 0 ? '#08b5ce' : '#17212a';
+          context.fillRect(Math.round(x + drift), Math.round(y), size * 2, size > 3 ? 2 : 1);
+          if (index % 3 === 0) context.fillRect(Math.round(x + drift + 6), Math.round(y + 5), 2, 2);
+        }
+        context.globalAlpha = 1;
+      };
+
+      const drawGraphicMarks = (time) => {
+        const drift = Math.sin(time * .00027) * (mobile ? 2 : 6);
+        const right = width * .88 + drift;
+        const top = height * .34;
+        context.save();
+        context.translate(right, top);
+        context.rotate(-.12);
+        context.globalAlpha = .23;
+        context.strokeStyle = '#17212a';
+        context.lineWidth = 1;
+        context.strokeRect(0, 0, mobile ? 38 : 62, mobile ? 25 : 40);
+        context.strokeRect(12, 13, mobile ? 52 : 82, mobile ? 31 : 49);
+        context.globalAlpha = .48;
+        context.strokeStyle = '#08b5ce';
+        context.strokeRect(26, -11, mobile ? 28 : 45, mobile ? 17 : 28);
+        context.fillStyle = '#08b5ce';
+        context.fillRect(3, 4, mobile ? 16 : 24, 3);
+        context.fillRect(27, 21, mobile ? 8 : 14, 2);
+        context.restore();
+
+        context.globalAlpha = .22;
+        context.fillStyle = '#17212a';
+        context.beginPath();
+        context.moveTo(width * .48, height * .72);
+        context.lineTo(width * .61, height * .66);
+        context.lineTo(width * .63, height * .67);
+        context.lineTo(width * .5, height * .74);
+        context.closePath();
+        context.fill();
+        context.globalAlpha = .36;
+        context.fillStyle = '#08b5ce';
+        context.fillRect(width * .5, height * .72, mobile ? 34 : 62, 2);
+        context.fillRect(width * .55, height * .755, mobile ? 18 : 31, 1);
+
+        context.globalAlpha = .2;
+        context.strokeStyle = '#17212a';
+        context.beginPath();
+        context.moveTo(width * .03, height * .66);
+        context.lineTo(width * .19, height * .58);
+        context.moveTo(width * .07, height * .7);
+        context.lineTo(width * .23, height * .62);
+        context.stroke();
+        context.globalAlpha = 1;
+      };
+
       const drawHalftone = (time) => {
         dotFields.forEach((field, fieldIndex) => {
           const spacing = field.spacing;
@@ -134,6 +279,12 @@
           [width * .185, height * .8], [0, height * .91],
         ], '#08a8c1', .34);
         context.restore();
+
+        drawStructureGrid(time);
+        drawOrbitDetails(time);
+        drawEdgeRails(time);
+        drawFloatingFragments(time);
+        drawGraphicMarks(time);
 
         context.globalAlpha = .13;
         context.fillStyle = '#16212a';

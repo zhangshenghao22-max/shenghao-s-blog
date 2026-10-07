@@ -51,6 +51,10 @@ draft: false
 
 动效使用原生 CSS 和少量 IntersectionObserver。内容只有进入视口时才播放，背景动画在页面不可见时不运行；移动端、低性能设备和 `prefers-reduced-motion` 会自动降级。
 
+## 终端视觉素材
+
+首页主视觉使用来自 [PRTS 首页](https://prts.wiki/w/首页) 的主题图素材，来源页面标注 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)。页面结构参考 PRTS 新版首页的横幅、入口网格和信息面板布局。明日方舟相关美术版权归原权利人所有。
+
 ## 部署
 
 推送到 `main` 后，`.github/workflows/deploy.yml` 会构建并发布到 GitHub Pages。当前自定义域名为 `https://www.zhangshenghao.com/`，域名记录位于 `public/CNAME`。

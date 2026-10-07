@@ -6,77 +6,53 @@ import { getPublishedMemories, formatMemoryDate } from '../lib/memories';
 
 const diaries = await getPublishedDiaries();
 const memories = await getPublishedMemories();
+const latestDiary = diaries[0];
 const latestMemory = memories[0];
+const today = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }).format(new Date());
 ---
 
 <BaseLayout pageClass="home-page">
-  <div class="terminal-shell">
-    <section class="terminal-hero section-shell" aria-labelledby="welcome-title">
-      <div class="terminal-hero__copy reveal">
-        <div class="terminal-hero__seal" aria-hidden="true"><span>清</span></div>
+  <div class="ark-home section-shell">
+    <section class="ark-hero reveal" aria-labelledby="welcome-title">
+      <img class="ark-hero__bg" src="/images/arknights/theme-forest.png" alt="沉浸式主题视觉" loading="eager" fetchpriority="high" decoding="async" />
+      <div class="ark-hero__veil" aria-hidden="true"></div>
+      <div class="ark-hero__frame" aria-hidden="true"></div>
+      <div class="ark-hero__copy">
+        <span class="ark-hero__mark" aria-hidden="true">清</span>
         <h1 id="welcome-title">欢迎来到清夏玖的个人网站</h1>
         <p>记录生活，也分享记忆。</p>
-        <div class="terminal-actions">
-          <a class="terminal-button terminal-button--primary" href="/about/">我是谁？ <span aria-hidden="true">↗</span></a>
-          <a class="terminal-button terminal-button--quiet" href="/diary/">进入日日不记 <span aria-hidden="true">↗</span></a>
-        </div>
+        <a class="ark-hero__enter" href="#modules">进入个人终端 <span aria-hidden="true">↘</span></a>
       </div>
-
-      <div class="terminal-core reveal" aria-hidden="true">
-        <div class="terminal-core__rings"><span></span><span></span><span></span></div>
-        <div class="terminal-core__beam"></div>
-        <div class="terminal-core__node"></div>
-        <span class="terminal-core__orbit terminal-core__orbit--one"></span>
-        <span class="terminal-core__orbit terminal-core__orbit--two"></span>
-      </div>
-      <div class="terminal-hero__rail" aria-hidden="true"></div>
+      <div class="ark-hero__pager" aria-hidden="true"><span class="is-active"></span><span></span><span></span></div>
+      <span class="ark-hero__edge" aria-hidden="true"></span>
     </section>
 
-    <section id="explore" class="terminal-index section-shell" aria-labelledby="index-title">
-      <div class="terminal-section-title reveal">
-        <span class="terminal-section-title__line" aria-hidden="true"></span>
-        <h2 id="index-title">从这里开始</h2>
-      </div>
-      <div class="terminal-index__grid">
-        <a class="terminal-module terminal-module--profile reveal" href="/about/">
-          <span class="terminal-module__shape" aria-hidden="true"></span>
-          <strong>我是谁？</strong>
-          <span class="terminal-module__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="terminal-module terminal-module--memory reveal" href="/memories/">
-          <span class="terminal-module__shape" aria-hidden="true"></span>
-          <strong>与你分享的记忆</strong>
-          <span class="terminal-module__arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="terminal-module terminal-module--diary reveal" href="/diary/">
-          <span class="terminal-module__shape" aria-hidden="true"></span>
-          <strong>日日不记</strong>
-          <span class="terminal-module__arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
+    <section id="modules" class="ark-module-section section-space" aria-labelledby="modules-title">
+      <div class="ark-heading reveal"><span class="ark-heading__rule" aria-hidden="true"></span><h2 id="modules-title">个人终端</h2></div>
+      <nav class="ark-nav" aria-label="个人网站入口">
+        <a class="ark-nav__tile reveal" href="/about/"><span class="ark-nav__icon ark-nav__icon--profile" aria-hidden="true"></span><strong>我是谁？</strong></a>
+        <a class="ark-nav__tile reveal" href="/memories/"><span class="ark-nav__icon ark-nav__icon--memory" aria-hidden="true"></span><strong>与你分享的记忆</strong></a>
+        <a class="ark-nav__tile reveal" href="/diary/"><span class="ark-nav__icon ark-nav__icon--diary" aria-hidden="true"></span><strong>日日不记</strong></a>
+        <a class="ark-nav__tile reveal" href="/admin/"><span class="ark-nav__icon ark-nav__icon--write" aria-hidden="true"></span><strong>写下日记</strong></a>
+      </nav>
     </section>
 
-    {diaries.length > 0 && <section class="terminal-records section-shell section-space" aria-labelledby="records-title">
-      <div class="terminal-section-title terminal-section-title--split reveal">
-        <div><span class="terminal-section-title__line" aria-hidden="true"></span><h2 id="records-title">最近写下</h2></div>
-        <a class="terminal-link" href="/diary/">查看全部 <span aria-hidden="true">↗</span></a>
-      </div>
-      <div class="terminal-records__grid">
-        {diaries.slice(0, 2).map((diary, index) => <div class="reveal"><PostCard diary={diary} featured={index === 0} /></div>)}
+    <section class="ark-hud section-space reveal" aria-label="个人终端信息">
+      <div class="ark-clock"><strong>{today}</strong><span>清夏玖的个人记录</span></div>
+      <div class="ark-hud__signal"><span aria-hidden="true"></span><b>记忆持续更新</b></div>
+    </section>
+
+    {latestDiary && <section class="ark-record section-space" aria-labelledby="latest-title">
+      <div class="ark-heading ark-heading--split reveal"><div><span class="ark-heading__rule" aria-hidden="true"></span><h2 id="latest-title">最近写下</h2></div><a class="ark-link" href="/diary/">查看全部 <span aria-hidden="true">↗</span></a></div>
+      <div class="ark-record__grid">
+        <div class="ark-record__feature reveal"><PostCard diary={latestDiary} featured /></div>
+        {diaries.slice(1, 3).map((diary) => <div class="ark-record__side reveal"><PostCard diary={diary} /></div>)}
       </div>
     </section>}
 
-    {latestMemory && <section class="terminal-memory section-shell section-space reveal" aria-labelledby="memory-title">
-      <a class="terminal-memory__image" href="/memories/">
-        {latestMemory.data.cover && <img src={latestMemory.data.cover} alt={latestMemory.data.coverAlt ?? ''} loading="lazy" />}
-        <span class="terminal-memory__corner" aria-hidden="true"></span>
-      </a>
-      <div class="terminal-memory__copy">
-        <time datetime={latestMemory.data.date.toISOString()}>{formatMemoryDate(latestMemory.data.date)}</time>
-        <h2 id="memory-title">{latestMemory.data.title}</h2>
-        <p>{latestMemory.data.description}</p>
-        <a class="terminal-link" href="/memories/">打开记忆 <span aria-hidden="true">↗</span></a>
-      </div>
+    {latestMemory && <section class="ark-memory section-space reveal" aria-labelledby="latest-memory-title">
+      <a class="ark-memory__image" href="/memories/"><img src={latestMemory.data.cover ?? '/images/arknights/theme-forest.png'} alt={latestMemory.data.coverAlt ?? '最近的一段记忆'} loading="lazy" /></a>
+      <div class="ark-memory__copy"><time datetime={latestMemory.data.date.toISOString()}>{formatMemoryDate(latestMemory.data.date)}</time><h2 id="latest-memory-title">{latestMemory.data.title}</h2><p>{latestMemory.data.description}</p><a class="ark-link" href="/memories/">打开记忆 <span aria-hidden="true">↗</span></a></div>
     </section>}
   </div>
 </BaseLayout>

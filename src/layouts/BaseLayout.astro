@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import PlayfulOrnaments from '../components/PlayfulOrnaments.astro';
+import SeasideScene from '../components/SeasideScene.astro';
 
 interface Props {
   title?: string;
@@ -11,12 +11,21 @@ interface Props {
 }
 
 const siteName = '清夏玖的个人网站';
-const defaultDescription = '清夏玖的个人网站，记录生活、分享记忆的私人终端。';
+const defaultDescription = '清夏玖的个人网站。夏天、海风，和一些不想忘记的事。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
-const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · PERSONAL ARCHIVE`;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · SEASIDE SUMMER`;
 const origin = Astro.site?.origin ?? 'https://www.zhangshenghao.com';
 const canonical = new URL(Astro.url.pathname, origin).toString();
 const ogImage = new URL('/images/og-cover.jpg', origin).toString();
+
+const pathname = Astro.url.pathname;
+const theme = pathname === '/'
+  ? 'theme-noon'
+  : pathname.startsWith('/about')
+    ? 'theme-afternoon'
+    : pathname.startsWith('/memories')
+      ? 'theme-sunset'
+      : 'theme-dusk';
 ---
 
 <!doctype html>
@@ -31,8 +40,8 @@ const ogImage = new URL('/images/og-cover.jpg', origin).toString();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#050708" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#8ee4ff" />
+    <meta name="color-scheme" content="light" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
@@ -50,21 +59,17 @@ const ogImage = new URL('/images/og-cover.jpg', origin).toString();
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <title>{pageTitle}</title>
-    <noscript><style>.ak-boot{display:none!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
+    <noscript><style>.page-wipe{display:none!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
   </head>
-  <body id="top" class={pageClass}>
-    <div class="ak-boot" data-boot aria-hidden="true">
-      <div class="ak-boot__inner">
-        <span class="ak-boot__mark"><span>清</span></span>
-        <div class="ak-boot__copy">
-          <b>PERSONAL ARCHIVE</b>
-          <span>正在接入终端 // INITIALIZING</span>
-        </div>
-        <div class="ak-boot__bar"><i></i></div>
-        <small>QXJ-001 · PRTS LINK · SECURE</small>
-      </div>
+  <body id="top" class={`${pageClass} ${theme}`}>
+    <SeasideScene />
+    <div class="page-wipe" aria-hidden="true">
+      <svg viewBox="0 0 1440 1000" preserveAspectRatio="none">
+        <path class="page-wipe__body" d="M0 86C240 26 480 146 720 86S1200 26 1440 86V914C1200 974 960 854 720 914S240 974 0 914Z" />
+        <path class="page-wipe__foam" d="M0 86C240 26 480 146 720 86S1200 26 1440 86" />
+        <path class="page-wipe__foam" d="M0 914C240 974 480 854 720 914S1200 974 1440 914" />
+      </svg>
     </div>
-    <PlayfulOrnaments />
     <SiteHeader />
     <main id="content" class="site-main">
       <slot />
@@ -75,18 +80,7 @@ const ogImage = new URL('/images/og-cover.jpg', origin).toString();
 
 <script is:inline>
   (() => {
-    const boot = document.querySelector('[data-boot]');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const finishBoot = () => boot?.classList.add('is-done');
-    let booted = false;
-    try { booted = window.sessionStorage.getItem('qx-booted') === '1'; } catch {}
-
-    if (reduceMotion || booted) {
-      finishBoot();
-    } else {
-      try { window.sessionStorage.setItem('qx-booted', '1'); } catch {}
-      window.setTimeout(finishBoot, 640);
-    }
 
     const clocks = document.querySelectorAll('[data-clock]');
     if (clocks.length) {
@@ -95,14 +89,28 @@ const ogImage = new URL('/images/og-cover.jpg', origin).toString();
         hour12: false,
         hour: '2-digit',
         minute: '2-digit',
-        second: '2-digit',
       });
       const tick = () => {
         const value = format.format(new Date());
         clocks.forEach((clock) => { clock.textContent = value; });
       };
       tick();
-      window.setInterval(tick, 1000);
+      window.setInterval(tick, 30000);
+    }
+
+    const reveals = document.querySelectorAll('.reveal');
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+      reveals.forEach((item) => observer.observe(item));
+    } else {
+      reveals.forEach((item) => item.classList.add('is-in'));
     }
 
     document.addEventListener('click', (event) => {
@@ -113,10 +121,10 @@ const ogImage = new URL('/images/og-cover.jpg', origin).toString();
       if (url.origin !== window.location.origin) return;
       if (url.pathname === window.location.pathname && (url.hash || url.search === window.location.search)) return;
       event.preventDefault();
-      document.body.classList.add('page-leaving');
-      window.setTimeout(() => { window.location.href = url.href; }, 180);
+      document.body.classList.add('is-leaving');
+      window.setTimeout(() => { window.location.href = url.href; }, 500);
     });
 
-    window.addEventListener('pageshow', () => document.body.classList.remove('page-leaving'));
+    window.addEventListener('pageshow', () => document.body.classList.remove('is-leaving'));
   })();
 </script>

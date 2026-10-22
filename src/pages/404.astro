@@ -2,11 +2,13 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="信号丢失" description="没有找到这个页面。" pageClass="error-page">
-  <section class="ak-error section-shell">
-    <p class="ak-eyebrow">Signal Lost / 404</p>
-    <h1>404</h1>
-    <p>没有找到这个页面。它可能已被移动、删除，或者从未存在于这份档案里。</p>
-    <a class="ak-btn ak-btn--primary" href="/">返回终端 <span aria-hidden="true">→</span></a>
+<BaseLayout title="迷路了" description="没有找到这个页面。" pageClass="error-page">
+  <section class="error-sheet section-shell">
+    <span class="chapter">A LOST PAGE / 404</span>
+    <h1>迷路了</h1>
+    <p class="hand">海鸥把这一页叼走了。</p>
+    <p class="error-sheet__text">没有找到这个页面。它可能被海浪冲走，也可能从来没有被写下。</p>
+    <a class="btn btn--sun" href="/">回到海边 <span aria-hidden="true">→</span></a>
+    <span class="error-sheet__gull" aria-hidden="true"></span>
   </section>
 </BaseLayout>

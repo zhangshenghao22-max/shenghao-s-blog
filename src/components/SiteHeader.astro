@@ -7,18 +7,28 @@ const navItems = [
 ];
 const pathname = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
+const night = pathname.startsWith('/diary') || pathname.startsWith('/404');
+const weather = night
+  ? { label: '夜', temp: '26°C' }
+  : pathname.startsWith('/memories')
+    ? { label: '晴', temp: '30°C' }
+    : { label: '晴', temp: '32°C' };
 ---
 
 <header class="site-header">
   <a class="skip-link" href="#content">跳到正文</a>
   <div class="site-header__inner">
     <a class="brand" href="/" aria-label="清夏玖的个人网站首页">
-      <span class="brand__mark" aria-hidden="true"><span>清</span></span>
+      <span class="brand__mark" aria-hidden="true">
+        <span class="brand__sun"></span>
+        <span class="brand__wave"></span>
+      </span>
       <span class="brand__name">
         <b>清夏玖</b>
-        <small>PERSONAL ARCHIVE</small>
+        <small>SEASIDE ARCHIVE</small>
       </span>
     </a>
+
     <nav class="nav" aria-label="主导航">
       {navItems.map((item) => (
         <a
@@ -26,16 +36,17 @@ const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.s
           href={item.href}
           aria-current={isActive(item.href) ? 'page' : undefined}
         >
-          <small class="nav__index">{item.index}</small>
+          <small class="nav__no">{item.index}</small>
           <span class="nav__cn">{item.label}</span>
           <em class="nav__en">{item.en}</em>
         </a>
       ))}
     </nav>
-    <div class="site-header__status">
-      <span class="status-dot" aria-hidden="true"></span>
-      <span class="status-label">SYSTEM ONLINE</span>
-      <time class="status-clock" data-clock>--:--:--</time>
+
+    <div class:list={['weather', { 'weather--night': night }]}>
+      <span class="weather__icon" aria-hidden="true"></span>
+      <span class="weather__text">{weather.label} <b>{weather.temp}</b></span>
+      <time class="weather__time" data-clock>--:--</time>
     </div>
   </div>
 </header>

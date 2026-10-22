@@ -106,22 +106,30 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
   description="清夏玖的个人资料、番剧和游戏。"
   pageClass="about-page"
 >
-  <section class="page-heading section-shell reveal">
-    <p class="ak-eyebrow">Profile / Archive 001</p>
+  <section class="page-head section-shell reveal">
+    <span class="chapter">CHAPTER 02 / PROFILE</span>
     <h1>我是谁？</h1>
-    <p>清夏玖，一个喜欢试试看的工科生。</p>
+    <p class="hand page-head__note">清夏玖，一个喜欢试试看的工科生。</p>
+    <span class="page-head__stamp" aria-hidden="true">SEASIDE ID</span>
   </section>
 
   <section class="profile-grid section-shell section-space" aria-label="个人资料">
     <article class="profile-name reveal">
-      <span class="profile-name__flower" aria-hidden="true">✳</span>
+      <span class="profile-name__sun" aria-hidden="true"></span>
+      <span class="profile-name__wave" aria-hidden="true"></span>
+      <p class="hand profile-name__kicker">SEASIDE ID / QXJ-001</p>
       <h2>清夏玖</h2>
       <dl><div><dt>年龄</dt><dd>20岁</dd></div><div><dt>身份</dt><dd>工科生</dd></div></dl>
+      <span class="profile-name__stamp" aria-hidden="true">20</span>
     </article>
     <a class="steam-card reveal" href={steamSearchUrl} target="_blank" rel="noopener noreferrer" aria-label={`在 Steam 搜索好友代码 ${steamFriendCode}`}>
-      <span>Steam 好友代码</span><strong>{steamFriendCode}</strong><span class="text-link">一起玩 <span aria-hidden="true">↗</span></span>
+      <span class="steam-card__label">Steam 好友代码</span>
+      <strong>{steamFriendCode}</strong>
+      <span class="text-link">一起玩 <span aria-hidden="true">↗</span></span>
+      <span class="steam-card__perf" aria-hidden="true"></span>
     </a>
     <article class="motto-card reveal">
+      <span class="motto-card__tape" aria-hidden="true"></span>
       <blockquote>不试试怎么知道。</blockquote>
     </article>
     <article class="mbti-card reveal">
@@ -135,8 +143,11 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
     </article>
   </section>
 
-  <section class="section-shell section-space" aria-label="喜欢的番剧">
-    <div class="section-heading reveal"><h2>喜欢的番剧</h2></div>
+  <section class="section-shell section-space scrapbook" aria-label="喜欢的番剧">
+    <div class="section-heading reveal">
+      <h2>喜欢的番剧</h2>
+      <span class="hand">看到就会想起夏天的那些</span>
+    </div>
     <div class="media-showcase media-showcase--anime">
       {animeItems.map((item) => (
         <a class="media-card media-card--anime reveal" href={item.href} target="_blank" rel="noopener noreferrer">
@@ -147,8 +158,11 @@ const steamSearchUrl = `https://steamcommunity.com/search/users/#text=${steamFri
     </div>
   </section>
 
-  <section class="section-shell section-space" aria-label="喜欢的游戏">
-    <div class="section-heading reveal"><h2>喜欢的游戏</h2></div>
+  <section class="section-shell section-space scrapbook" aria-label="喜欢的游戏">
+    <div class="section-heading reveal">
+      <h2>喜欢的游戏</h2>
+      <span class="hand">在屏幕里度过的夏天</span>
+    </div>
     <div class="media-showcase media-showcase--games">
       {gameItems.map((item) => (
         <a class="media-card media-card--game reveal" href={item.href} target="_blank" rel="noopener noreferrer">

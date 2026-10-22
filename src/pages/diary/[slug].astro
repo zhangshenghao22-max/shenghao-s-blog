@@ -18,10 +18,25 @@ const { Content } = await render(diary);
 
 <BaseLayout title={diary.data.title} description={diary.data.description} pageClass="article-page">
   <article class="article-shell">
-    <header class="article-header reveal"><p class="ak-eyebrow">Log Entry</p><a class="text-link" href="/diary/">← 日日不记</a><time datetime={diary.data.pubDate.toISOString()}>{formatDate(diary.data.pubDate)}</time><h1>{diary.data.title}</h1><p>{diary.data.description}</p></header>
-    {diary.data.cover && <img class="article-cover reveal" src={diary.data.cover} alt={diary.data.coverAlt ?? ''} />}
+    <span class="article-paper__tape" aria-hidden="true"></span>
+    <header class="article-header reveal">
+      <span class="chapter">A PAGE FROM MY SUMMER</span>
+      <a class="text-link" href="/diary/">← 日日不记</a>
+      <time datetime={diary.data.pubDate.toISOString()}>{formatDate(diary.data.pubDate)}</time>
+      <h1>{diary.data.title}</h1>
+      <p class="hand article-header__note">{diary.data.description}</p>
+    </header>
+    {diary.data.cover && (
+      <figure class="article-cover reveal">
+        <img src={diary.data.cover} alt={diary.data.coverAlt ?? ''} />
+        <span class="article-cover__tape" aria-hidden="true"></span>
+      </figure>
+    )}
     <div class="article-content reveal"><Content /></div>
-    {diary.data.tags.length > 0 && <ul class="tag-list" aria-label="标签">{diary.data.tags.map((tag: string) => <li>{tag}</li>)}</ul>}
+    {diary.data.tags.length > 0 && (
+      <ul class="tag-list" aria-label="标签">{diary.data.tags.map((tag: string) => <li>{tag}</li>)}</ul>
+    )}
+    <p class="article-end hand" aria-hidden="true">— 夏天还在继续 —</p>
   </article>
   <nav class="diary-nav section-shell" aria-label="日记导航">{previous ? <a href={getDiaryUrl(previous)}>← {previous.data.title}</a> : <span></span>}{next && <a href={getDiaryUrl(next)}>{next.data.title} →</a>}</nav>
 </BaseLayout>

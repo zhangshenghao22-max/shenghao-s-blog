@@ -5,23 +5,29 @@ const memories = await getPublishedMemories();
 ---
 
 <BaseLayout title="与你分享的记忆" description="清夏玖珍藏的照片与视频。" pageClass="memories-page">
-  <section class="page-heading section-shell reveal">
-    <p class="ak-eyebrow">Memory Archive / 003</p>
+  <section class="page-head section-shell reveal">
+    <span class="chapter">CHAPTER 03 / MEMORY</span>
     <h1>与你分享的记忆</h1>
-    <p>一些舍不得忘记的瞬间。</p>
+    <p class="hand page-head__note">一些舍不得忘记的瞬间。</p>
+    <span class="page-head__stamp" aria-hidden="true">PHOTO ALBUM</span>
   </section>
   <div class="section-shell memories-list">
     {memories.map((memory) => <section class="memory-group section-space">
-      <header class="memory-group__heading reveal"><time datetime={memory.data.date.toISOString()}>{formatMemoryDate(memory.data.date)}</time><h2>{memory.data.title}</h2><p>{memory.data.description}</p></header>
+      <header class="memory-group__heading reveal">
+        <span class="memory-group__date hand">{formatMemoryDate(memory.data.date)}</span>
+        <h2>{memory.data.title}</h2>
+        <p>{memory.data.description}</p>
+      </header>
       <div class="memory-wall">{memory.data.items.map((item, index) => <figure class:list={["memory-item", "reveal", { 'memory-item--wide': index === 0 }]}>
         {item.type === 'image' ? <a href={item.src} data-lightbox><img src={item.src} alt={item.alt ?? memory.data.title} loading="lazy" /></a> : <video src={item.src} poster={item.poster} controls playsinline preload="metadata" aria-label={item.alt ?? item.caption ?? memory.data.title}></video>}
-        {item.caption && <figcaption>{item.caption}</figcaption>}
+        {item.caption && <figcaption class="hand">{item.caption}</figcaption>}
+        <span class="memory-item__tape" aria-hidden="true"></span>
       </figure>)}</div>
     </section>)}
     {!memories.length && (
-      <div class="ak-empty">
-        <span class="ak-empty__code">NO MEMORY / 000</span>
-        <p>还没有收藏的记忆。</p>
+      <div class="empty-letter section-space">
+        <span class="hand">还没有收藏的记忆。</span>
+        <p>等第一张照片被海浪送回来。</p>
       </div>
     )}
   </div>

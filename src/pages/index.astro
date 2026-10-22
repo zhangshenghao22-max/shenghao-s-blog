@@ -6,227 +6,201 @@ import { getPublishedMemories } from '../lib/memories';
 const diaries = await getPublishedDiaries();
 const memories = await getPublishedMemories();
 const latestDiary = diaries[0];
-const secondaryDiaries = diaries.slice(1, 3);
 const latestMemory = memories[0];
 
 const shortDate = (date: Date) => date.toISOString().slice(0, 10).replaceAll('-', '.');
-const logCount = String(diaries.length).padStart(2, '0');
-const memoCount = String(memories.length).padStart(2, '0');
 const latestLogDate = latestDiary ? shortDate(latestDiary.data.pubDate) : 'NO RECORD';
 const latestMemoDate = latestMemory ? shortDate(latestMemory.data.date) : 'NO RECORD';
+const logCount = String(diaries.length).padStart(2, '0');
+const memoCount = String(memories.length).padStart(2, '0');
 ---
 
 <BaseLayout pageClass="home-page">
-  <section class="ak-hero" aria-labelledby="welcome-title">
-    <picture class="ak-hero__media">
-      <source
-        type="image/webp"
-        srcset="/images/arknights/theme-forest-960.webp 960w, /images/arknights/theme-forest-1560.webp 1560w"
-        sizes="100vw"
-      />
-      <img
-        src="/images/arknights/theme-forest.png"
-        alt=""
-        width="1560"
-        height="500"
-        loading="eager"
-        fetchpriority="high"
-        decoding="async"
-      />
-    </picture>
-    <span class="ak-hero__shade" aria-hidden="true"></span>
-    <span class="ak-hero__grid" aria-hidden="true"></span>
-    <span class="ak-hero__frame" aria-hidden="true"></span>
-
-    <div class="ak-hero__top" aria-hidden="true">
-      <span><b>QXJ</b> // PERSONAL TERMINAL</span>
-      <span class="ak-hero__top-right"><span>ARCHIVE 001</span><i></i><span>PRTS LINK / STABLE</span></span>
+  <section class="hero" aria-labelledby="welcome-title">
+    <div class="bunting" aria-hidden="true">
+      <i style="--d: 0s"></i><i style="--d: .2s"></i><i style="--d: .4s"></i>
+      <i style="--d: .1s"></i><i style="--d: .3s"></i><i style="--d: .5s"></i>
+      <i style="--d: .15s"></i><i style="--d: .35s"></i>
     </div>
 
-    <div class="ak-hero__copy">
-      <p class="ak-eyebrow">Qing Xia Jiu · Personal Archive</p>
-      <h1 id="welcome-title">
-        清夏玖
-        <em>QING XIA JIU / QXJ-001</em>
-      </h1>
-      <p class="ak-hero__lead">记录生活，也分享记忆。</p>
-      <div class="ak-hero__actions">
-        <a class="ak-btn ak-btn--primary" href="#modules">进入终端 <span aria-hidden="true">→</span></a>
-        <a class="ak-btn" href="/about/">查看档案</a>
+    <div class="hero__postcard">
+      <span class="tape tape--tl" aria-hidden="true"></span>
+      <span class="tape tape--br" aria-hidden="true"></span>
+      <p class="hero__kicker">WELCOME TO MY SUMMER</p>
+      <h1 id="welcome-title"><span class="hero__title">清夏玖的个人网站</span></h1>
+      <p class="hero__lead">记录生活，也分享记忆。</p>
+      <p class="hero__hand">今年夏天，也一起看海吧。</p>
+      <div class="hero__actions">
+        <a class="btn btn--sun" href="#modules">走进海边 <span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="/about/">我是谁？</a>
       </div>
+      <span class="hero__stamp" aria-hidden="true">SEASIDE<br />QXJ · 2026</span>
     </div>
 
-    <span class="ak-hero__side" aria-hidden="true">Archive / QXJ-001 / East 8</span>
-
-    <div class="ak-hero__foot">
-      <div class="ak-hero__stat">
-        <small>Latest Log</small>
-        <b>{latestLogDate}</b>
-      </div>
-      <div class="ak-hero__stat">
-        <small>Archive</small>
-        <b>{logCount} LOGS / {memoCount} MEMOS</b>
-      </div>
-      <div class="ak-hero__stat">
-        <small>Local Time · UTC+8</small>
-        <b><time data-clock>--:--:--</time></b>
-      </div>
-      <span class="ak-hero__scroll" aria-hidden="true">Scroll <i></i></span>
+    <div class="hero__tags" aria-hidden="true">
+      <span class="tag tag--sun">SEA 26°C</span>
+      <span class="tag tag--paper">WIND 3m/s</span>
     </div>
+
+    <a class="hero__scroll" href="#modules">
+      <span>SCROLL</span>
+      <i aria-hidden="true"></i>
+    </a>
   </section>
 
-  <section id="modules" class="ak-section" aria-labelledby="modules-title">
-    <header class="ak-section__head reveal">
-      <span class="ak-section__index" aria-hidden="true">01</span>
-      <div class="ak-section__title">
-        <p class="ak-eyebrow">Access Modules</p>
+  <div class="sea-ticker" aria-hidden="true">
+    <div class="sea-ticker__track">
+      <span class="sea-ticker__group">夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i> 浪花 <i>·</i> 夕阳 <i>·</i> 冰棒 <i>·</i> 沙滩 <i>·</i> 夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i></span>
+      <span class="sea-ticker__group">夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i> 浪花 <i>·</i> 夕阳 <i>·</i> 冰棒 <i>·</i> 沙滩 <i>·</i> 夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i></span>
+    </div>
+  </div>
+
+  <section id="modules" class="scene-section" aria-labelledby="modules-title">
+    <header class="section-head reveal">
+      <span class="chapter">CHAPTER 01</span>
+      <div>
         <h2 id="modules-title">个人终端</h2>
+        <p class="hand">海边的三个入口</p>
       </div>
-      <span class="ak-section__line" aria-hidden="true"></span>
-      <span class="ak-section__meta">04 Entries</span>
+      <span class="section-head__line" aria-hidden="true"></span>
+      <span class="section-head__meta">03 SPOTS</span>
     </header>
 
-    <nav class="ak-menu" aria-label="个人网站入口">
-      <a class="ak-menu__item reveal" href="/about/">
-        <span class="ak-menu__num" aria-hidden="true">01</span>
-        <span class="ak-menu__body"><b>我是谁？</b><em>Profile / Archive</em></span>
-        <span class="ak-menu__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" />
-            <circle cx="12" cy="10.2" r="2.1" />
-            <path d="M8.6 16.2c.7-1.9 2-2.8 3.4-2.8s2.7.9 3.4 2.8" />
-          </svg>
+    <nav class="postcards" aria-label="个人网站入口">
+      <a class="postcard postcard--profile reveal" href="/about/">
+        <span class="postcard__no">01</span>
+        <span class="postcard__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><rect x="8" y="15" width="48" height="34" rx="3" /><circle cx="22" cy="29" r="6" /><path d="M14 44c2-6 14-6 16 0M38 27h11M38 34h11M38 41h7" /></svg>
         </span>
-        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+        <b>我是谁？</b>
+        <em>PROFILE</em>
+        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
+        <span class="postcard__pin" aria-hidden="true"></span>
       </a>
 
-      <a class="ak-menu__item reveal" href="/memories/">
-        <span class="ak-menu__num" aria-hidden="true">02</span>
-        <span class="ak-menu__body"><b>与你分享的记忆</b><em>Memory / Archive</em></span>
-        <span class="ak-menu__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <rect x="3.5" y="6" width="17" height="12.5" />
-            <circle cx="12" cy="12.2" r="3.1" />
-            <path d="M8 6l1.4-2h5.2L16 6" />
-          </svg>
+      <a class="postcard postcard--memory reveal" href="/memories/">
+        <span class="postcard__no">02</span>
+        <span class="postcard__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="30" rx="3" /><circle cx="32" cy="33" r="8" /><path d="M18 18l4-6h20l4 6" /><circle cx="47" cy="25" r="2" /></svg>
         </span>
-        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+        <b>与你分享的记忆</b>
+        <em>MEMORY</em>
+        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
+        <span class="postcard__pin" aria-hidden="true"></span>
       </a>
 
-      <a class="ak-menu__item reveal" href="/diary/">
-        <span class="ak-menu__num" aria-hidden="true">03</span>
-        <span class="ak-menu__body"><b>日日不记</b><em>Log / Archive</em></span>
-        <span class="ak-menu__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <path d="M6 3.5h10.5L19 6v14.5H6z" />
-            <path d="M9 8h7M9 11.5h7M9 15h4.5" />
-          </svg>
+      <a class="postcard postcard--diary reveal" href="/diary/">
+        <span class="postcard__no">03</span>
+        <span class="postcard__art" aria-hidden="true">
+          <svg viewBox="0 0 64 64"><path d="M15 10h28l6 6v38H15z" /><path d="M22 22h20M22 30h20M22 38h13" /><path d="M48 52c4-7 8-7 12 0" /></svg>
         </span>
-        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
-      </a>
-
-      <a class="ak-menu__item reveal" href="/admin/">
-        <span class="ak-menu__num" aria-hidden="true">04</span>
-        <span class="ak-menu__body"><b>写下日记</b><em>Terminal / Write</em></span>
-        <span class="ak-menu__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
-            <path d="M4.5 19.5 8 18.7 19 7.7l-2.7-2.7L5.3 16 4.5 19.5Z" />
-            <path d="m14.6 6.7 2.7 2.7M4.5 19.5 8 18.7" />
-          </svg>
-        </span>
-        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+        <b>日日不记</b>
+        <em>DIARY</em>
+        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
+        <span class="postcard__pin" aria-hidden="true"></span>
       </a>
     </nav>
   </section>
 
-  <section class="ak-section" aria-labelledby="latest-title">
-    <header class="ak-section__head reveal">
-      <span class="ak-section__index" aria-hidden="true">02</span>
-      <div class="ak-section__title">
-        <p class="ak-eyebrow">Recent Log</p>
+  <section class="scene-section" aria-labelledby="latest-title">
+    <header class="section-head reveal">
+      <span class="chapter">CHAPTER 02</span>
+      <div>
         <h2 id="latest-title">最近写下</h2>
+        <p class="hand">夹在日记本里的那一页</p>
       </div>
-      <span class="ak-section__line" aria-hidden="true"></span>
-      <span class="ak-section__meta"><a href="/diary/">查看全部 ↗</a></span>
+      <span class="section-head__line" aria-hidden="true"></span>
+      <span class="section-head__meta">{logCount} PAGES</span>
     </header>
 
     {latestDiary ? (
-      <>
-        <article class="ak-log reveal">
-          <div class="ak-log__media">
-            {latestDiary.data.cover ? (
-              <img src={latestDiary.data.cover} alt={latestDiary.data.coverAlt ?? ''} loading="lazy" />
-            ) : (
-              <span class="ak-log__blank" aria-hidden="true"><b>LOG</b><small>NO VISUAL DATA</small></span>
-            )}
+      <div class="notebook reveal">
+        <span class="notebook__rings" aria-hidden="true"></span>
+        <div class="notebook__page notebook__page--photo">
+          {latestDiary.data.cover ? (
+            <img src={latestDiary.data.cover} alt={latestDiary.data.coverAlt ?? ''} loading="lazy" />
+          ) : (
+            <span class="notebook__doodle" aria-hidden="true">
+              <span class="doodle-sun"></span>
+              <span class="doodle-sea"></span>
+              <b>LOG</b>
+            </span>
+          )}
+          <time class="notebook__date" datetime={latestDiary.data.pubDate.toISOString()}>{latestLogDate}</time>
+          <span class="tape tape--photo" aria-hidden="true"></span>
+        </div>
+        <div class="notebook__page notebook__page--text">
+          <p class="hand notebook__kicker">THIS SUMMER</p>
+          <h3><a href={getDiaryUrl(latestDiary)}>{latestDiary.data.title}</a></h3>
+          <p class="notebook__excerpt">{latestDiary.data.description}</p>
+          <div class="tags">
+            {latestDiary.data.tags.map((tag) => <span>{tag}</span>)}
           </div>
-          <div class="ak-log__body">
-            <div class="ak-log__meta">
-              <time datetime={latestDiary.data.pubDate.toISOString()}>{shortDate(latestDiary.data.pubDate)}</time>
-              <span>Log Entry / 001</span>
-            </div>
-            <h3><a href={getDiaryUrl(latestDiary)}>{latestDiary.data.title}</a></h3>
-            <p>{latestDiary.data.description}</p>
-            <div class="ak-log__foot">
-              <div class="ak-log__tags">
-                {latestDiary.data.tags.map((tag) => <span>{tag}</span>)}
-              </div>
-              <a class="ak-btn ak-btn--sm" href={getDiaryUrl(latestDiary)}>阅读全文 <span aria-hidden="true">→</span></a>
-            </div>
-          </div>
-        </article>
-
-        {secondaryDiaries.length > 0 && (
-          <div class="ak-log__more">
-            {secondaryDiaries.map((diary) => (
-              <a href={getDiaryUrl(diary)}>
-                <small>{shortDate(diary.data.pubDate)}</small>
-                <b>{diary.data.title}</b>
-              </a>
-            ))}
-          </div>
-        )}
-      </>
+          <a class="btn btn--ink" href={getDiaryUrl(latestDiary)}>读这一页 <span aria-hidden="true">→</span></a>
+          <span class="notebook__scribble" aria-hidden="true">~</span>
+        </div>
+      </div>
     ) : (
-      <div class="ak-empty reveal">
-        <span class="ak-empty__code">NO RECORDS / 000</span>
-        <p>还没有公开的日记。写下第一行，终端就会开始记录。</p>
-        <a class="ak-btn ak-btn--sm" href="/admin/">写下第一篇 <span aria-hidden="true">→</span></a>
+      <div class="notebook notebook--empty reveal">
+        <span class="notebook__rings" aria-hidden="true"></span>
+        <div class="notebook__page notebook__page--photo">
+          <span class="notebook__doodle" aria-hidden="true">
+            <span class="doodle-sun"></span>
+            <span class="doodle-sea"></span>
+            <b>NO LOG</b>
+          </span>
+          <span class="notebook__date">BLANK PAGE</span>
+        </div>
+        <div class="notebook__page notebook__page--text">
+          <p class="hand notebook__kicker">STILL WAITING</p>
+          <h3>这个夏天，还没有写下什么。</h3>
+          <p class="notebook__excerpt">有些日子先留白，等海风慢慢把它填满。</p>
+          <a class="btn btn--ink" href="/diary/">去日记本看看 <span aria-hidden="true">→</span></a>
+        </div>
       </div>
     )}
   </section>
 
-  <section class="ak-section" aria-labelledby="memory-title">
-    <header class="ak-section__head reveal">
-      <span class="ak-section__index" aria-hidden="true">03</span>
-      <div class="ak-section__title">
-        <p class="ak-eyebrow">Memory Archive</p>
+  <section class="scene-section" aria-labelledby="memory-title">
+    <header class="section-head reveal">
+      <span class="chapter">CHAPTER 03</span>
+      <div>
         <h2 id="memory-title">与你分享的记忆</h2>
+        <p class="hand">晒在沙滩上的照片</p>
       </div>
-      <span class="ak-section__line" aria-hidden="true"></span>
-      <span class="ak-section__meta">{memoCount} Memos</span>
+      <span class="section-head__line" aria-hidden="true"></span>
+      <span class="section-head__meta">{memoCount} MEMOS</span>
     </header>
 
     {latestMemory ? (
-      <a class="ak-memory reveal" href="/memories/">
-        <img
-          src={latestMemory.data.cover ?? '/images/arknights/theme-forest-1560.webp'}
-          alt={latestMemory.data.coverAlt ?? latestMemory.data.title}
-          loading="lazy"
-        />
-        <span class="ak-memory__shade" aria-hidden="true"></span>
-        <span class="ak-memory__index">MEM-001 / {latestMemoDate}</span>
-        <div class="ak-memory__copy">
-          <span class="ak-tag">Memory / {latestMemoDate}</span>
-          <h3>{latestMemory.data.title}</h3>
-          <p>{latestMemory.data.description}</p>
-          <span class="ak-btn ak-btn--sm">打开记忆 <span aria-hidden="true">→</span></span>
+      <div class="album reveal">
+        <a class="polaroid" href="/memories/">
+          <span class="polaroid__tape" aria-hidden="true"></span>
+          <span class="polaroid__photo">
+            <img
+              src={latestMemory.data.cover ?? '/memories/assets/ocean-backdrop.jpg'}
+              alt={latestMemory.data.coverAlt ?? latestMemory.data.title}
+              loading="lazy"
+            />
+          </span>
+          <span class="polaroid__caption">
+            <span class="hand">MEM-001 / {latestMemoDate}</span>
+            <b>{latestMemory.data.title}</b>
+            <small>{latestMemory.data.description}</small>
+          </span>
+          <span class="polaroid__go">翻开相册 <i aria-hidden="true">→</i></span>
+        </a>
+        <div class="album__note">
+          <span class="hand">夏天会过去，照片会留下来。</span>
+          <span class="album__stamp">{memoCount} MEMORIES</span>
         </div>
-      </a>
+      </div>
     ) : (
-      <div class="ak-empty reveal">
-        <span class="ak-empty__code">NO MEMORY / 000</span>
-        <p>还没有收藏的记忆。</p>
+      <div class="album album--empty reveal">
+        <div class="empty-letter">
+          <span class="hand">还没有收藏的记忆。</span>
+          <p>等第一张照片被海浪送回来。</p>
+        </div>
       </div>
     )}
   </section>

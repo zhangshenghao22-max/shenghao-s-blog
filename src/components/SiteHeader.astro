@@ -9,20 +9,17 @@ const pathname = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 const night = pathname.startsWith('/diary') || pathname.startsWith('/404');
 const weather = night
-  ? { label: '夜', temp: '26°C' }
+  ? { label: '夜', temp: '25°C' }
   : pathname.startsWith('/memories')
-    ? { label: '晴', temp: '30°C' }
-    : { label: '晴', temp: '32°C' };
+    ? { label: '晴', temp: '28°C' }
+    : { label: '晴', temp: '30°C' };
 ---
 
 <header class="site-header">
   <a class="skip-link" href="#content">跳到正文</a>
   <div class="site-header__inner">
     <a class="brand" href="/" aria-label="清夏玖的个人网站首页">
-      <span class="brand__mark" aria-hidden="true">
-        <span class="brand__sun"></span>
-        <span class="brand__wave"></span>
-      </span>
+      <span class="brand__mark" aria-hidden="true"><span>清</span></span>
       <span class="brand__name">
         <b>清夏玖</b>
         <small>SEASIDE ARCHIVE</small>
@@ -36,7 +33,7 @@ const weather = night
           href={item.href}
           aria-current={isActive(item.href) ? 'page' : undefined}
         >
-          <small class="nav__no">{item.index}</small>
+          <span class="nav__no">{item.index}</span>
           <span class="nav__cn">{item.label}</span>
           <em class="nav__en">{item.en}</em>
         </a>

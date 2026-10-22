@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="清夏玖">
-  <rect width="64" height="64" rx="14" fill="#fffaf0"/>
-  <circle cx="32" cy="25" r="11" fill="#ffd166"/>
-  <path d="M4 40c8-6 16-6 24 0s16 6 24 0v9c-8 6-16 6-24 0s-16-6-24 0z" fill="#2aa8c6"/>
-  <path d="M4 47c8-6 16-6 24 0s16 6 24 0v3c-8 6-16 6-24 0s-16-6-24 0z" fill="#0c7597"/>
-  <circle cx="32" cy="25" r="18" fill="none" stroke="#18313c" stroke-width="2" opacity=".18"/>
+  <rect width="64" height="64" rx="14" fill="#071c2c"/>
+  <circle cx="32" cy="30" r="16" fill="none" stroke="#f8fbfc" stroke-width="1.5"/>
+  <path d="M12 40c7-4 13-4 20 0s13 4 20 0" fill="none" stroke="#ffd39a" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="39" cy="23" r="3.5" fill="#ffd39a"/>
 </svg>

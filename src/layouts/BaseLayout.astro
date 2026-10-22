@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import SeasideScene from '../components/SeasideScene.astro';
+import AnimeBackdrop from '../components/AnimeBackdrop.astro';
 
 interface Props {
   title?: string;
@@ -19,13 +19,11 @@ const canonical = new URL(Astro.url.pathname, origin).toString();
 const ogImage = new URL('/images/og-cover.jpg', origin).toString();
 
 const pathname = Astro.url.pathname;
-const theme = pathname === '/'
-  ? 'theme-noon'
-  : pathname.startsWith('/about')
-    ? 'theme-afternoon'
-    : pathname.startsWith('/memories')
-      ? 'theme-sunset'
-      : 'theme-dusk';
+const theme = pathname.startsWith('/memories')
+  ? 'theme-gold'
+  : pathname.startsWith('/diary') || pathname.startsWith('/404')
+    ? 'theme-night'
+    : 'theme-day';
 ---
 
 <!doctype html>
@@ -40,7 +38,7 @@ const theme = pathname === '/'
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#8ee4ff" />
+    <meta name="theme-color" content="#071c2c" />
     <meta name="color-scheme" content="light" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href={canonical} />
@@ -59,17 +57,11 @@ const theme = pathname === '/'
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <title>{pageTitle}</title>
-    <noscript><style>.page-wipe{display:none!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
+    <noscript><style>.page-wipe{display:none!important}.reveal{opacity:1!important;transform:none!important;filter:none!important}</style></noscript>
   </head>
   <body id="top" class={`${pageClass} ${theme}`}>
-    <SeasideScene />
-    <div class="page-wipe" aria-hidden="true">
-      <svg viewBox="0 0 1440 1000" preserveAspectRatio="none">
-        <path class="page-wipe__body" d="M0 86C240 26 480 146 720 86S1200 26 1440 86V914C1200 974 960 854 720 914S240 974 0 914Z" />
-        <path class="page-wipe__foam" d="M0 86C240 26 480 146 720 86S1200 26 1440 86" />
-        <path class="page-wipe__foam" d="M0 914C240 974 480 854 720 914S1200 974 1440 914" />
-      </svg>
-    </div>
+    <AnimeBackdrop />
+    <div class="page-wipe" aria-hidden="true"><span class="page-wipe__line"></span></div>
     <SiteHeader />
     <main id="content" class="site-main">
       <slot />
@@ -107,10 +99,44 @@ const theme = pathname === '/'
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+      }, { threshold: .14, rootMargin: '0px 0px -8% 0px' });
       reveals.forEach((item) => observer.observe(item));
     } else {
       reveals.forEach((item) => item.classList.add('is-in'));
+    }
+
+    const onScroll = () => {
+      document.documentElement.classList.toggle('is-scrolled', window.scrollY > 28);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      const media = hero.querySelector('.hero__media');
+      const copy = hero.querySelector('.hero__copy');
+      let target = window.scrollY || 0;
+      let current = target;
+      let frame = 0;
+      const update = () => {
+        frame = 0;
+        current += (target - current) * .12;
+        if (media) media.style.transform = `translate3d(0, ${(current * .16).toFixed(1)}px, 0) scale(1.035)`;
+        if (copy) copy.style.opacity = String(Math.max(0, 1 - current / (window.innerHeight * .86)));
+        if (Math.abs(target - current) > .5) frame = requestAnimationFrame(update);
+      };
+      if (!reduceMotion) {
+        window.addEventListener('scroll', () => {
+          target = window.scrollY || 0;
+          if (!frame) frame = requestAnimationFrame(update);
+        }, { passive: true });
+        hero.addEventListener('pointermove', (event) => {
+          const rect = hero.getBoundingClientRect();
+          hero.style.setProperty('--mx', `${((event.clientX - rect.left) / rect.width * 100).toFixed(1)}%`);
+          hero.style.setProperty('--my', `${((event.clientY - rect.top) / rect.height * 100).toFixed(1)}%`);
+        }, { passive: true });
+      }
+      update();
     }
 
     document.addEventListener('click', (event) => {
@@ -122,7 +148,7 @@ const theme = pathname === '/'
       if (url.pathname === window.location.pathname && (url.hash || url.search === window.location.search)) return;
       event.preventDefault();
       document.body.classList.add('is-leaving');
-      window.setTimeout(() => { window.location.href = url.href; }, 500);
+      window.setTimeout(() => { window.location.href = url.href; }, 520);
     });
 
     window.addEventListener('pageshow', () => document.body.classList.remove('is-leaving'));

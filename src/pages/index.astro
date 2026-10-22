@@ -16,191 +16,169 @@ const memoCount = String(memories.length).padStart(2, '0');
 ---
 
 <BaseLayout pageClass="home-page">
-  <section class="hero" aria-labelledby="welcome-title">
-    <div class="bunting" aria-hidden="true">
-      <i style="--d: 0s"></i><i style="--d: .2s"></i><i style="--d: .4s"></i>
-      <i style="--d: .1s"></i><i style="--d: .3s"></i><i style="--d: .5s"></i>
-      <i style="--d: .15s"></i><i style="--d: .35s"></i>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__media">
+      <img src="/images/summer/hero.jpg" alt="" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
     </div>
+    <span class="hero__shade" aria-hidden="true"></span>
+    <span class="hero__flare" aria-hidden="true"></span>
+    <span class="hero__grain" aria-hidden="true"></span>
+    <span class="hero__frame" aria-hidden="true"></span>
 
-    <div class="hero__postcard">
-      <span class="tape tape--tl" aria-hidden="true"></span>
-      <span class="tape tape--br" aria-hidden="true"></span>
-      <p class="hero__kicker">WELCOME TO MY SUMMER</p>
-      <h1 id="welcome-title"><span class="hero__title">清夏玖的个人网站</span></h1>
+    <div class="hero__copy">
+      <p class="hero__kicker">SEASIDE SUMMER / 2026</p>
+      <h1 id="hero-title">
+        <span>清夏玖的个人网站</span>
+        <em>QING XIA JIU · PERSONAL ARCHIVE</em>
+      </h1>
       <p class="hero__lead">记录生活，也分享记忆。</p>
       <p class="hero__hand">今年夏天，也一起看海吧。</p>
       <div class="hero__actions">
-        <a class="btn btn--sun" href="#modules">走进海边 <span aria-hidden="true">→</span></a>
+        <a class="btn btn--light" href="#modules">走进海边 <span aria-hidden="true">→</span></a>
         <a class="btn btn--ghost" href="/about/">我是谁？</a>
       </div>
-      <span class="hero__stamp" aria-hidden="true">SEASIDE<br />QXJ · 2026</span>
     </div>
 
-    <div class="hero__tags" aria-hidden="true">
-      <span class="tag tag--sun">SEA 26°C</span>
-      <span class="tag tag--paper">WIND 3m/s</span>
+    <p class="hero__vertical" aria-hidden="true">海辺の夏、忘れない。</p>
+    <div class="hero__meta" aria-hidden="true">
+      <span>35.3°N / 139.5°E</span>
+      <span>晴 / 30°C</span>
     </div>
-
-    <a class="hero__scroll" href="#modules">
-      <span>SCROLL</span>
-      <i aria-hidden="true"></i>
-    </a>
+    <a class="hero__scroll" href="#modules"><span>SCROLL</span><i aria-hidden="true"></i></a>
   </section>
 
-  <div class="sea-ticker" aria-hidden="true">
-    <div class="sea-ticker__track">
-      <span class="sea-ticker__group">夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i> 浪花 <i>·</i> 夕阳 <i>·</i> 冰棒 <i>·</i> 沙滩 <i>·</i> 夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i></span>
-      <span class="sea-ticker__group">夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i> 浪花 <i>·</i> 夕阳 <i>·</i> 冰棒 <i>·</i> 沙滩 <i>·</i> 夏天 <i>·</i> 海风 <i>·</i> 蝉鸣 <i>·</i> 汽水 <i>·</i></span>
+  <div class="film-ticker" aria-hidden="true">
+    <div class="film-ticker__track">
+      <span>海辺の夏 <i>·</i> SUMMER ARCHIVE <i>·</i> 蝉の声 <i>·</i> 青い海 <i>·</i> 風の通り道 <i>·</i> 夕凪 <i>·</i> 海辺の夏 <i>·</i> SUMMER ARCHIVE <i>·</i> 蝉の声 <i>·</i> 青い海 <i>·</i></span>
+      <span>海辺の夏 <i>·</i> SUMMER ARCHIVE <i>·</i> 蝉の声 <i>·</i> 青い海 <i>·</i> 風の通り道 <i>·</i> 夕凪 <i>·</i> 海辺の夏 <i>·</i> SUMMER ARCHIVE <i>·</i> 蝉の声 <i>·</i> 青い海 <i>·</i></span>
     </div>
   </div>
 
   <section id="modules" class="scene-section" aria-labelledby="modules-title">
     <header class="section-head reveal">
-      <span class="chapter">CHAPTER 01</span>
+      <span class="section-head__no">01</span>
       <div>
+        <p class="section-head__en">Access / Modules</p>
         <h2 id="modules-title">个人终端</h2>
-        <p class="hand">海边的三个入口</p>
       </div>
       <span class="section-head__line" aria-hidden="true"></span>
-      <span class="section-head__meta">03 SPOTS</span>
+      <span class="section-head__meta">03</span>
     </header>
 
-    <nav class="postcards" aria-label="个人网站入口">
-      <a class="postcard postcard--profile reveal" href="/about/">
-        <span class="postcard__no">01</span>
-        <span class="postcard__art" aria-hidden="true">
-          <svg viewBox="0 0 64 64"><rect x="8" y="15" width="48" height="34" rx="3" /><circle cx="22" cy="29" r="6" /><path d="M14 44c2-6 14-6 16 0M38 27h11M38 34h11M38 41h7" /></svg>
+    <nav class="portals" aria-label="个人网站入口">
+      <a class="portal reveal" href="/about/">
+        <span class="portal__no">01</span>
+        <span class="portal__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><rect x="7" y="12" width="34" height="24" rx="2" /><circle cx="18" cy="23" r="4" /><path d="M11 32c1.4-4 12-4 14 0M30 22h7M30 28h7" /></svg>
         </span>
         <b>我是谁？</b>
-        <em>PROFILE</em>
-        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
-        <span class="postcard__pin" aria-hidden="true"></span>
+        <em>Profile / 档案</em>
+        <span class="portal__desc">关于我、番剧和游戏</span>
+        <span class="portal__arrow" aria-hidden="true">→</span>
       </a>
 
-      <a class="postcard postcard--memory reveal" href="/memories/">
-        <span class="postcard__no">02</span>
-        <span class="postcard__art" aria-hidden="true">
-          <svg viewBox="0 0 64 64"><rect x="8" y="18" width="48" height="30" rx="3" /><circle cx="32" cy="33" r="8" /><path d="M18 18l4-6h20l4 6" /><circle cx="47" cy="25" r="2" /></svg>
+      <a class="portal reveal" href="/memories/">
+        <span class="portal__no">02</span>
+        <span class="portal__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><rect x="7" y="15" width="34" height="22" rx="2" /><circle cx="24" cy="26" r="6" /><path d="M15 15l3-5h12l3 5" /><circle cx="35" cy="21" r="1.6" /></svg>
         </span>
         <b>与你分享的记忆</b>
-        <em>MEMORY</em>
-        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
-        <span class="postcard__pin" aria-hidden="true"></span>
+        <em>Memory / 记忆</em>
+        <span class="portal__desc">照片、视频和舍不得忘记的瞬间</span>
+        <span class="portal__arrow" aria-hidden="true">→</span>
       </a>
 
-      <a class="postcard postcard--diary reveal" href="/diary/">
-        <span class="postcard__no">03</span>
-        <span class="postcard__art" aria-hidden="true">
-          <svg viewBox="0 0 64 64"><path d="M15 10h28l6 6v38H15z" /><path d="M22 22h20M22 30h20M22 38h13" /><path d="M48 52c4-7 8-7 12 0" /></svg>
+      <a class="portal reveal" href="/diary/">
+        <span class="portal__no">03</span>
+        <span class="portal__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M12 7h20l5 5v29H12z" /><path d="M18 17h14M18 23h14M18 29h9" /></svg>
         </span>
         <b>日日不记</b>
-        <em>DIARY</em>
-        <span class="postcard__go">翻开 <i aria-hidden="true">→</i></span>
-        <span class="postcard__pin" aria-hidden="true"></span>
+        <em>Diary / 日志</em>
+        <span class="portal__desc">偶尔写下，慢慢收藏</span>
+        <span class="portal__arrow" aria-hidden="true">→</span>
       </a>
     </nav>
   </section>
 
   <section class="scene-section" aria-labelledby="latest-title">
     <header class="section-head reveal">
-      <span class="chapter">CHAPTER 02</span>
+      <span class="section-head__no">02</span>
       <div>
+        <p class="section-head__en">Recent / Log</p>
         <h2 id="latest-title">最近写下</h2>
-        <p class="hand">夹在日记本里的那一页</p>
       </div>
       <span class="section-head__line" aria-hidden="true"></span>
-      <span class="section-head__meta">{logCount} PAGES</span>
+      <span class="section-head__meta">{logCount}</span>
     </header>
 
     {latestDiary ? (
-      <div class="notebook reveal">
-        <span class="notebook__rings" aria-hidden="true"></span>
-        <div class="notebook__page notebook__page--photo">
+      <article class="log-panel reveal">
+        <div class="log-panel__media">
           {latestDiary.data.cover ? (
             <img src={latestDiary.data.cover} alt={latestDiary.data.coverAlt ?? ''} loading="lazy" />
           ) : (
-            <span class="notebook__doodle" aria-hidden="true">
-              <span class="doodle-sun"></span>
-              <span class="doodle-sea"></span>
-              <b>LOG</b>
-            </span>
+            <span class="log-panel__blank" aria-hidden="true"><b>LOG</b><small>NO VISUAL</small></span>
           )}
-          <time class="notebook__date" datetime={latestDiary.data.pubDate.toISOString()}>{latestLogDate}</time>
-          <span class="tape tape--photo" aria-hidden="true"></span>
         </div>
-        <div class="notebook__page notebook__page--text">
-          <p class="hand notebook__kicker">THIS SUMMER</p>
-          <h3><a href={getDiaryUrl(latestDiary)}>{latestDiary.data.title}</a></h3>
-          <p class="notebook__excerpt">{latestDiary.data.description}</p>
-          <div class="tags">
-            {latestDiary.data.tags.map((tag) => <span>{tag}</span>)}
+        <div class="log-panel__body">
+          <div class="log-panel__meta">
+            <time datetime={latestDiary.data.pubDate.toISOString()}>{latestLogDate}</time>
+            <span>Entry / 001</span>
           </div>
-          <a class="btn btn--ink" href={getDiaryUrl(latestDiary)}>读这一页 <span aria-hidden="true">→</span></a>
-          <span class="notebook__scribble" aria-hidden="true">~</span>
+          <h3><a href={getDiaryUrl(latestDiary)}>{latestDiary.data.title}</a></h3>
+          <p>{latestDiary.data.description}</p>
+          <div class="log-panel__foot">
+            <div class="tags">
+              {latestDiary.data.tags.map((tag) => <span>{tag}</span>)}
+            </div>
+            <a class="link-arrow" href={getDiaryUrl(latestDiary)}>阅读全文 <span aria-hidden="true">→</span></a>
+          </div>
         </div>
-      </div>
+      </article>
     ) : (
-      <div class="notebook notebook--empty reveal">
-        <span class="notebook__rings" aria-hidden="true"></span>
-        <div class="notebook__page notebook__page--photo">
-          <span class="notebook__doodle" aria-hidden="true">
-            <span class="doodle-sun"></span>
-            <span class="doodle-sea"></span>
-            <b>NO LOG</b>
-          </span>
-          <span class="notebook__date">BLANK PAGE</span>
-        </div>
-        <div class="notebook__page notebook__page--text">
-          <p class="hand notebook__kicker">STILL WAITING</p>
-          <h3>这个夏天，还没有写下什么。</h3>
-          <p class="notebook__excerpt">有些日子先留白，等海风慢慢把它填满。</p>
-          <a class="btn btn--ink" href="/diary/">去日记本看看 <span aria-hidden="true">→</span></a>
-        </div>
+      <div class="empty-panel reveal">
+        <span class="empty-panel__mark" aria-hidden="true">NO RECORD</span>
+        <p class="empty-panel__jp" aria-hidden="true">まだ、何も書いていない。</p>
+        <h3>这个夏天，还没有写下什么。</h3>
+        <p>有些日子先留白，等海风慢慢把它填满。</p>
+        <a class="link-arrow" href="/diary/">去日记本看看 <span aria-hidden="true">→</span></a>
       </div>
     )}
   </section>
 
   <section class="scene-section" aria-labelledby="memory-title">
     <header class="section-head reveal">
-      <span class="chapter">CHAPTER 03</span>
+      <span class="section-head__no">03</span>
       <div>
+        <p class="section-head__en">Memory / Archive</p>
         <h2 id="memory-title">与你分享的记忆</h2>
-        <p class="hand">晒在沙滩上的照片</p>
       </div>
       <span class="section-head__line" aria-hidden="true"></span>
-      <span class="section-head__meta">{memoCount} MEMOS</span>
+      <span class="section-head__meta">{memoCount}</span>
     </header>
 
     {latestMemory ? (
-      <div class="album reveal">
-        <a class="polaroid" href="/memories/">
-          <span class="polaroid__tape" aria-hidden="true"></span>
-          <span class="polaroid__photo">
-            <img
-              src={latestMemory.data.cover ?? '/memories/assets/ocean-backdrop.jpg'}
-              alt={latestMemory.data.coverAlt ?? latestMemory.data.title}
-              loading="lazy"
-            />
-          </span>
-          <span class="polaroid__caption">
-            <span class="hand">MEM-001 / {latestMemoDate}</span>
-            <b>{latestMemory.data.title}</b>
-            <small>{latestMemory.data.description}</small>
-          </span>
-          <span class="polaroid__go">翻开相册 <i aria-hidden="true">→</i></span>
-        </a>
-        <div class="album__note">
-          <span class="hand">夏天会过去，照片会留下来。</span>
-          <span class="album__stamp">{memoCount} MEMORIES</span>
+      <a class="memory-banner reveal" href="/memories/">
+        <img
+          src={latestMemory.data.cover ?? '/memories/assets/ocean-backdrop.jpg'}
+          alt={latestMemory.data.coverAlt ?? latestMemory.data.title}
+          loading="lazy"
+        />
+        <span class="memory-banner__shade" aria-hidden="true"></span>
+        <div class="memory-banner__copy">
+          <span class="tag">Memory / 001 · {latestMemoDate}</span>
+          <h3>{latestMemory.data.title}</h3>
+          <p>{latestMemory.data.description}</p>
+          <span class="memory-banner__link">打开记忆 <span aria-hidden="true">→</span></span>
         </div>
-      </div>
+        <span class="memory-banner__index" aria-hidden="true">M-001</span>
+      </a>
     ) : (
-      <div class="album album--empty reveal">
-        <div class="empty-letter">
-          <span class="hand">还没有收藏的记忆。</span>
-          <p>等第一张照片被海浪送回来。</p>
-        </div>
+      <div class="empty-panel reveal">
+        <span class="empty-panel__mark" aria-hidden="true">NO MEMORY</span>
+        <p class="empty-panel__jp" aria-hidden="true">まだ、写真がない。</p>
+        <h3>还没有收藏的记忆。</h3>
       </div>
     )}
   </section>

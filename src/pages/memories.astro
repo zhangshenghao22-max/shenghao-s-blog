@@ -5,7 +5,11 @@ const memories = await getPublishedMemories();
 ---
 
 <BaseLayout title="与你分享的记忆" description="清夏玖珍藏的照片与视频。" pageClass="memories-page">
-  <section class="page-heading section-shell reveal"><h1>与你分享的记忆</h1><p>一些舍不得忘记的瞬间。</p></section>
+  <section class="page-heading section-shell reveal">
+    <p class="ak-eyebrow">Memory Archive / 003</p>
+    <h1>与你分享的记忆</h1>
+    <p>一些舍不得忘记的瞬间。</p>
+  </section>
   <div class="section-shell memories-list">
     {memories.map((memory) => <section class="memory-group section-space">
       <header class="memory-group__heading reveal"><time datetime={memory.data.date.toISOString()}>{formatMemoryDate(memory.data.date)}</time><h2>{memory.data.title}</h2><p>{memory.data.description}</p></header>
@@ -14,7 +18,12 @@ const memories = await getPublishedMemories();
         {item.caption && <figcaption>{item.caption}</figcaption>}
       </figure>)}</div>
     </section>)}
-    {!memories.length && <p class="empty-state">还没有收藏的记忆。</p>}
+    {!memories.length && (
+      <div class="ak-empty">
+        <span class="ak-empty__code">NO MEMORY / 000</span>
+        <p>还没有收藏的记忆。</p>
+      </div>
+    )}
   </div>
   <dialog class="lightbox" aria-label="照片预览"><button class="lightbox__close" type="button" aria-label="关闭照片">×</button><img src="" alt="" /></dialog>
   <script>

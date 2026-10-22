@@ -1,6 +1,26 @@
-﻿<footer class="site-footer">
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
   <div class="site-footer__inner">
-    <p>清夏玖</p>
-    <p>记录生活，也分享记忆。</p>
+    <div class="site-footer__brand">
+      <span class="brand__mark brand__mark--small" aria-hidden="true"><span>清</span></span>
+      <p>
+        清夏玖的个人网站
+        <small>PERSONAL ARCHIVE / QXJ-001</small>
+      </p>
+    </div>
+    <p class="site-footer__credit">
+      主视觉：
+      <a href="https://prts.wiki/w/首页" target="_blank" rel="noopener noreferrer">PRTS Wiki</a>
+      ·
+      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a><br />
+      明日方舟相关版权归原权利人所有
+    </p>
+    <div class="site-footer__meta">
+      <p>© {year} 清夏玖</p>
+      <a class="site-footer__top" href="#top">BACK TO TOP <span aria-hidden="true">↑</span></a>
+    </div>
   </div>
 </footer>

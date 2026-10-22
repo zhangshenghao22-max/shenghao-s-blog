@@ -1,4 +1,4 @@
-﻿---
+---
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
@@ -11,26 +11,58 @@ interface Props {
 }
 
 const siteName = '清夏玖的个人网站';
-const defaultDescription = '清夏玖的个人网站，分享生活、记忆和日常。';
+const defaultDescription = '清夏玖的个人网站，记录生活、分享记忆的私人终端。';
 const { title, description = defaultDescription, pageClass = '' } = Astro.props;
-const pageTitle = title ? `${title} · ${siteName}` : siteName;
+const pageTitle = title ? `${title} · ${siteName}` : `${siteName} · PERSONAL ARCHIVE`;
+const origin = Astro.site?.origin ?? 'https://www.zhangshenghao.com';
+const canonical = new URL(Astro.url.pathname, origin).toString();
+const ogImage = new URL('/images/og-cover.jpg', origin).toString();
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" class="no-js">
   <head>
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+      window.addEventListener('error', () => document.documentElement.classList.remove('js'), { once: true });
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0a1115" />
+    <meta name="theme-color" content="#050708" />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <title>{pageTitle}</title>
+    <noscript><style>.ak-boot{display:none!important}.reveal{opacity:1!important;transform:none!important}</style></noscript>
   </head>
-  <body class={pageClass}>
-    <div class="boot-screen" data-boot-screen aria-hidden="true">
-      <span class="boot-screen__mark">清</span>
-      <span class="boot-screen__line"></span>
+  <body id="top" class={pageClass}>
+    <div class="ak-boot" data-boot aria-hidden="true">
+      <div class="ak-boot__inner">
+        <span class="ak-boot__mark"><span>清</span></span>
+        <div class="ak-boot__copy">
+          <b>PERSONAL ARCHIVE</b>
+          <span>正在接入终端 // INITIALIZING</span>
+        </div>
+        <div class="ak-boot__bar"><i></i></div>
+        <small>QXJ-001 · PRTS LINK · SECURE</small>
+      </div>
     </div>
     <PlayfulOrnaments />
     <SiteHeader />
@@ -43,20 +75,48 @@ const pageTitle = title ? `${title} · ${siteName}` : siteName;
 
 <script is:inline>
   (() => {
-    const finishBoot = () => document.querySelector('[data-boot-screen]')?.classList.add('is-done');
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const boot = document.querySelector('[data-boot]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finishBoot = () => boot?.classList.add('is-done');
+    let booted = false;
+    try { booted = window.sessionStorage.getItem('qx-booted') === '1'; } catch {}
+
+    if (reduceMotion || booted) {
       finishBoot();
-      return;
+    } else {
+      try { window.sessionStorage.setItem('qx-booted', '1'); } catch {}
+      window.setTimeout(finishBoot, 640);
     }
+
+    const clocks = document.querySelectorAll('[data-clock]');
+    if (clocks.length) {
+      const format = new Intl.DateTimeFormat('zh-CN', {
+        timeZone: 'Asia/Shanghai',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      });
+      const tick = () => {
+        const value = format.format(new Date());
+        clocks.forEach((clock) => { clock.textContent = value; });
+      };
+      tick();
+      window.setInterval(tick, 1000);
+    }
+
     document.addEventListener('click', (event) => {
+      if (reduceMotion || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       const target = event.target instanceof Element ? event.target.closest('a') : null;
       if (!target || target.target === '_blank' || target.hasAttribute('download')) return;
       const url = new URL(target.href, window.location.href);
-      if (url.origin !== window.location.origin || (url.pathname === window.location.pathname && url.hash)) return;
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname === window.location.pathname && (url.hash || url.search === window.location.search)) return;
       event.preventDefault();
       document.body.classList.add('page-leaving');
-      window.setTimeout(() => { window.location.href = url.href; }, 220);
+      window.setTimeout(() => { window.location.href = url.href; }, 180);
     });
-    window.setTimeout(finishBoot, 520);
+
+    window.addEventListener('pageshow', () => document.body.classList.remove('page-leaving'));
   })();
 </script>

@@ -1,58 +1,233 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
-import { getPublishedDiaries } from '../lib/diary';
-import { getPublishedMemories, formatMemoryDate } from '../lib/memories';
+import { getDiaryUrl, getPublishedDiaries } from '../lib/diary';
+import { getPublishedMemories } from '../lib/memories';
 
 const diaries = await getPublishedDiaries();
 const memories = await getPublishedMemories();
 const latestDiary = diaries[0];
+const secondaryDiaries = diaries.slice(1, 3);
 const latestMemory = memories[0];
-const today = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }).format(new Date());
+
+const shortDate = (date: Date) => date.toISOString().slice(0, 10).replaceAll('-', '.');
+const logCount = String(diaries.length).padStart(2, '0');
+const memoCount = String(memories.length).padStart(2, '0');
+const latestLogDate = latestDiary ? shortDate(latestDiary.data.pubDate) : 'NO RECORD';
+const latestMemoDate = latestMemory ? shortDate(latestMemory.data.date) : 'NO RECORD';
 ---
 
 <BaseLayout pageClass="home-page">
-  <div class="ark-home section-shell">
-    <section class="ark-hero reveal" aria-labelledby="welcome-title">
-      <img class="ark-hero__bg" src="/images/arknights/theme-forest.png" alt="沉浸式主题视觉" loading="eager" fetchpriority="high" decoding="async" />
-      <div class="ark-hero__veil" aria-hidden="true"></div>
-      <div class="ark-hero__frame" aria-hidden="true"></div>
-      <div class="ark-hero__copy">
-        <span class="ark-hero__mark" aria-hidden="true">清</span>
-        <h1 id="welcome-title">欢迎来到清夏玖的个人网站</h1>
-        <p>记录生活，也分享记忆。</p>
-        <a class="ark-hero__enter" href="#modules">进入个人终端 <span aria-hidden="true">↘</span></a>
+  <section class="ak-hero" aria-labelledby="welcome-title">
+    <picture class="ak-hero__media">
+      <source
+        type="image/webp"
+        srcset="/images/arknights/theme-forest-960.webp 960w, /images/arknights/theme-forest-1560.webp 1560w"
+        sizes="100vw"
+      />
+      <img
+        src="/images/arknights/theme-forest.png"
+        alt=""
+        width="1560"
+        height="500"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+    <span class="ak-hero__shade" aria-hidden="true"></span>
+    <span class="ak-hero__grid" aria-hidden="true"></span>
+    <span class="ak-hero__frame" aria-hidden="true"></span>
+
+    <div class="ak-hero__top" aria-hidden="true">
+      <span><b>QXJ</b> // PERSONAL TERMINAL</span>
+      <span class="ak-hero__top-right"><span>ARCHIVE 001</span><i></i><span>PRTS LINK / STABLE</span></span>
+    </div>
+
+    <div class="ak-hero__copy">
+      <p class="ak-eyebrow">Qing Xia Jiu · Personal Archive</p>
+      <h1 id="welcome-title">
+        清夏玖
+        <em>QING XIA JIU / QXJ-001</em>
+      </h1>
+      <p class="ak-hero__lead">记录生活，也分享记忆。</p>
+      <div class="ak-hero__actions">
+        <a class="ak-btn ak-btn--primary" href="#modules">进入终端 <span aria-hidden="true">→</span></a>
+        <a class="ak-btn" href="/about/">查看档案</a>
       </div>
-      <div class="ark-hero__pager" aria-hidden="true"><span class="is-active"></span><span></span><span></span></div>
-      <span class="ark-hero__edge" aria-hidden="true"></span>
-    </section>
+    </div>
 
-    <section id="modules" class="ark-module-section section-space" aria-labelledby="modules-title">
-      <div class="ark-heading reveal"><span class="ark-heading__rule" aria-hidden="true"></span><h2 id="modules-title">个人终端</h2></div>
-      <nav class="ark-nav" aria-label="个人网站入口">
-        <a class="ark-nav__tile reveal" href="/about/"><span class="ark-nav__icon ark-nav__icon--profile" aria-hidden="true"></span><strong>我是谁？</strong></a>
-        <a class="ark-nav__tile reveal" href="/memories/"><span class="ark-nav__icon ark-nav__icon--memory" aria-hidden="true"></span><strong>与你分享的记忆</strong></a>
-        <a class="ark-nav__tile reveal" href="/diary/"><span class="ark-nav__icon ark-nav__icon--diary" aria-hidden="true"></span><strong>日日不记</strong></a>
-        <a class="ark-nav__tile reveal" href="/admin/"><span class="ark-nav__icon ark-nav__icon--write" aria-hidden="true"></span><strong>写下日记</strong></a>
-      </nav>
-    </section>
+    <span class="ak-hero__side" aria-hidden="true">Archive / QXJ-001 / East 8</span>
 
-    <section class="ark-hud section-space reveal" aria-label="个人终端信息">
-      <div class="ark-clock"><strong>{today}</strong><span>清夏玖的个人记录</span></div>
-      <div class="ark-hud__signal"><span aria-hidden="true"></span><b>记忆持续更新</b></div>
-    </section>
-
-    {latestDiary && <section class="ark-record section-space" aria-labelledby="latest-title">
-      <div class="ark-heading ark-heading--split reveal"><div><span class="ark-heading__rule" aria-hidden="true"></span><h2 id="latest-title">最近写下</h2></div><a class="ark-link" href="/diary/">查看全部 <span aria-hidden="true">↗</span></a></div>
-      <div class="ark-record__grid">
-        <div class="ark-record__feature reveal"><PostCard diary={latestDiary} featured /></div>
-        {diaries.slice(1, 3).map((diary) => <div class="ark-record__side reveal"><PostCard diary={diary} /></div>)}
+    <div class="ak-hero__foot">
+      <div class="ak-hero__stat">
+        <small>Latest Log</small>
+        <b>{latestLogDate}</b>
       </div>
-    </section>}
+      <div class="ak-hero__stat">
+        <small>Archive</small>
+        <b>{logCount} LOGS / {memoCount} MEMOS</b>
+      </div>
+      <div class="ak-hero__stat">
+        <small>Local Time · UTC+8</small>
+        <b><time data-clock>--:--:--</time></b>
+      </div>
+      <span class="ak-hero__scroll" aria-hidden="true">Scroll <i></i></span>
+    </div>
+  </section>
 
-    {latestMemory && <section class="ark-memory section-space reveal" aria-labelledby="latest-memory-title">
-      <a class="ark-memory__image" href="/memories/"><img src={latestMemory.data.cover ?? '/images/arknights/theme-forest.png'} alt={latestMemory.data.coverAlt ?? '最近的一段记忆'} loading="lazy" /></a>
-      <div class="ark-memory__copy"><time datetime={latestMemory.data.date.toISOString()}>{formatMemoryDate(latestMemory.data.date)}</time><h2 id="latest-memory-title">{latestMemory.data.title}</h2><p>{latestMemory.data.description}</p><a class="ark-link" href="/memories/">打开记忆 <span aria-hidden="true">↗</span></a></div>
-    </section>}
-  </div>
+  <section id="modules" class="ak-section" aria-labelledby="modules-title">
+    <header class="ak-section__head reveal">
+      <span class="ak-section__index" aria-hidden="true">01</span>
+      <div class="ak-section__title">
+        <p class="ak-eyebrow">Access Modules</p>
+        <h2 id="modules-title">个人终端</h2>
+      </div>
+      <span class="ak-section__line" aria-hidden="true"></span>
+      <span class="ak-section__meta">04 Entries</span>
+    </header>
+
+    <nav class="ak-menu" aria-label="个人网站入口">
+      <a class="ak-menu__item reveal" href="/about/">
+        <span class="ak-menu__num" aria-hidden="true">01</span>
+        <span class="ak-menu__body"><b>我是谁？</b><em>Profile / Archive</em></span>
+        <span class="ak-menu__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+            <path d="M12 2.8 20 7v10l-8 4.2L4 17V7l8-4.2Z" />
+            <circle cx="12" cy="10.2" r="2.1" />
+            <path d="M8.6 16.2c.7-1.9 2-2.8 3.4-2.8s2.7.9 3.4 2.8" />
+          </svg>
+        </span>
+        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+      </a>
+
+      <a class="ak-menu__item reveal" href="/memories/">
+        <span class="ak-menu__num" aria-hidden="true">02</span>
+        <span class="ak-menu__body"><b>与你分享的记忆</b><em>Memory / Archive</em></span>
+        <span class="ak-menu__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+            <rect x="3.5" y="6" width="17" height="12.5" />
+            <circle cx="12" cy="12.2" r="3.1" />
+            <path d="M8 6l1.4-2h5.2L16 6" />
+          </svg>
+        </span>
+        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+      </a>
+
+      <a class="ak-menu__item reveal" href="/diary/">
+        <span class="ak-menu__num" aria-hidden="true">03</span>
+        <span class="ak-menu__body"><b>日日不记</b><em>Log / Archive</em></span>
+        <span class="ak-menu__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+            <path d="M6 3.5h10.5L19 6v14.5H6z" />
+            <path d="M9 8h7M9 11.5h7M9 15h4.5" />
+          </svg>
+        </span>
+        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+      </a>
+
+      <a class="ak-menu__item reveal" href="/admin/">
+        <span class="ak-menu__num" aria-hidden="true">04</span>
+        <span class="ak-menu__body"><b>写下日记</b><em>Terminal / Write</em></span>
+        <span class="ak-menu__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round">
+            <path d="M4.5 19.5 8 18.7 19 7.7l-2.7-2.7L5.3 16 4.5 19.5Z" />
+            <path d="m14.6 6.7 2.7 2.7M4.5 19.5 8 18.7" />
+          </svg>
+        </span>
+        <span class="ak-menu__access" aria-hidden="true">Access ↗</span>
+      </a>
+    </nav>
+  </section>
+
+  <section class="ak-section" aria-labelledby="latest-title">
+    <header class="ak-section__head reveal">
+      <span class="ak-section__index" aria-hidden="true">02</span>
+      <div class="ak-section__title">
+        <p class="ak-eyebrow">Recent Log</p>
+        <h2 id="latest-title">最近写下</h2>
+      </div>
+      <span class="ak-section__line" aria-hidden="true"></span>
+      <span class="ak-section__meta"><a href="/diary/">查看全部 ↗</a></span>
+    </header>
+
+    {latestDiary ? (
+      <>
+        <article class="ak-log reveal">
+          <div class="ak-log__media">
+            {latestDiary.data.cover ? (
+              <img src={latestDiary.data.cover} alt={latestDiary.data.coverAlt ?? ''} loading="lazy" />
+            ) : (
+              <span class="ak-log__blank" aria-hidden="true"><b>LOG</b><small>NO VISUAL DATA</small></span>
+            )}
+          </div>
+          <div class="ak-log__body">
+            <div class="ak-log__meta">
+              <time datetime={latestDiary.data.pubDate.toISOString()}>{shortDate(latestDiary.data.pubDate)}</time>
+              <span>Log Entry / 001</span>
+            </div>
+            <h3><a href={getDiaryUrl(latestDiary)}>{latestDiary.data.title}</a></h3>
+            <p>{latestDiary.data.description}</p>
+            <div class="ak-log__foot">
+              <div class="ak-log__tags">
+                {latestDiary.data.tags.map((tag) => <span>{tag}</span>)}
+              </div>
+              <a class="ak-btn ak-btn--sm" href={getDiaryUrl(latestDiary)}>阅读全文 <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        </article>
+
+        {secondaryDiaries.length > 0 && (
+          <div class="ak-log__more">
+            {secondaryDiaries.map((diary) => (
+              <a href={getDiaryUrl(diary)}>
+                <small>{shortDate(diary.data.pubDate)}</small>
+                <b>{diary.data.title}</b>
+              </a>
+            ))}
+          </div>
+        )}
+      </>
+    ) : (
+      <div class="ak-empty reveal">
+        <span class="ak-empty__code">NO RECORDS / 000</span>
+        <p>还没有公开的日记。写下第一行，终端就会开始记录。</p>
+        <a class="ak-btn ak-btn--sm" href="/admin/">写下第一篇 <span aria-hidden="true">→</span></a>
+      </div>
+    )}
+  </section>
+
+  <section class="ak-section" aria-labelledby="memory-title">
+    <header class="ak-section__head reveal">
+      <span class="ak-section__index" aria-hidden="true">03</span>
+      <div class="ak-section__title">
+        <p class="ak-eyebrow">Memory Archive</p>
+        <h2 id="memory-title">与你分享的记忆</h2>
+      </div>
+      <span class="ak-section__line" aria-hidden="true"></span>
+      <span class="ak-section__meta">{memoCount} Memos</span>
+    </header>
+
+    {latestMemory ? (
+      <a class="ak-memory reveal" href="/memories/">
+        <img
+          src={latestMemory.data.cover ?? '/images/arknights/theme-forest-1560.webp'}
+          alt={latestMemory.data.coverAlt ?? latestMemory.data.title}
+          loading="lazy"
+        />
+        <span class="ak-memory__shade" aria-hidden="true"></span>
+        <span class="ak-memory__index">MEM-001 / {latestMemoDate}</span>
+        <div class="ak-memory__copy">
+          <span class="ak-tag">Memory / {latestMemoDate}</span>
+          <h3>{latestMemory.data.title}</h3>
+          <p>{latestMemory.data.description}</p>
+          <span class="ak-btn ak-btn--sm">打开记忆 <span aria-hidden="true">→</span></span>
+        </div>
+      </a>
+    ) : (
+      <div class="ak-empty reveal">
+        <span class="ak-empty__code">NO MEMORY / 000</span>
+        <p>还没有收藏的记忆。</p>
+      </div>
+    )}
+  </section>
 </BaseLayout>

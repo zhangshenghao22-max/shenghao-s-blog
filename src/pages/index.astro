@@ -18,7 +18,11 @@ const memoCount = String(memories.length).padStart(2, '0');
 <BaseLayout pageClass="home-page">
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero__media">
-      <img src="/images/summer/hero.jpg" alt="" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
+      <picture class="hero__picture">
+        <source media="(min-width: 900px)" type="image/webp" srcset="/images/summer/hero-3200.webp 3200w, /images/summer/hero-3840.webp 3840w" sizes="100vw" />
+        <source type="image/webp" srcset="/images/summer/hero-1600.webp 1600w, /images/summer/hero-3200.webp 3200w" sizes="100vw" />
+        <img src="/images/summer/hero.jpg" alt="" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async" />
+      </picture>
     </div>
     <span class="hero__shade" aria-hidden="true"></span>
     <span class="hero__flare" aria-hidden="true"></span>

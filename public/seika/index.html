@@ -19,28 +19,28 @@
 <body>
 <div id="app">
   <header id="topbar">
-    <button id="btnStatus" class="tb-btn" title="状态">📱</button>
+    <button id="btnSessions" class="tb-btn" title="对话记录">☰</button>
     <div id="title">
-      <div class="t1">校规修改器</div>
+      <div class="t1" id="ttl">校规修改器</div>
       <div class="t2" id="subtitle">圣樱女子学院</div>
     </div>
+    <button id="btnStatus" class="tb-btn" title="状态">📱</button>
     <button id="btnSettings" class="tb-btn" title="设置">⚙︎</button>
   </header>
 
   <main id="scroller">
     <div id="messages"></div>
     <div id="hint" class="hint">
-      <div class="hint-card">
-        <div class="hint-h">圣樱女子学院 · 特批生</div>
-        <p>你是全校唯一的男生。入学第一天，手机上出现了「校规修改器」——你可以添加、修改任何校规，三千名女生必须遵守。</p>
-        <p class="dim">点「开始」直接进入开场，或在下方说出你的第一条校规。</p>
+      <div class="hint-card" id="hintCard">
+        <div class="hint-h" id="hintTitle">圣樱女子学院 · 特批生</div>
+        <p id="hintText">你是全校唯一的男生。入学第一天，手机上出现了「校规修改器」——你可以添加、修改任何校规，三千名女生必须遵守。</p>
+        <p class="dim">点「开始」进入开场，或在下方直接说出你的第一句话。</p>
         <button id="btnStart" class="primary">开始</button>
       </div>
     </div>
   </main>
 
   <div id="optionBar"></div>
-
   <button id="btnJump" class="jump" type="button">↓ 回到最新</button>
 
   <footer id="composer">
@@ -50,7 +50,32 @@
   </footer>
 </div>
 
-<!-- 设置抽屉 -->
+<!-- 对话列表 -->
+<div id="sessionsSheet" class="sheet">
+  <div class="sheet-inner">
+    <div class="sheet-head">
+      <span>对话记录</span>
+      <button id="btnCloseSessions" class="c-btn">✕</button>
+    </div>
+    <button id="btnNewSession" class="primary">＋ 新建对话</button>
+    <div id="sessionList" class="list"></div>
+    <p class="fine">每个对话绑定一个世界，切换对话即切换世界与上下文。</p>
+  </div>
+</div>
+
+<!-- 选世界 -->
+<div id="worldSheet" class="sheet">
+  <div class="sheet-inner">
+    <div class="sheet-head">
+      <span>选择世界</span>
+      <button id="btnCloseWorld" class="c-btn">✕</button>
+    </div>
+    <div id="worldList" class="list"></div>
+    <p class="fine">世界决定人设与规则。可以在设置里添加你自己写的新世界。</p>
+  </div>
+</div>
+
+<!-- 设置 -->
 <div id="settingsSheet" class="sheet">
   <div class="sheet-inner">
     <div class="sheet-head">
@@ -75,7 +100,7 @@
 
     <label class="chk">
       <input id="cfgKeep" type="checkbox">
-      <span>记住 Key（关掉则关闭页面即忘，需重新输入）</span>
+      <span>记住 Key（关掉则关闭页面即忘）</span>
     </label>
 
     <label>模型
@@ -86,18 +111,42 @@
       <input id="cfgTemp" type="range" min="0" max="1.6" step="0.02">
     </label>
 
-    <label>上下文轮数 <span id="cfgCtxVal" class="dim">16</span>
-      <input id="cfgCtx" type="range" min="4" max="40" step="2">
+    <label>上下文轮数 <span id="cfgCtxVal" class="dim">30</span>
+      <input id="cfgCtx" type="range" min="8" max="80" step="2">
+    </label>
+
+    <label class="chk">
+      <input id="cfgSummary" type="checkbox">
+      <span>自动摘要（超出窗口的旧剧情压缩成前情提要，记忆不断档）</span>
     </label>
 
     <div class="row">
+      <button id="btnAddWorld" class="ghost">＋ 添加世界</button>
+      <button id="btnImport" class="ghost">导入存档</button>
+    </div>
+    <div class="row">
       <button id="btnExport" class="ghost">导出存档</button>
-      <button id="btnClear" class="ghost danger">清空会话</button>
+      <button id="btnClear" class="ghost danger">清空全部</button>
     </div>
 
+    <div id="worldForm" class="world-form" hidden>
+      <label>世界名称
+        <input id="wName" type="text" placeholder="例如：赛博都市">
+      </label>
+      <label>世界提示词（写清世界观、角色、规则、输出格式）
+        <textarea id="wPrompt" rows="6" placeholder="你是……"></textarea>
+      </label>
+      <div class="row">
+        <button id="btnSaveWorld" class="ghost">保存世界</button>
+        <button id="btnCancelWorld" class="ghost">取消</button>
+      </div>
+    </div>
+
+    <input id="fileImport" type="file" accept=".json,application/json" hidden>
+
     <p class="fine">
-      直连模式下 Key 只存在这台手机的浏览器里，请求直接从手机发往上游 API，不经过任何中间服务器。
-      本应用是纯静态页面，可以离线打开；会话记录存在本机，清浏览器数据即丢失，重要进度用「导出存档」备份。
+      直连模式下 Key 只存在这台手机的浏览器里，请求直接从手机发往上游 API。
+      会话记录存在本机，重要进度用「导出存档」备份。
     </p>
   </div>
 </div>
@@ -116,4 +165,3 @@
 <script src="./app.js"></script>
 </body>
 </html>
-

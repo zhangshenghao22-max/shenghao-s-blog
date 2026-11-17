@@ -11,14 +11,23 @@
   --danger:#d08080;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;max-width:100%;overflow-x:hidden}
+html,body{
+  height:100%;width:100%;max-width:100%;
+  overflow:hidden;                    /* 页面本身永不滚动 */
+  position:fixed;inset:0;
+  overscroll-behavior:none;
+}
 body{
   margin:0;background:var(--bg);color:var(--text);
   font:15px/1.75 -apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Helvetica Neue",sans-serif;
   overscroll-behavior:none;
 }
 #app{
-  position:fixed;inset:0;display:flex;flex-direction:column; overflow-x:hidden;max-width:100vw;
+  position:absolute;left:0;right:0;top:0;
+  height:var(--app-h,100%);            /* 跟随 visualViewport，键盘弹出时收窄 */
+  display:flex;flex-direction:column;
+  overflow:hidden;                     /* 只允许内部消息区滚动 */
+
   padding-top:env(safe-area-inset-top);
   padding-bottom:env(safe-area-inset-bottom);
 }
@@ -40,7 +49,15 @@ body{
 .tb-btn:active{background:#150f20}
 
 /* ── 消息区 ── */
-#scroller{flex:1;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:12px 12px 4px;-webkit-overflow-scrolling:auto}
+#scroller{
+  flex:1 1 auto;
+  min-height:0;                        /* ★ 关键：不加这行 flex 子项不会收缩，整页会被撑高 */
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
+  -webkit-overflow-scrolling:touch;
+  padding:12px 12px 4px;
+}
 #messages{display:flex;flex-direction:column;gap:14px}
 .msg{max-width:100%;animation:in .28s ease-out}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -192,3 +209,58 @@ summary::-webkit-details-marker{display:none}
 .jump.on{opacity:1;transform:none;pointer-events:auto}
 .jump:active{filter:brightness(1.2)}
 
+
+
+/* ── 列表（对话 / 世界） ── */
+.list{display:flex;flex-direction:column;gap:8px;margin:4px 0 14px}
+.item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 12px;border-radius:12px;
+  border:1px solid #2b2240;background:#0d0a16;cursor:pointer;
+}
+.item:active{background:#150f22}
+.item.on{border-color:#6b53a0;background:linear-gradient(135deg,#1d1630,#161022)}
+.item-main{flex:1;min-width:0}
+.item-t{
+  font-size:13.5px;color:#e2d8ee;font-weight:500;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.item-s{
+  font-size:11px;color:#7d7391;margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.item.on .item-t{color:#b9a4e0}
+.item-x{
+  flex:0 0 auto;width:28px;height:28px;border-radius:8px;
+  border:1px solid #3a2d55;background:transparent;color:#5f5670;
+  font-size:12px;cursor:pointer;display:grid;place-items:center;
+}
+.item-x:active{color:#d08080;border-color:#4a2c38}
+
+/* ── 添加世界表单 ── */
+.world-form{
+  margin-top:6px;padding:12px;border-radius:12px;
+  border:1px dashed #3a2d55;background:#0a0812;
+}
+.world-form textarea{
+  display:block;width:100%;margin-top:6px;padding:11px 13px;border-radius:11px;
+  border:1px solid #2e2442;background:#0e0b16;color:var(--text);
+  font:inherit;font-size:13px;line-height:1.6;outline:none;resize:vertical;
+}
+
+/* ── 轻提示 ── */
+#toast{
+  position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));
+  transform:translate(-50%,10px);z-index:80;
+  max-width:82vw;padding:10px 16px;border-radius:12px;
+  background:rgba(26,20,40,.96);border:1px solid #4a3a70;color:#e2d8ee;
+  font-size:12.5px;line-height:1.5;text-align:center;
+  box-shadow:0 10px 28px rgba(0,0,0,.55);
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* 顶栏四按钮略缩，保证 390 宽能放下 */
+#topbar{gap:8px}
+.tb-btn{width:34px;height:34px;font-size:14px}

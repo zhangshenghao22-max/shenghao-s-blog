@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<title>校规修改器</title>
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#06050a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="校规修改器">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<link rel="icon" href="./icons/icon-192.png">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <button id="btnStatus" class="tb-btn" title="状态">📱</button>
+    <div id="title">
+      <div class="t1">校规修改器</div>
+      <div class="t2" id="subtitle">圣樱女子学院</div>
+    </div>
+    <button id="btnSettings" class="tb-btn" title="设置">⚙︎</button>
+  </header>
+
+  <main id="scroller">
+    <div id="messages"></div>
+    <div id="hint" class="hint">
+      <div class="hint-card">
+        <div class="hint-h">圣樱女子学院 · 特批生</div>
+        <p>你是全校唯一的男生。入学第一天，手机上出现了「校规修改器」——你可以添加、修改任何校规，三千名女生必须遵守。</p>
+        <p class="dim">点「开始」直接进入开场，或在下方说出你的第一条校规。</p>
+        <button id="btnStart" class="primary">开始</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="optionBar"></div>
+
+  <footer id="composer">
+    <button id="btnReload" class="c-btn" title="重写上一轮">↻</button>
+    <textarea id="input" rows="1" placeholder="输入校规或行动…" enterkeyhint="send"></textarea>
+    <button id="btnSend" class="c-btn send" title="发送">↑</button>
+  </footer>
+</div>
+
+<!-- 设置抽屉 -->
+<div id="settingsSheet" class="sheet">
+  <div class="sheet-inner">
+    <div class="sheet-head">
+      <span>设置</span>
+      <button id="btnCloseSettings" class="c-btn">✕</button>
+    </div>
+
+    <label>连接方式
+      <select id="cfgMode" class="sel">
+        <option value="direct">直连（浏览器直接请求上游，无需后端）</option>
+        <option value="proxy">代理（走同源 /api/chat，需自建后端）</option>
+      </select>
+    </label>
+
+    <label>接口地址 Base URL
+      <input id="cfgBase" type="url" placeholder="https://api.deepseek.com/v1" autocomplete="off" spellcheck="false">
+    </label>
+
+    <label>API Key
+      <input id="cfgKey" type="password" placeholder="sk-..." autocomplete="off" spellcheck="false">
+    </label>
+
+    <label class="chk">
+      <input id="cfgKeep" type="checkbox">
+      <span>记住 Key（关掉则关闭页面即忘，需重新输入）</span>
+    </label>
+
+    <label>模型
+      <input id="cfgModel" type="text" placeholder="deepseek-chat" autocomplete="off" spellcheck="false">
+    </label>
+
+    <label>温度 <span id="cfgTempVal" class="dim">0.92</span>
+      <input id="cfgTemp" type="range" min="0" max="1.6" step="0.02">
+    </label>
+
+    <label>上下文轮数 <span id="cfgCtxVal" class="dim">16</span>
+      <input id="cfgCtx" type="range" min="4" max="40" step="2">
+    </label>
+
+    <div class="row">
+      <button id="btnExport" class="ghost">导出存档</button>
+      <button id="btnClear" class="ghost danger">清空会话</button>
+    </div>
+
+    <p class="fine">
+      直连模式下 Key 只存在这台手机的浏览器里，请求直接从手机发往上游 API，不经过任何中间服务器。
+      本应用是纯静态页面，可以离线打开；会话记录存在本机，清浏览器数据即丢失，重要进度用「导出存档」备份。
+    </p>
+  </div>
+</div>
+
+<!-- 状态面板 -->
+<div id="statusSheet" class="sheet">
+  <div class="sheet-inner">
+    <div class="sheet-head">
+      <span>当前状态</span>
+      <button id="btnCloseStatus" class="c-btn">✕</button>
+    </div>
+    <div id="statusBody" class="status-body">还没有状态。</div>
+  </div>
+</div>
+
+<script src="./app.js"></script>
+</body>
+</html>
+

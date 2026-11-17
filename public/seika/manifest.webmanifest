@@ -1,0 +1,19 @@
+{
+  "name": "校规修改器",
+  "short_name": "校规修改器",
+  "description": "圣樱女子学院 · 校规修改器互动叙事",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#06050a",
+  "theme_color": "#06050a",
+  "lang": "zh-Hans",
+  "categories": ["entertainment", "games"],
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
+

@@ -40,7 +40,7 @@ body{
 .tb-btn:active{background:#150f20}
 
 /* ── 消息区 ── */
-#scroller{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 4px}
+#scroller{flex:1;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;padding:12px 12px 4px;-webkit-overflow-scrolling:auto}
 #messages{display:flex;flex-direction:column;gap:14px}
 .msg{max-width:100%;animation:in .28s ease-out}
 @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -176,3 +176,19 @@ label.chk input[type=checkbox]{
 /* details 默认三角去掉（模型输出自带 ▶ 前缀） */
 summary{list-style:none}
 summary::-webkit-details-marker{display:none}
+
+
+/* ── 「回到最新」悬浮按钮 ── */
+.jump{
+  position:absolute;right:14px;bottom:calc(132px + env(safe-area-inset-bottom));
+  z-index:20;padding:9px 15px;border-radius:999px;
+  border:1px solid #4a3a70;background:rgba(26,20,40,.94);color:#d9cfe8;
+  font-size:12.5px;font-weight:500;cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,.5);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease;
+}
+.jump.on{opacity:1;transform:none;pointer-events:auto}
+.jump:active{filter:brightness(1.2)}
+

@@ -77,7 +77,7 @@
     renderStatus(last ? last.content : '');
     const n = msgs.filter(m => m.role === 'assistant').length;
     els.subtitle.textContent = n ? `圣樱女子学院 · 第 ${n} 轮` : '圣樱女子学院';
-    scrollBottom(true);
+    scrollToBottom();
   }
 
   function appendMsgEl(role, content) {
@@ -92,11 +92,32 @@
     return bubble;
   }
 
-  function scrollBottom(force) {
+  /* ───────── 滚动跟随 ─────────
+     规则：用户没主动上滑时跟随到底；一旦上滑，锁定当前位置不把用户拽回来。 */
+  let followBottom = true;
+  let jumpBtn = null;
+
+  function atBottom() {
     const el = els.scroller;
-    const near = el.scrollHeight - el.scrollTop - el.clientHeight < 260;
-    if (force || near) el.scrollTop = el.scrollHeight;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 48;
   }
+
+  function syncJumpBtn() {
+    if (!jumpBtn) return;
+    jumpBtn.classList.toggle('on', !followBottom);
+  }
+
+  function scrollToBottom() {
+    followBottom = true;
+    els.scroller.scrollTop = els.scroller.scrollHeight;
+    syncJumpBtn();
+  }
+
+  // 只在用户滚动时更新意图（程序滚动到底后 atBottom() 仍为真，不会误判）
+  els.scroller.addEventListener('scroll', () => {
+    followBottom = atBottom();
+    syncJumpBtn();
+  }, { passive: true });
 
   /* ───────── 选项 ───────── */
   function plainText(html) {
@@ -273,7 +294,7 @@
     els.hint.style.display = 'none';
     appendMsgEl('user', val);
     els.optionBar.innerHTML = '';
-    scrollBottom(true);
+    scrollToBottom();
 
     const bubble = appendMsgEl('assistant', '');
     bubble.classList.add('caret');
@@ -281,12 +302,41 @@
     busy = true;
     els.send.disabled = true;
 
-    const onDelta = (d) => { acc += d; bubble.innerHTML = acc; scrollBottom(); };
+    // ── 流式渲染：合并到帧里刷新，避免每个 token 重排整段；
+    //    用户上滑后不再自动跟到底，改为锚定视口位置，内容增长不会把视线推走。──
+    let rafId = 0;
+    let lastPaint = 0;
+
+    const paint = () => {
+      rafId = 0;
+      const el = els.scroller;
+      const prevTop = el.scrollTop;
+      const prevH = el.scrollHeight;
+      bubble.innerHTML = acc;
+      if (followBottom) {
+        el.scrollTop = el.scrollHeight;
+      } else {
+        // 保持在原来看的位置：内容在下方增长，不顶动视口
+        const grew = el.scrollHeight - prevH;
+        if (grew > 0) el.scrollTop = prevTop;
+      }
+      lastPaint = performance.now();
+    };
+
+    const schedulePaint = (force) => {
+      if (force || performance.now() - lastPaint > 70) {
+        if (rafId) return;
+        rafId = requestAnimationFrame(paint);
+      }
+    };
+
+    const onDelta = (d) => { acc += d; schedulePaint(); };
 
     try {
       if (cfg.mode === 'proxy') await requestProxy(onDelta);
       else await requestDirect(onDelta);
     } catch (e) {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
       bubble.classList.remove('caret');
       bubble.innerHTML = acc + `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ ${esc(e.message || e)}</div>`;
       busy = false;
@@ -296,12 +346,14 @@
 
     // ── 反拒绝守卫：命中过滤特征或空回复时，清空并追加强制指令重试一次 ──
     if (cfg.mode === 'direct' && looksRefused(acc)) {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
       acc = '';
       bubble.innerHTML = '<div style="color:#8c82a0;font-size:12px;padding:8px;">（检测到过滤，正在重写…）</div>';
       bubble.classList.add('caret');
       try {
         await requestDirect(onDelta, RETRY_OVERRIDE);
       } catch (e) {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
         bubble.classList.remove('caret');
         bubble.innerHTML = `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ 重试失败：${esc(e.message || e)}</div>`;
         busy = false;
@@ -309,6 +361,10 @@
         return;
       }
     }
+
+    // 收尾：把最后一帧同步落地，避免残留节流中的旧内容
+    if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
+    if (acc) paint();
     bubble.classList.remove('caret');
 
     if (!acc) {
@@ -322,7 +378,8 @@
     renderStatus(acc);
     const n = msgs.filter(m => m.role === 'assistant').length;
     els.subtitle.textContent = `圣樱女子学院 · 第 ${n} 轮`;
-    scrollBottom(true);
+    // 只有用户仍在底部时才继续跟随；上滑看历史时保持原位置
+    if (followBottom) scrollToBottom();
   }
 
   /* ───────── 交互 ───────── */
@@ -380,6 +437,10 @@
   };
 
   /* ───────── 启动 ───────── */
+  jumpBtn = document.getElementById('btnJump');
+  if (jumpBtn) jumpBtn.onclick = () => scrollToBottom();
+  syncJumpBtn();
+
   fillCfgUI();
   renderAll();
   loadSystemPrompt();

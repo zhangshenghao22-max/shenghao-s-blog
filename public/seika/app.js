@@ -22,11 +22,12 @@ const DEFAULT_CFG = {
 
 /* 篇幅档位：决定 max_tokens 与注入给模型的字数硬指标 */
 const LENGTH_PRESETS = {
-  mini:   { label: '极短 · 200–350 字',   words: '200–350',   cap: 420,  paras: '2–3',   tokens: 1000 },
-  brief:  { label: '短 · 400–600 字',     words: '400–600',   cap: 720,  paras: '3–4',   tokens: 1600 },
-  short:  { label: '中 · 900–1200 字',    words: '900–1200',  cap: 1400, paras: '4–5',   tokens: 3000 },
-  normal: { label: '长 · 1400–2000 字',   words: '1400–2000', cap: 2300, paras: '6–8',   tokens: 4096 },
-  epic:   { label: '极长 · 2200–3000 字', words: '2200–3000', cap: 3400, paras: '9–12',  tokens: 6144 }
+  // tokens 要留足面板+选项的余量，否则正文写完就被截断，选项直接消失
+  mini:   { label: '极短 · 200–350 字',   words: '200–350',   cap: 420,  paras: '2–3',   tokens: 2000 },
+  brief:  { label: '短 · 400–600 字',     words: '400–600',   cap: 720,  paras: '3–4',   tokens: 2800 },
+  short:  { label: '中 · 900–1200 字',    words: '900–1200',  cap: 1400, paras: '4–5',   tokens: 4000 },
+  normal: { label: '长 · 1400–2000 字',   words: '1400–2000', cap: 2300, paras: '6–8',   tokens: 5200 },
+  epic:   { label: '极长 · 2200–3000 字', words: '2200–3000', cap: 3400, paras: '9–12',  tokens: 7000 }
 };
 function lengthOf() { return LENGTH_PRESETS[S.cfg.len] || LENGTH_PRESETS.normal; }
 
@@ -434,6 +435,7 @@ function buildSystem(prompt, s) {
   return sys;
 }
 
+let lastFinish = '';
 async function consumeSSE(res, onDelta) {
   const reader = res.body.getReader();
   const dec = new TextDecoder();
@@ -452,6 +454,8 @@ async function consumeSSE(res, onDelta) {
       let j;
       try { j = JSON.parse(data); } catch { continue; }
       if (j.error) throw new Error(j.error.message || j.detail || JSON.stringify(j.error));
+      const fr = j.choices?.[0]?.finish_reason;
+      if (fr) lastFinish = fr;
       const d = j.choices?.[0]?.delta?.content;
       if (d) onDelta(d);
     }
@@ -618,6 +622,34 @@ async function requestContinue(msgs, tail, need) {
   return j.choices?.[0]?.message?.content || '';
 }
 
+// 输出被 max_tokens 截断时，只补尾巴（数值块 / 状态面板 / 选项）
+async function requestTail(msgs, partial) {
+  const base = (S.cfg.base || DEFAULT_CFG.base).replace(/\/+$/, '');
+  const w = worldById(active() ? active().worldId : 'seika');
+  const basePrompt = await getPrompt(w);
+  const sys = basePrompt +
+    '\n\n====\n【补齐模式】你上一条回复在结尾被截断了，缺少数值变化块、状态面板和选项。\n现在只输出缺失的尾部，从断点接着写。不要重写正文，不要重复已经输出过的段落。\n====';
+  const res = await fetch(base + '/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
+    body: JSON.stringify({
+      model: S.cfg.model,
+      stream: false,
+      temperature: Math.min(1.1, S.cfg.temp),
+      max_tokens: 1800,
+      messages: [
+        { role: 'system', content: sys },
+        ...msgs,
+        { role: 'assistant', content: partial.slice(-2600) },
+        { role: 'user', content: '继续输出被截断的部分：先把正文剩下的段落写完（如果有），然后输出数值变化块、状态面板和 1️⃣-5️⃣ 选项。只输出尾部，不要重写已经写过的内容。' }
+      ]
+    })
+  });
+  if (!res.ok) throw new Error('补齐请求 ' + res.status);
+  const j = await res.json();
+  return j.choices?.[0]?.message?.content || '';
+}
+
 /* ═════════════ 发送 ═════════════ */
 async function send(text) {
   if (busy) return;
@@ -674,6 +706,7 @@ async function send(text) {
   const onDelta = (d) => { acc += d; schedulePaint(); };
 
   const msgs = buildMessages(s);
+  lastFinish = '';
 
   try {
     if (S.cfg.mode === 'proxy') await requestProxy(msgs, onDelta);
@@ -707,6 +740,23 @@ async function send(text) {
   if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
   if (acc) paint();
   bubble.classList.remove('caret');
+
+  /* ── 结构兜底：被 max_tokens 截断时补出面板与选项 ── */
+  if (acc && S.cfg.mode === 'direct') {
+    const truncated = lastFinish === 'length';
+    const noPanel = !/<\/details>/i.test(acc);
+    const noOptions = !/[1-5]\uFE0F?\u20E3/.test(acc);
+    if (truncated || noPanel || noOptions) {
+      toast('输出被截断，正在补齐选项…');
+      try {
+        const tail = await requestTail(msgs, acc);
+        if (tail && tail.trim()) {
+          acc = acc.trimEnd() + '\n\n' + tail.trim();
+          bubble.innerHTML = acc;
+        }
+      } catch (e) { /* 补不上就算了，别打断 */ }
+    }
+  }
 
   /* ── 篇幅兜底：正文没写到下限就自动续写并拼回正文块 ── */
   if (acc && S.cfg.mode === 'direct' && S.cfg.autoExtend) {
@@ -1136,6 +1186,10 @@ async function boot() {
 
 boot();
 })();
+
+
+
+
 
 
 

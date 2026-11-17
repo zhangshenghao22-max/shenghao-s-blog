@@ -1,5 +1,5 @@
 // sw.js — 离线壳缓存（站点可达 /seika/ 子目录下）
-const CACHE = 'seika-shell-v3';
+const CACHE = 'seika-shell-v4';
 const BASE = new URL('./', self.location).pathname;   // 自动适配部署路径
 const SHELL = [
   BASE,
@@ -46,3 +46,4 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+

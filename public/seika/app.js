@@ -9,13 +9,14 @@ const HISTORY_SEED = './seeds/history-01.json?v=2';
 const DEFAULT_CFG = {
   base: 'https://api.deepseek.com/v1',
   key: '',
-  model: 'deepseek-chat',
+  model: 'deepseek-flash',
   temp: 0.92,
   ctx: 30,
   mode: 'direct',
   keep: true,
   autoSummary: true,
   autoExtend: true,
+  thinking: false,
   len: 'normal',
   style: 'life'
 };
@@ -133,6 +134,9 @@ function load() {
     } catch {}
   }
   st.cfg = Object.assign({}, DEFAULT_CFG, st.cfg || {});
+  // 旧模型名已下线，迁到新名字
+  if (!st.cfg.model || st.cfg.model === 'deepseek-chat') st.cfg.model = 'deepseek-flash';
+  if (typeof st.cfg.thinking !== 'boolean') st.cfg.thinking = false;
   if (!Array.isArray(st.worlds)) st.worlds = [];
   if (!Array.isArray(st.sessions)) st.sessions = [];
   return st;
@@ -194,7 +198,7 @@ const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
  'optionBar','btnJump','btnMoreOpts','optWrap','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
- 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgStyle','cfgKeep','cfgSummary','cfgExtend','diag',
+ 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgStyle','cfgThink','cfgKeep','cfgSummary','cfgExtend','diag',
  'btnAddWorld','btnGenWorld','genStatus','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
@@ -554,7 +558,7 @@ async function requestDirect(messages, onDelta, override) {
   const res = await fetch(base + '/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
-    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: lengthOf().tokens, messages: msgs })
+    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: lengthOf().tokens, messages: msgs, thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } })
   });
   if (!res.ok) {
     let t = '';
@@ -598,7 +602,7 @@ async function callOnce(sys, user) {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
     body: JSON.stringify({
-      model: S.cfg.model, stream: false, temperature: 0.3, max_tokens: 900,
+      model: S.cfg.model, stream: false, temperature: 0.3, max_tokens: 900, thinking: { type: 'disabled' },
       messages: [{ role: 'system', content: sys }, { role: 'user', content: user }]
     })
   });
@@ -690,6 +694,7 @@ async function requestContinue(msgs, tail, need) {
       stream: false,
       temperature: Math.min(1.2, S.cfg.temp + 0.05),
       max_tokens: 2400,
+      thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' },
       messages: [
         { role: 'system', content: sys },
         ...msgs,
@@ -718,6 +723,7 @@ async function requestTail(msgs, partial) {
       stream: false,
       temperature: Math.min(1.1, S.cfg.temp),
       max_tokens: 1800,
+      thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' },
       messages: [
         { role: 'system', content: sys },
         ...msgs,
@@ -927,6 +933,7 @@ function fillCfgUI() {
   els.cfgTempVal.textContent = Number(S.cfg.temp).toFixed(2);
   els.cfgLen.value = S.cfg.len || 'normal';
   els.cfgStyle.value = S.cfg.style || 'life';
+  els.cfgThink.checked = !!S.cfg.thinking;
   els.cfgCtx.value = S.cfg.ctx;
   els.cfgCtxVal.textContent = S.cfg.ctx;
 }
@@ -943,6 +950,7 @@ function readCfgUI() {
   S.cfg.ctx = Number(els.cfgCtx.value);
   S.cfg.len = els.cfgLen.value;
   S.cfg.style = els.cfgStyle.value;
+  S.cfg.thinking = els.cfgThink.checked;
   save();
 }
 
@@ -1388,6 +1396,8 @@ async function boot() {
 
 boot();
 })();
+
+
 
 
 

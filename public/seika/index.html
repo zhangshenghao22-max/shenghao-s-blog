@@ -156,16 +156,25 @@
     <button id="btnLoadSample" class="ghost wide">载入「校规修改器 · 27 轮」聊天记录</button>
 
     <div id="worldForm" class="world-form" hidden>
-      <label>世界名称
+      <label>世界名称（留空则从资料里自动取）
         <input id="wName" type="text" placeholder="例如：赛博都市">
       </label>
-      <label>世界提示词（写清世界观、角色、规则、输出格式）
-        <textarea id="wPrompt" rows="6" placeholder="你是……"></textarea>
+      <label>作品资料（粘贴接口 JSON，或任意设定文本）
+        <textarea id="wPrompt" rows="6" placeholder="把 aigirlfriendnetwork 的作品 JSON 整段粘进来，或者直接贴一段世界观设定…"></textarea>
       </label>
+      <p class="fine">
+        拿 JSON 的方法：Safari 打开<br>
+        <code>aigirlfriendnetwork.com/go/api/apps/作品ID</code><br>
+        全选复制，粘贴到上面。也可以直接贴设定文字，AI 会照着写成人设提示词。
+      </p>
       <div class="row">
-        <button id="btnSaveWorld" class="ghost">保存世界</button>
+        <button id="btnGenWorld" class="ghost">AI 生成世界</button>
+        <button id="btnSaveWorld" class="ghost">纯文本直接存</button>
+      </div>
+      <div class="row">
         <button id="btnCancelWorld" class="ghost">取消</button>
       </div>
+      <p class="fine" id="genStatus"></p>
     </div>
 
     <input id="fileImport" type="file" accept=".json,.txt,application/json,text/plain" hidden>
@@ -193,6 +202,7 @@
 <script src="./app.js"></script>
 </body>
 </html>
+
 
 
 

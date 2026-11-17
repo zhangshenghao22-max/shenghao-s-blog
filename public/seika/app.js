@@ -57,6 +57,18 @@ const BUILTIN_WORLDS = [
     starters: ['（开始。先给我「身份录入」表：姓名、性别、年龄、性格、外貌。等我填完再开场。）']
   },
   {
+    id: 'azhuo',
+    name: '亚朵包养',
+    desc: '金主 × 女大 · 六人后宫 · 交易与感情',
+    icon: '💞',
+    prompt: './worlds/azhuo.txt',
+    intro: {
+      h: '亚朵包养 · 黑金会员',
+      p: '你是这个城市几大家族之一的独苗，亚朵包养平台上唯一的黑金会员。2025 年圣诞节，你妹妹江若溪通过资金流向发现了你的消费记录，直接控股收购了亚朵——现在她既是你的妹妹，也是你的房东、股东和唯一的客服。'
+    },
+    starters: ['（开始。先给我看亚朵APP的首页：余额、推荐佳丽列表、江若溪最近的一条消息。）']
+  },
+  {
     id: 'free',
     name: '自由剧场',
     desc: '无固定设定，随手开一局',
@@ -260,7 +272,7 @@ function updateHint() {
   const intro = w.intro || { h: w.name, p: w.desc || '' };
   els.hintTitle.textContent = intro.h;
   els.hintText.textContent = intro.p;
-  const ph = { seika: '输入校规或行动…', family: '说点什么，或者做点什么…', free: '想做什么？' };
+  const ph = { seika: '输入校规或行动…', family: '说点什么，或者做点什么…', azhuo: '打开APP，或者做点什么…', free: '想做什么？' };
   if (els.input) els.input.placeholder = ph[w.id] || '输入你的行动…';
 }
 
@@ -1200,6 +1212,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

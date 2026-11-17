@@ -164,7 +164,7 @@ async function getPrompt(w) {
 /* ═════════════ DOM ═════════════ */
 const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
- 'optionBar','btnJump','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
+ 'optionBar','btnJump','btnMoreOpts','optWrap','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
  'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgKeep','cfgSummary','cfgExtend','diag',
  'btnAddWorld','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
@@ -328,7 +328,7 @@ function extractOptions(html) {
   let m;
   while ((m = re.exec(text))) {
     let label = m[2].replace(/\s*[📝😳👑🎀+]+$/g, '').trim();
-    if (label.length > 46) label = label.slice(0, 46) + '…';
+    if (label.length > 64) label = label.slice(0, 64) + '…';
     out.push({ n: m[1], label });
     if (out.length >= 5) break;
   }
@@ -337,13 +337,24 @@ function extractOptions(html) {
 
 function renderOptions(html) {
   els.optionBar.innerHTML = '';
-  extractOptions(html).forEach(o => {
+  els.optionBar.classList.remove('expanded');
+  if (els.optWrap) els.optWrap.classList.remove('expanded');
+  if (els.btnMoreOpts) {
+    els.btnMoreOpts.textContent = '⋮';
+    els.btnMoreOpts.classList.remove('on');
+  }
+  const list = extractOptions(html);
+  list.forEach(o => {
     const b = document.createElement('button');
     b.className = 'opt';
     b.textContent = ['①', '②', '③', '④', '⑤'][Number(o.n) - 1] + ' ' + o.label;
     b.onclick = () => send(o.n);
     els.optionBar.appendChild(b);
   });
+  // 超过两条才需要展开按钮
+  if (els.btnMoreOpts) {
+    els.btnMoreOpts.style.display = list.length > 2 ? '' : 'none';
+  }
 }
 
 function renderStatus(html) {
@@ -825,6 +836,16 @@ els.input.addEventListener('keydown', (e) => {
 els.btnSend.onclick = () => send();
 els.btnJump.onclick = () => scrollToBottom();
 
+/* 选项条展开／收起 */
+if (els.btnMoreOpts) {
+  els.btnMoreOpts.onclick = () => {
+    const on = els.optionBar.classList.toggle('expanded');
+    if (els.optWrap) els.optWrap.classList.toggle('expanded', on);
+    els.btnMoreOpts.textContent = on ? '×' : '⋮';
+    els.btnMoreOpts.classList.toggle('on', on);
+  };
+}
+
 els.btnReload.onclick = () => {
   if (busy) return;
   const s = active();
@@ -1107,6 +1128,10 @@ async function boot() {
 
 boot();
 })();
+
+
+
+
 
 
 

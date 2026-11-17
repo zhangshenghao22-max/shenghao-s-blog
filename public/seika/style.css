@@ -33,14 +33,16 @@ body{
 
 /* ── 顶栏 ── */
 #topbar{
+  flex:0 0 auto;                        /* 关键：永不被压缩 */
+  min-height:54px;
   display:flex;align-items:center;gap:10px;
   padding:8px 12px;border-bottom:1px solid var(--line);
   background:rgba(6,5,10,.86);backdrop-filter:blur(18px);
   -webkit-backdrop-filter:blur(18px);
 }
-#title{flex:1;text-align:center;line-height:1.25}
-.t1{font-size:15px;font-weight:600;letter-spacing:.5px}
-.t2{font-size:10.5px;color:var(--dim);letter-spacing:1px}
+#title{flex:1;min-width:0;text-align:center;line-height:1.25}
+.t1{font-size:15px;font-weight:600;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t2{font-size:10.5px;color:var(--dim);letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-btn{
   width:36px;height:36px;border-radius:10px;border:1px solid var(--line);
   background:var(--bg-2);color:var(--accent-2);font-size:15px;cursor:pointer;
@@ -102,21 +104,27 @@ body{
 
 /* ── 选项条 ── */
 #optionBar{
-  display:flex;gap:8px;overflow-x:auto;padding:8px 12px;
+  flex:0 0 auto;                        /* 关键：永不被压缩 */
+  display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:8px 12px;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 #optionBar::-webkit-scrollbar{display:none}
 #optionBar:empty{display:none}
 .opt{
-  flex:0 0 auto;max-width:78vw;padding:8px 13px;border-radius:999px;
+  flex:0 0 auto;
+  max-width:min(72vw,360px);
+  padding:7px 13px;border-radius:14px;
   border:1px solid #3a2d55;background:#120e1c;color:#d9cfe8;
-  font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:12.5px;line-height:1.35;
+  white-space:normal;text-align:left;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
   cursor:pointer;
 }
 .opt:active{background:#1d1630}
 
 /* ── 输入区 ── */
 #composer{
+  flex:0 0 auto;                        /* 关键：永不被压缩 */
   display:flex;align-items:flex-end;gap:8px;min-width:0;padding:8px 12px 10px;
   border-top:1px solid var(--line);background:rgba(6,5,10,.92);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
@@ -261,7 +269,7 @@ summary::-webkit-details-marker{display:none}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* 顶栏四按钮略缩，保证 390 宽能放下 */
-#topbar{gap:8px}
+#topbar{gap:7px;padding:6px 10px}
 .tb-btn{width:34px;height:34px;font-size:14px}
 
 
@@ -272,3 +280,38 @@ summary::-webkit-details-marker{display:none}
   border:1px dashed #2b2240;border-radius:10px;background:#080610;
   word-break:break-all;
 }
+
+
+
+/* ── 选项条：收起时横滑，展开时纵向全显示 ── */
+#optWrap{position:relative;flex:0 0 auto}
+#optionBar{padding-right:48px}
+#optionBar.expanded{
+  flex-direction:column;align-items:stretch;
+  max-height:46vh;overflow-y:auto;overflow-x:hidden;
+  padding-right:48px;   /* 给右上角 × 让位 */
+}
+#optionBar.expanded .opt{
+  max-width:none;
+  -webkit-line-clamp:unset;
+  border-radius:12px;
+}
+.more{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:34px;height:34px;border-radius:50%;z-index:5;
+  border:1px solid #4a3a70;background:rgba(22,16,34,.96);color:#c9b8e8;
+  font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.5);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.more:active{filter:brightness(1.25)}
+.more.on{background:#2a2040;color:#e8e0f0}
+/* 展开时按钮贴顶，避免浮在长列表中间 */
+#optWrap.expanded .more{
+  top:6px;right:6px;transform:none;
+  width:28px;height:28px;font-size:14px;opacity:.72;
+}
+#optWrap.expanded .more:active{opacity:1}
+
+
+

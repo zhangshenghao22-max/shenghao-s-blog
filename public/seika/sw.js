@@ -1,6 +1,6 @@
 // sw.js — 离线壳缓存（站点可达 /seika/ 子目录下）
 // 原则：代码与图标走缓存优先；提示词 / 存档等"内容"永远走网络，保证改了就生效。
-const CACHE = 'seika-shell-v13';
+const CACHE = 'seika-shell-v14';
 const BASE = new URL('./', self.location).pathname;   // 自动适配部署路径
 const SHELL = [
   BASE,
@@ -52,6 +52,7 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+
 
 
 

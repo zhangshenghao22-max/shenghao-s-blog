@@ -45,6 +45,18 @@ const BUILTIN_WORLDS = [
     starters: ['（开始。第一轮：我在学生会大楼顶层休息室，第一次打开校规修改器，输入第一条校规。）']
   },
   {
+    id: 'family',
+    name: '家中唯一异性',
+    desc: '平行中国 · 家族后宫 · 双性别路线',
+    icon: '🏠',
+    prompt: './worlds/family.txt',
+    intro: {
+      h: '家中唯一异性 · 平行中国',
+      p: '大学毕业回到家乡，你发现这里的一切都变了。女性的衣着大胆到不讲道理，而性，在这个社会里是可以摆上桌面的家务事。你是这个家族里唯一的异性。'
+    },
+    starters: ['（开始。先给我「身份录入」表：姓名、性别、年龄、性格、外貌。等我填完再开场。）']
+  },
+  {
     id: 'free',
     name: '自由剧场',
     desc: '无固定设定，随手开一局',
@@ -248,6 +260,8 @@ function updateHint() {
   const intro = w.intro || { h: w.name, p: w.desc || '' };
   els.hintTitle.textContent = intro.h;
   els.hintText.textContent = intro.p;
+  const ph = { seika: '输入校规或行动…', family: '说点什么，或者做点什么…', free: '想做什么？' };
+  if (els.input) els.input.placeholder = ph[w.id] || '输入你的行动…';
 }
 
 function renderAll() {
@@ -1186,6 +1200,8 @@ async function boot() {
 
 boot();
 })();
+
+
 
 
 

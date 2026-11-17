@@ -23,13 +23,12 @@ body{
   overscroll-behavior:none;
 }
 #app{
-  position:absolute;left:0;right:0;top:0;
-  height:var(--app-h,100%);            /* 跟随 visualViewport，键盘弹出时收窄 */
+  position:fixed;left:0;right:0;top:0;bottom:0;
   display:flex;flex-direction:column;
-  overflow:hidden;                     /* 只允许内部消息区滚动 */
-
+  overflow:hidden;                      /* 只允许内部消息区滚动 */
   padding-top:env(safe-area-inset-top);
-  padding-bottom:env(safe-area-inset-bottom);
+  /* 键盘弹出时用底部 padding 让位：整个面板不缩高，底部空白被键盘盖住 */
+  padding-bottom:calc(var(--kb, 0px) + env(safe-area-inset-bottom));
 }
 
 /* ── 顶栏 ── */
@@ -264,3 +263,4 @@ summary::-webkit-details-marker{display:none}
 /* 顶栏四按钮略缩，保证 390 宽能放下 */
 #topbar{gap:8px}
 .tb-btn{width:34px;height:34px;font-size:14px}
+

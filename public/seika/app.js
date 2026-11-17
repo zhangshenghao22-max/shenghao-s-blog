@@ -161,11 +161,19 @@ const els = {};
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
 
-/* ═════════════ 视口高度（iOS 键盘） ═════════════ */
+/* ═════════════ 键盘让位（iOS） ═════════════
+   不再缩 #app 高度（那会在下方露出一块黑），改成量出键盘占了多少，
+   让整块面板用 padding-bottom 让位：底部空白正好被键盘盖住。 */
 function syncViewport() {
   const vv = window.visualViewport;
-  const h = vv ? vv.height : window.innerHeight;
-  document.documentElement.style.setProperty('--app-h', Math.round(h) + 'px');
+  const root = document.documentElement;
+  if (!vv) { root.style.setProperty('--kb', '0px'); return; }
+  let kb = Math.round(window.innerHeight - vv.height - vv.offsetTop);
+  if (!isFinite(kb) || kb < 0) kb = 0;
+  // 异常值保护：键盘不可能超过视口的 75%
+  if (kb > window.innerHeight * 0.75) kb = Math.round(window.innerHeight * 0.45);
+  root.style.setProperty('--kb', kb + 'px');
+  root.style.setProperty('--kb-open', kb > 60 ? '1' : '0');
 }
 if (window.visualViewport) {
   visualViewport.addEventListener('resize', syncViewport);
@@ -173,6 +181,8 @@ if (window.visualViewport) {
 }
 window.addEventListener('resize', syncViewport);
 window.addEventListener('orientationchange', () => setTimeout(syncViewport, 120));
+window.addEventListener('focusin', () => setTimeout(syncViewport, 300));
+window.addEventListener('focusout', () => setTimeout(syncViewport, 300));
 syncViewport();
 
 /* ═════════════ 滚动跟随 ═════════════ */
@@ -691,6 +701,22 @@ function autosize() {
 }
 
 els.input.addEventListener('input', autosize);
+
+/* ── 键盘：滑动消息区或点空白处即收起，方便看图 ── */
+let touched = false;
+els.scroller.addEventListener('touchstart', () => { touched = false; }, { passive: true });
+els.scroller.addEventListener('touchmove', () => {
+  if (!touched && document.activeElement === els.input) {
+    touched = true;
+    els.input.blur();
+  }
+}, { passive: true });
+els.scroller.addEventListener('click', () => {
+  if (document.activeElement === els.input) els.input.blur();
+});
+els.input.addEventListener('focus', () => {
+  setTimeout(() => { if (followBottom) scrollToBottom(); }, 320);
+});
 els.input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey && window.innerWidth > 720) { e.preventDefault(); send(); }
 });

@@ -14,8 +14,17 @@ const DEFAULT_CFG = {
   ctx: 30,
   mode: 'direct',
   keep: true,
-  autoSummary: true
+  autoSummary: true,
+  len: 'normal'
 };
+
+/* 篇幅档位：决定 max_tokens 与注入给模型的字数硬指标 */
+const LENGTH_PRESETS = {
+  short: { label: '标准 · 900–1200 字', words: '900–1200', tokens: 3000 },
+  normal: { label: '长 · 1400–2000 字', words: '1400–2000', tokens: 4096 },
+  epic: { label: '极长 · 2200–3000 字', words: '2200–3000', tokens: 6144 }
+};
+function lengthOf() { return LENGTH_PRESETS[S.cfg.len] || LENGTH_PRESETS.normal; }
 
 const BUILTIN_WORLDS = [
   {
@@ -156,7 +165,7 @@ const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
  'optionBar','btnJump','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
- 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgKeep','cfgSummary',
+ 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgKeep','cfgSummary',
  'btnAddWorld','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
@@ -399,6 +408,8 @@ function buildMessages(s) {
 
 function buildSystem(prompt, s) {
   let sys = prompt;
+  const L = lengthOf();
+  sys += `\n\n====\n【本轮篇幅 · 硬指标】\n正文必须写到 ${L.words} 字。字数不足时不要收尾，回去把省略的动作过程补写出来。\n只推进 1–2 个动作节点，把这个节点写透，不要为了推进剧情而压缩描写。\n====`;
   if (s && s.summary) {
     sys += '\n\n====\n【前情摘要】（更早剧情的压缩记录，一律视为已经发生的事实，后续要与之连贯）\n' + s.summary + '\n====';
   }
@@ -440,7 +451,7 @@ async function requestDirect(messages, onDelta, override) {
   const res = await fetch(base + '/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
-    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: 2600, messages: msgs })
+    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: lengthOf().tokens, messages: msgs })
   });
   if (!res.ok) {
     let t = '';
@@ -678,6 +689,7 @@ function fillCfgUI() {
   els.cfgSummary.checked = !!S.cfg.autoSummary;
   els.cfgTemp.value = S.cfg.temp;
   els.cfgTempVal.textContent = Number(S.cfg.temp).toFixed(2);
+  els.cfgLen.value = S.cfg.len || 'normal';
   els.cfgCtx.value = S.cfg.ctx;
   els.cfgCtxVal.textContent = S.cfg.ctx;
 }
@@ -691,6 +703,7 @@ function readCfgUI() {
   S.cfg.autoSummary = els.cfgSummary.checked;
   S.cfg.temp = Number(els.cfgTemp.value);
   S.cfg.ctx = Number(els.cfgCtx.value);
+  S.cfg.len = els.cfgLen.value;
   save();
 }
 
@@ -1005,5 +1018,7 @@ async function boot() {
 
 boot();
 })();
+
+
 
 

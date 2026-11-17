@@ -1,5 +1,6 @@
 // sw.js — 离线壳缓存（站点可达 /seika/ 子目录下）
-const CACHE = 'seika-shell-v7';
+// 原则：代码与图标走缓存优先；提示词 / 存档等"内容"永远走网络，保证改了就生效。
+const CACHE = 'seika-shell-v9';
 const BASE = new URL('./', self.location).pathname;   // 自动适配部署路径
 const SHELL = [
   BASE,
@@ -7,8 +8,6 @@ const SHELL = [
   BASE + 'style.css',
   BASE + 'app.js',
   BASE + 'manifest.webmanifest',
-  BASE + 'system-prompt.txt',
-  BASE + 'worlds/free.txt',
   BASE + 'icons/icon-180.png',
   BASE + 'icons/icon-192.png',
   BASE + 'icons/icon-512.png'
@@ -28,11 +27,17 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+// 这些从不缓存：人设提示词、世界提示词、种子/导入数据
+function isContent(pathname) {
+  return /\.(txt|json)$/i.test(pathname) || /\/seeds\//.test(pathname) || /\/imports\//.test(pathname);
+}
+
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET') return;
   if (url.origin !== location.origin) return;          // 上游 API 直连，不拦截
   if (!url.pathname.startsWith(BASE)) return;          // 只管本子目录
+  if (isContent(url.pathname)) return;                 // 内容类：交给网络，永远最新
 
   e.respondWith(
     caches.match(e.request).then((hit) => {
@@ -47,7 +52,3 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
-
-
-
-

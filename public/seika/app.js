@@ -15,6 +15,7 @@ const DEFAULT_CFG = {
   mode: 'direct',
   keep: true,
   autoSummary: true,
+  autoExtend: true,
   len: 'normal'
 };
 
@@ -165,7 +166,7 @@ const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
  'optionBar','btnJump','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
- 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgKeep','cfgSummary',
+ 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgKeep','cfgSummary','cfgExtend','diag',
  'btnAddWorld','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
@@ -547,6 +548,59 @@ ${text}`;
   compacting = false;
 }
 
+/* ═════════════ 篇幅工具（自动续写） ═════════════ */
+function bodyHtml(html) {
+  const i = html.indexOf('<div');
+  if (i < 0) return html;
+  const open = html.indexOf('>', i);
+  if (open < 0) return html;
+  const close = html.indexOf('</div>', open + 1);
+  return close < 0 ? html.slice(open + 1) : html.slice(open + 1, close);
+}
+
+function bodyLen(html) {
+  return stripHtml(bodyHtml(html)).replace(/\s+/g, '').length;
+}
+
+// 把续写文本塞回正文块末尾（只取纯文本，绝不破坏结构化面板）
+function appendToBody(html, text) {
+  const plain = stripHtml(text).trim();
+  if (!plain) return html;
+  const i = html.indexOf('<div');
+  const open = html.indexOf('>', i);
+  const close = html.indexOf('</div>', open + 1);
+  const chunk = esc(plain).replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
+  if (i < 0 || open < 0 || close < 0) return html + '\n\n' + chunk;
+  return html.slice(0, close) + '\n\n' + chunk + '\n' + html.slice(close);
+}
+
+async function requestContinue(msgs, tail, need) {
+  const base = (S.cfg.base || DEFAULT_CFG.base).replace(/\/+$/, '');
+  const w = worldById(active()?.worldId);
+  const basePrompt = await getPrompt(w);
+  const sys = basePrompt +
+    '\n\n====\n【续写模式】这一轮你只负责补写正文的后续段落。只输出纯文本段落，不要输出任何 HTML 标签、数值变化块、状态面板或选项。\n====';
+  const res = await fetch(base + '/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
+    body: JSON.stringify({
+      model: S.cfg.model,
+      stream: false,
+      temperature: Math.min(1.2, S.cfg.temp + 0.05),
+      max_tokens: 2400,
+      messages: [
+        { role: 'system', content: sys },
+        ...msgs,
+        { role: 'assistant', content: tail },
+        { role: 'user', content: `接着上一段继续写，约 ${need} 字。只输出正文段落（纯文本，不要标签）。不要重复已写内容，不要总结，不要结束场景，不要跳时间。` }
+      ]
+    })
+  });
+  if (!res.ok) throw new Error('续写请求 ' + res.status);
+  const j = await res.json();
+  return j.choices?.[0]?.message?.content || '';
+}
+
 /* ═════════════ 发送 ═════════════ */
 async function send(text) {
   if (busy) return;
@@ -637,6 +691,26 @@ async function send(text) {
   if (acc) paint();
   bubble.classList.remove('caret');
 
+  /* ── 篇幅兜底：正文没写到下限就自动续写并拼回正文块 ── */
+  if (acc && S.cfg.mode === 'direct' && S.cfg.autoExtend) {
+    const target = Math.round(parseInt(lengthOf().words.split(/[–-]/)[0], 10) * 0.9);
+    let rounds = 0;
+    while (bodyLen(acc) < target && rounds < 2) {
+      rounds++;
+      const need = target - bodyLen(acc);
+      toast(`正文只有 ${bodyLen(acc)} 字，自动续写中…`);
+      let extra = '';
+      try {
+        extra = await requestContinue(msgs, stripHtml(acc).slice(-2600), need + 300);
+      } catch (e) { break; }
+      if (!extra || !extra.trim()) break;
+      acc = appendToBody(acc, extra.trim());
+      bubble.classList.add('caret');
+      paint();
+      bubble.classList.remove('caret');
+    }
+  }
+
   if (!acc) bubble.innerHTML = '<div style="color:#8c82a0;font-size:13px;padding:10px;">（空回复，检查模型名或额度）</div>';
 
   s.msgs.push({ role: 'assistant', content: acc });
@@ -680,6 +754,19 @@ function closeAllSheets() {
 }
 
 /* ═════════════ 设置 ═════════════ */
+const BUILD = 'r10';
+async function showDiag() {
+  try {
+    const w = worldById(active() ? active().worldId : 'seika');
+    const p = await getPrompt(w);
+    const L = lengthOf();
+    els.diag.textContent =
+      `引擎 ${BUILD} ｜ 世界「${w.name}」｜ 提示词 ${p.length} 字符 ｜ 正文目标 ${L.words} 字 ｜ 上限 ${L.tokens} tokens`;
+  } catch (e) {
+    els.diag.textContent = '引擎 ' + BUILD;
+  }
+}
+
 function fillCfgUI() {
   els.cfgBase.value = S.cfg.base;
   els.cfgKey.value = S.cfg.key;
@@ -687,6 +774,7 @@ function fillCfgUI() {
   els.cfgMode.value = S.cfg.mode;
   els.cfgKeep.checked = !!S.cfg.keep;
   els.cfgSummary.checked = !!S.cfg.autoSummary;
+  els.cfgExtend.checked = !!S.cfg.autoExtend;
   els.cfgTemp.value = S.cfg.temp;
   els.cfgTempVal.textContent = Number(S.cfg.temp).toFixed(2);
   els.cfgLen.value = S.cfg.len || 'normal';
@@ -701,6 +789,7 @@ function readCfgUI() {
   S.cfg.mode = els.cfgMode.value;
   S.cfg.keep = els.cfgKeep.checked;
   S.cfg.autoSummary = els.cfgSummary.checked;
+  S.cfg.autoExtend = els.cfgExtend.checked;
   S.cfg.temp = Number(els.cfgTemp.value);
   S.cfg.ctx = Number(els.cfgCtx.value);
   S.cfg.len = els.cfgLen.value;
@@ -759,7 +848,7 @@ els.btnCloseSessions.onclick = () => closeSheet(els.sessionsSheet);
 els.btnNewSession.onclick = () => { renderWorlds(); closeSheet(els.sessionsSheet); openSheet(els.worldSheet); };
 els.btnCloseWorld.onclick = () => closeSheet(els.worldSheet);
 
-els.btnSettings.onclick = () => { fillCfgUI(); els.worldForm.hidden = true; openSheet(els.settingsSheet); };
+els.btnSettings.onclick = () => { fillCfgUI(); els.worldForm.hidden = true; openSheet(els.settingsSheet); showDiag(); };
 els.btnCloseSettings.onclick = () => { readCfgUI(); closeSheet(els.settingsSheet); };
 
 els.btnStatus.onclick = () => openSheet(els.statusSheet);
@@ -1018,6 +1107,9 @@ async function boot() {
 
 boot();
 })();
+
+
+
 
 
 

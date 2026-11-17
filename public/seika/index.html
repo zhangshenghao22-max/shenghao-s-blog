@@ -128,6 +128,11 @@
       <span>自动摘要（超出窗口的旧剧情压缩成前情提要，记忆不断档）</span>
     </label>
 
+    <label class="chk">
+      <input id="cfgExtend" type="checkbox">
+      <span>自动续写（正文没写到下限时，自动补写并接在正文后）</span>
+    </label>
+
     <div class="row">
       <button id="btnAddWorld" class="ghost">＋ 添加世界</button>
       <button id="btnImport" class="ghost">导入存档</button>
@@ -153,6 +158,8 @@
 
     <input id="fileImport" type="file" accept=".json,.txt,application/json,text/plain" hidden>
 
+    <p class="fine diag" id="diag"></p>
+
     <p class="fine">
       直连模式下 Key 只存在这台手机的浏览器里，请求直接从手机发往上游 API。
       会话记录存在本机，重要进度用「导出存档」备份。
@@ -174,5 +181,6 @@
 <script src="./app.js"></script>
 </body>
 </html>
+
 
 

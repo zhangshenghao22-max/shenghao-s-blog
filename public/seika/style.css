@@ -264,3 +264,11 @@ summary::-webkit-details-marker{display:none}
 #topbar{gap:8px}
 .tb-btn{width:34px;height:34px;font-size:14px}
 
+
+/* 设置底部诊断行 */
+.fine.diag{
+  color:#6f6683;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:10.5px;line-height:1.7;padding:8px 10px;margin:4px 0 14px;
+  border:1px dashed #2b2240;border-radius:10px;background:#080610;
+  word-break:break-all;
+}

@@ -4,7 +4,7 @@
 /* ═════════════ 常量 ═════════════ */
 const LS_KEY = 'seika.v2';
 const CHAR_BUDGET = 180000;          // 单次请求上下文软上限（字符）
-const HISTORY_SEED = './seeds/history-01.json';
+const HISTORY_SEED = './seeds/history-01.json?v=2';
 
 const DEFAULT_CFG = {
   base: 'https://api.deepseek.com/v1',
@@ -157,7 +157,7 @@ const els = {};
  'optionBar','btnJump','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
  'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgKeep','cfgSummary',
- 'btnAddWorld','btnImport','btnExport','btnClear','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
+ 'btnAddWorld','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
 
@@ -777,54 +777,149 @@ els.btnExport.onclick = () => {
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 };
 
+/* ── 导入：JSON 存档 / 纯文本聊天记录 ── */
+/* 用标签栈精确补齐被截断的 HTML */
+const VOID_TAGS = new Set(['br', 'img', 'input', 'hr', 'meta', 'link', 'source', 'wbr', 'area', 'base', 'col', 'embed', 'param', 'track']);
+function balanceHtml(html) {
+  const src = String(html);
+  // 去掉注释和脚本/样式内容，避免误判
+  const cleaned = src.replace(/<!--[\s\S]*?-->/g, '').replace(/<(script|style)[\s\S]*?<\/\1>/gi, '');
+  const stack = [];
+  const re = /<(\/?)([a-zA-Z][a-zA-Z0-9-]*)/g;
+  let m;
+  while ((m = re.exec(cleaned))) {
+    const closing = m[1] === '/';
+    const tag = m[2].toLowerCase();
+    if (VOID_TAGS.has(tag)) continue;
+    if (!closing) {
+      stack.push(tag);
+    } else {
+      const i = stack.lastIndexOf(tag);
+      if (i >= 0) stack.length = i;
+    }
+  }
+  if (!stack.length) return src;
+  return src.trimEnd() + stack.reverse().map(t => `</${t}>`).join('');
+}
+
+// 解析「[USER]: … #----# [AI]: … #====#」格式的纯文本记录
+function parsePlainLog(text) {
+  const msgs = [];
+  const rx = /\[USER\]:\s*([\s\S]*?)\s*#-{10,}#\s*\[AI\]:\s*([\s\S]*?)\s*(?=#={10,}#|$)/g;
+  let m;
+  while ((m = rx.exec(text))) {
+    const u = m[1].trim();
+    const a = m[2].trim();
+    if (u) msgs.push({ role: 'user', content: u });
+    if (a) msgs.push({ role: 'assistant', content: balanceHtml(a) });
+  }
+  return msgs;
+}
+
+function ingestSessions(list) {
+  let added = 0;
+  (list || []).forEach(x => {
+    if (!x || !Array.isArray(x.msgs) || !x.msgs.length) return;
+    const s = mkSession(x.worldId || 'seika', x.title || '导入的对话');
+    s.msgs = x.msgs
+      .filter(m => m && m.role && typeof m.content === 'string')
+      .map(m => ({ role: m.role, content: m.content }));
+    s.summary = x.summary || '';
+    s.summarizedUpTo = x.summarizedUpTo || 0;
+    s.createdAt = x.createdAt || now();
+    s.updatedAt = x.updatedAt || now();
+    S.sessions.push(s);
+    added++;
+  });
+  if (added) {
+    S.active = S.sessions[S.sessions.length - 1].id;
+    save();
+    renderAll();
+    renderSessions();
+    closeSheet(els.settingsSheet);
+    toast(`已导入 ${added} 个对话`);
+  }
+  return added;
+}
+
 els.btnImport.onclick = () => els.fileImport.click();
 els.fileImport.addEventListener('change', async (e) => {
   const f = e.target.files?.[0];
   if (!f) return;
   try {
-    const d = JSON.parse(await f.text());
-    if (Array.isArray(d.sessions) && d.sessions.length) {
-      let added = 0;
-      d.sessions.forEach(x => {
-        if (!x || !Array.isArray(x.msgs)) return;
-        const s = mkSession(x.worldId || 'seika', x.title || '导入的对话');
-        s.msgs = x.msgs.map(m => ({ role: m.role, content: m.content }));
-        s.summary = x.summary || '';
-        s.summarizedUpTo = x.summarizedUpTo || 0;
-        s.createdAt = x.createdAt || now();
-        s.updatedAt = x.updatedAt || now();
-        S.sessions.push(s);
-        added++;
-      });
-      if (Array.isArray(d.worlds)) S.worlds.push(...d.worlds.filter(w => w && w.id && w.name));
-      if (added) {
-        S.active = S.sessions[S.sessions.length - 1].id;
-        save();
-        renderAll();
-        renderSessions();
-        closeSheet(els.settingsSheet);
-        toast(`已导入 ${added} 个对话`);
+    const raw = await f.text();
+    const looksJsonFile = /\.json$/i.test(f.name);
+
+    if (looksJsonFile) {
+      let d = null;
+      try { d = JSON.parse(raw); } catch (err) {
+        toast('JSON 解析失败：' + err.message);
         return;
       }
-    }
-    if (Array.isArray(d.msgs) && d.msgs.length) {
-      const s = mkSession('seika', d.source || '导入的对话');
-      s.msgs = d.msgs.map(m => ({ role: m.role, content: m.content }));
-      S.sessions.push(s);
-      S.active = s.id;
-      save();
-      renderAll();
-      closeSheet(els.settingsSheet);
-      toast('已导入 1 个对话');
+      if (Array.isArray(d.sessions) && ingestSessions(d.sessions)) {
+        if (Array.isArray(d.worlds)) {
+          S.worlds.push(...d.worlds.filter(w => w && w.id && w.name));
+          save();
+        }
+        return;
+      }
+      if (Array.isArray(d.msgs) && d.msgs.length) {
+        ingestSessions([{ worldId: 'seika', title: d.source || d.note || '导入的对话', msgs: d.msgs }]);
+        return;
+      }
+      toast('文件里没有可识别的对话');
       return;
     }
-    toast('文件里没有可识别的对话');
+
+    // 先按纯文本记录解析（[USER]: … #----# [AI]: … #====#）
+    const msgs = parsePlainLog(raw);
+    if (msgs.length) {
+      const rounds = Math.round(msgs.length / 2);
+      ingestSessions([{ worldId: 'seika', title: `导入记录 · ${rounds} 轮`, msgs }]);
+      return;
+    }
+
+    // 兜底：可能是被改成 .txt 的 JSON
+    try {
+      const d = JSON.parse(raw);
+      if (Array.isArray(d.sessions) && ingestSessions(d.sessions)) return;
+      if (Array.isArray(d.msgs) && d.msgs.length) {
+        ingestSessions([{ worldId: 'seika', title: d.source || '导入的对话', msgs: d.msgs }]);
+        return;
+      }
+    } catch {}
+
+    toast('没匹配到 [USER]/[AI] 段落，也不是存档 JSON');
   } catch (err) {
     toast('导入失败：' + (err.message || err));
   } finally {
     e.target.value = '';
   }
 });
+
+/* 一键载入站点内置的那份记录 */
+els.btnLoadSample.onclick = async () => {
+  els.btnLoadSample.disabled = true;
+  els.btnLoadSample.textContent = '载入中…';
+  try {
+    const r = await fetch('./seeds/history-01.json?v=2', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const msgs = d.msgs || [];
+    if (!msgs.length) throw new Error('没有对话内容');
+    ingestSessions([{
+      worldId: 'seika',
+      title: '校规修改器 · 第1–27轮',
+      msgs: msgs.map(m => ({ role: m.role, content: m.role === 'assistant' ? balanceHtml(m.content) : m.content }))
+    }]);
+  } catch (err) {
+    toast('载入失败：' + (err.message || err));
+  } finally {
+    els.btnLoadSample.disabled = false;
+    els.btnLoadSample.textContent = '载入「校规修改器 · 27 轮」聊天记录';
+  }
+};
+
 
 els.btnClear.onclick = () => {
   if (!confirm('清空本机全部对话与世界？Key 设置会保留。')) return;
@@ -884,3 +979,5 @@ async function boot() {
 
 boot();
 })();
+
+

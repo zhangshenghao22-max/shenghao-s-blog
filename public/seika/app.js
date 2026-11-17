@@ -16,14 +16,17 @@ const DEFAULT_CFG = {
   keep: true,
   autoSummary: true,
   autoExtend: true,
-  len: 'normal'
+  len: 'normal',
+  style: 'life'
 };
 
 /* 篇幅档位：决定 max_tokens 与注入给模型的字数硬指标 */
 const LENGTH_PRESETS = {
-  short: { label: '标准 · 900–1200 字', words: '900–1200', tokens: 3000 },
-  normal: { label: '长 · 1400–2000 字', words: '1400–2000', tokens: 4096 },
-  epic: { label: '极长 · 2200–3000 字', words: '2200–3000', tokens: 6144 }
+  mini:   { label: '极短 · 200–350 字',   words: '200–350',   cap: 420,  paras: '2–3',   tokens: 1000 },
+  brief:  { label: '短 · 400–600 字',     words: '400–600',   cap: 720,  paras: '3–4',   tokens: 1600 },
+  short:  { label: '中 · 900–1200 字',    words: '900–1200',  cap: 1400, paras: '4–5',   tokens: 3000 },
+  normal: { label: '长 · 1400–2000 字',   words: '1400–2000', cap: 2300, paras: '6–8',   tokens: 4096 },
+  epic:   { label: '极长 · 2200–3000 字', words: '2200–3000', cap: 3400, paras: '9–12',  tokens: 6144 }
 };
 function lengthOf() { return LENGTH_PRESETS[S.cfg.len] || LENGTH_PRESETS.normal; }
 
@@ -166,7 +169,7 @@ const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
  'optionBar','btnJump','btnMoreOpts','optWrap','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
- 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgKeep','cfgSummary','cfgExtend','diag',
+ 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgStyle','cfgKeep','cfgSummary','cfgExtend','diag',
  'btnAddWorld','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
@@ -421,7 +424,10 @@ function buildMessages(s) {
 function buildSystem(prompt, s) {
   let sys = prompt;
   const L = lengthOf();
-  sys += `\n\n====\n【本轮篇幅 · 硬指标】\n正文必须写到 ${L.words} 字。字数不足时不要收尾，回去把省略的动作过程补写出来。\n只推进 1–2 个动作节点，把这个节点写透，不要为了推进剧情而压缩描写。\n====`;
+  const styleLine = (S.cfg.style === 'story')
+    ? '文风：剧情流。聚焦冲突和推进，闲笔从简。'
+    : '文风：生活流。允许闲笔、走神、日常琐碎，让对话有停顿和错位。人物先像活人，再谈剧情。';
+  sys += `\n\n====\n【本轮篇幅】\n正文 ${L.words} 字，分 ${L.paras} 段。不要少于下限，也不要超过 ${L.cap} 字。\n${styleLine}\n只推进 1–2 个动作节点，把这一段写透，不要为了赶剧情而压缩。\n====`;
   if (s && s.summary) {
     sys += '\n\n====\n【前情摘要】（更早剧情的压缩记录，一律视为已经发生的事实，后续要与之连贯）\n' + s.summary + '\n====';
   }
@@ -789,6 +795,7 @@ function fillCfgUI() {
   els.cfgTemp.value = S.cfg.temp;
   els.cfgTempVal.textContent = Number(S.cfg.temp).toFixed(2);
   els.cfgLen.value = S.cfg.len || 'normal';
+  els.cfgStyle.value = S.cfg.style || 'life';
   els.cfgCtx.value = S.cfg.ctx;
   els.cfgCtxVal.textContent = S.cfg.ctx;
 }
@@ -804,6 +811,7 @@ function readCfgUI() {
   S.cfg.temp = Number(els.cfgTemp.value);
   S.cfg.ctx = Number(els.cfgCtx.value);
   S.cfg.len = els.cfgLen.value;
+  S.cfg.style = els.cfgStyle.value;
   save();
 }
 
@@ -1128,6 +1136,8 @@ async function boot() {
 
 boot();
 })();
+
+
 
 
 

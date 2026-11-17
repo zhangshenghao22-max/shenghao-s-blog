@@ -116,9 +116,18 @@
 
     <label>回复篇幅
       <select id="cfgLen" class="sel">
-        <option value="short">标准 · 900–1200 字</option>
+        <option value="mini">极短 · 200–350 字</option>
+        <option value="brief">短 · 400–600 字</option>
+        <option value="short">中 · 900–1200 字</option>
         <option value="normal">长 · 1400–2000 字（推荐）</option>
         <option value="epic">极长 · 2200–3000 字</option>
+      </select>
+    </label>
+
+    <label>文风
+      <select id="cfgStyle" class="sel">
+        <option value="life">生活流 · 有闲笔、会走神、说话带停顿</option>
+        <option value="story">剧情流 · 紧凑、聚焦冲突</option>
       </select>
     </label>
 
@@ -184,6 +193,7 @@
 <script src="./app.js"></script>
 </body>
 </html>
+
 
 
 

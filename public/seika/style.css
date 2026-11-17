@@ -135,7 +135,7 @@ body{
 /* ── 选项条 ── */
 #optionBar{
   flex:0 0 auto;                        /* 关键：永不被压缩 */
-  display:flex;align-items:stretch;gap:8px;overflow-x:auto;padding:8px 12px;
+  display:flex;align-items:flex-start;gap:8px;overflow-x:auto;overflow-y:auto;max-height:32vh;padding:8px 12px;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;
 }
 #optionBar::-webkit-scrollbar{display:none}
@@ -147,7 +147,6 @@ body{
   border:1px solid var(--line);background:var(--bg-2);color:var(--text);
   font-size:12.5px;line-height:1.35;
   white-space:normal;text-align:left;
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
   cursor:pointer;
 }
 .opt:active{background:#1d1630}
@@ -327,7 +326,7 @@ summary::-webkit-details-marker{display:none}
   border-radius:12px;
 }
 .more{
-  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  position:absolute;right:6px;top:10px;
   width:34px;height:34px;border-radius:50%;z-index:5;
   border:1px solid #4a3a70;background:rgba(22,16,34,.96);color:#c9b8e8;
   font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center;
@@ -359,3 +358,52 @@ summary::-webkit-details-marker{display:none}
 .c-btn{color:var(--accent-2)}
 .opt:active{background:color-mix(in srgb, var(--accent) 22%, var(--bg-2))}
 
+
+/* ═══════ 轻小说标签体系：仅「家中唯一异性」世界启用 ═══════ */
+body[data-world="family"] tl{
+  display:block;font-size:11.5px;line-height:1.95;color:#9a8790;
+  padding:9px 12px;margin:8px 0;border-radius:11px;
+  border:1px solid var(--line);
+  background:color-mix(in srgb, var(--bg-2) 88%, transparent);
+  letter-spacing:.2px;
+}
+body[data-world="family"] article{display:block}
+body[data-world="family"] article p{margin:0 0 .9em;line-height:1.92}
+body[data-world="family"] article p:last-child{margin-bottom:0}
+body[data-world="family"] w{color:#e07080;font-weight:500}
+body[data-world="family"] m{color:#8fb0d6;font-weight:500}
+body[data-world="family"] thk{
+  display:block;color:#a898c0;font-style:italic;font-size:13.5px;line-height:1.85;
+  border-left:2px solid var(--accent);padding:2px 0 2px 11px;
+  margin:.75em 0;opacity:.92;
+}
+body[data-world="family"] fx{
+  display:block;color:#7f8fa6;font-size:12.5px;letter-spacing:.6px;
+  margin:.7em 0;text-align:center;
+}
+body[data-world="family"] opt,
+body[data-world="family"] suggested_questions{display:block}
+body[data-world="family"] opt{margin:10px 0}
+body[data-world="family"] d{
+  display:block;padding:10px 13px;margin:7px 0;border-radius:12px;
+  border:1px solid var(--line);background:var(--bg-2);color:var(--text);
+  font-size:13px;line-height:1.55;cursor:pointer;transition:background .15s;
+}
+body[data-world="family"] d:active{
+  background:color-mix(in srgb,var(--accent) 26%,var(--bg-2));
+}
+body[data-world="family"] pre.cube{
+  white-space:pre-wrap;word-break:break-word;
+  font:11.5px/1.95 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color:#c9c1d9;background:color-mix(in srgb, var(--bg) 55%, #000);
+  border:1px solid var(--line);border-radius:10px;
+  padding:11px 12px;margin:8px 0;overflow-x:auto;
+}
+body[data-world="family"] details summary{color:var(--accent-2)}
+
+
+/* 这个世界原格式的折叠面板没有三角标记，补一个可点的暗示 */
+body[data-world="family"] summary::before{
+  content:"▶ ";font-size:.78em;color:var(--accent-2);opacity:.85;
+}
+body[data-world="family"] details[open] > summary::before{content:"▼ ";}

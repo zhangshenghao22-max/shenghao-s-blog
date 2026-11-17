@@ -244,13 +244,39 @@ els.scroller.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ═════════════ 渲染 ═════════════ */
+/* 把另一套平台输出（轻小说标签）整理成能直接渲染的 HTML */
+function adaptHtml(html) {
+  let out = String(html);
+  // 思维链（藏在 HTML 注释里的推导过程）不展示
+  out = out.replace(/<details[^>]*>\s*<summary[^>]*>\s*思维链\s*<\/summary>[\s\S]*?<\/details>/gi, '');
+  // 代码围栏 → <pre>（含未闭合的兜底）
+  out = out.replace(/```[a-zA-Z]*[ \t]*\r?\n?([\s\S]*?)```/g, (m, code) => {
+    return '<pre class="cube">' + esc(code.trim()) + '</pre>';
+  });
+  out = out.replace(/```[a-zA-Z]*[ \t]*\r?\n?([\s\S]*)$/, (m, code) => {
+    return '<pre class="cube">' + esc(code.trim()) + '</pre>';
+  });
+  return out;
+}
+
 function appendMsgEl(role, content) {
   const wrap = document.createElement('div');
   wrap.className = 'msg ' + (role === 'user' ? 'user' : 'ai');
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-  if (role === 'user') bubble.textContent = content;
-  else bubble.innerHTML = content;
+  if (role === 'user') {
+    bubble.textContent = content;
+  } else {
+    bubble.innerHTML = adaptHtml(content);
+    // 轻小说格式的 <d> 选项可直接点
+    bubble.querySelectorAll('d').forEach(el => {
+      el.onclick = () => {
+        const t = el.textContent.trim();
+        const m = t.match(/^([A-Za-z])[.、)．\s]/);
+        send(m ? m[1] : t);
+      };
+    });
+  }
   wrap.appendChild(bubble);
   els.messages.appendChild(wrap);
   return bubble;
@@ -362,6 +388,24 @@ function plainText(html) {
 }
 
 function extractOptions(html) {
+  // ① 轻小说格式：<opt><suggested_questions><d>A. …</d>
+  try {
+    const dom = document.createElement('div');
+    dom.innerHTML = adaptHtml(html);
+    const ds = [...dom.querySelectorAll('d')];
+    if (ds.length) {
+      return ds.slice(0, 5).map((el, i) => {
+        const t = el.textContent.trim();
+        const m = t.match(/^([A-Za-z])[.、)．\s]\s*(.*)$/);
+        const key = m ? m[1].toUpperCase() : String.fromCharCode(65 + i);
+        let label = (m ? m[2] : t).trim();
+        if (label.length > 64) label = label.slice(0, 64) + '…';
+        return { key, label };
+      });
+    }
+  } catch {}
+
+  // ② 数字格式：1️⃣–5️⃣
   const text = plainText(html);
   const out = [];
   const re = /^\s*([1-5])\uFE0F?\u20E3?\s*(.+?)\s*$/gm;
@@ -369,7 +413,7 @@ function extractOptions(html) {
   while ((m = re.exec(text))) {
     let label = m[2].replace(/\s*[📝😳👑🎀+]+$/g, '').trim();
     if (label.length > 64) label = label.slice(0, 64) + '…';
-    out.push({ n: m[1], label });
+    out.push({ key: m[1], label });
     if (out.length >= 5) break;
   }
   return out;
@@ -387,8 +431,9 @@ function renderOptions(html) {
   list.forEach(o => {
     const b = document.createElement('button');
     b.className = 'opt';
-    b.textContent = ['①', '②', '③', '④', '⑤'][Number(o.n) - 1] + ' ' + o.label;
-    b.onclick = () => send(o.n);
+    const isLetter = /^[A-Z]$/.test(o.key);
+    b.textContent = (isLetter ? o.key + '. ' : ['①', '②', '③', '④', '⑤'][Number(o.key) - 1] + ' ') + o.label;
+    b.onclick = () => send(o.key);
     els.optionBar.appendChild(b);
   });
   // 超过两条才需要展开按钮
@@ -1236,7 +1281,10 @@ els.fileImport.addEventListener('change', async (e) => {
     const msgs = parsePlainLog(raw);
     if (msgs.length) {
       const rounds = Math.round(msgs.length / 2);
-      ingestSessions([{ worldId: 'seika', title: `导入记录 · ${rounds} 轮`, msgs }]);
+      // 带轻小说标签的记录归到对应世界
+      const probe = msgs.slice(0, 4).map(m => m.content).join('');
+      const worldId = /<tl>|<article>|<opt>|<thk>/i.test(probe) ? 'family' : 'seika';
+      ingestSessions([{ worldId, title: `导入记录 · ${rounds} 轮`, msgs }]);
       return;
     }
 
@@ -1340,6 +1388,10 @@ async function boot() {
 
 boot();
 })();
+
+
+
+
 
 
 

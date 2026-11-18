@@ -752,6 +752,28 @@ async function requestTail(msgs, partial) {
   return j.choices?.[0]?.message?.content || '';
 }
 
+/* 把上游五花八门的错误翻译成人话 */
+function friendlyError(e) {
+  const m = String((e && e.message) || e);
+  if (/PROHIBITED_CONTENT|prompt_blocked/.test(m))
+    return '被模型方的内容审核拦了（不是网络问题）。Gemini 官方 API 不支持这类内容，换 DeepSeek 或 GLM。';
+  if (/violation of provider Terms Of Service/i.test(m))
+    return '被 OpenRouter 的服务条款拦了。Gemini 系列在 OpenRouter 上不接受成人内容。';
+  if (/\b401\b|invalid.*api.?key|incorrect api key/i.test(m))
+    return 'Key 无效或已过期，检查一下 ⚙︎ 里填的。';
+  if (/\b402\b|insufficient|quota|余额/i.test(m))
+    return '额度不足，去充值。';
+  if (/\b429\b|rate.?limit/i.test(m))
+    return '请求太频繁被限流，等十几秒再发。';
+  if (/\b50[234]\b/.test(m))
+    return '上游模型暂时不可用（503/502/504），过一会儿再试或换个模型。';
+  if (/model.*not.*(found|exist)|unknown model/i.test(m))
+    return '模型名不存在，检查 ⚙︎ 里的模型名。';
+  if (/Failed to fetch|NetworkError|load failed/i.test(m))
+    return '连不上上游。检查网络，或这个接口不允许浏览器跨域。';
+  return m;
+}
+
 /* ═════════════ 发送 ═════════════ */
 async function send(text) {
   if (busy) return;
@@ -816,7 +838,7 @@ async function send(text) {
   } catch (e) {
     if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
     bubble.classList.remove('caret');
-    bubble.innerHTML = acc + `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ ${esc(e.message || e)}</div>`;
+    bubble.innerHTML = acc + `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ ${esc(friendlyError(e))}</div>`;
     busy = false;
     els.btnSend.disabled = false;
     return;
@@ -832,7 +854,7 @@ async function send(text) {
     } catch (e) {
       if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
       bubble.classList.remove('caret');
-      bubble.innerHTML = `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ 重试失败：${esc(e.message || e)}</div>`;
+      bubble.innerHTML = `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ 重试失败：${esc(friendlyError(e))}</div>`;
       busy = false;
       els.btnSend.disabled = false;
       return;
@@ -1428,6 +1450,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

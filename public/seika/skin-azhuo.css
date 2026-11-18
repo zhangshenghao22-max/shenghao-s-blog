@@ -1,0 +1,179 @@
+/* 复刻自原站 built_in_css —— 作用域限定 body[data-world="azhuo"] */
+body[data-world="azhuo"] .style_dot-flashing__8L91Q, body[data-world="azhuo"] .style_text__zGhNq{ display: none !important; }
+body[data-world="azhuo"] .flex.items-center.justify-center.w-6.h-5{
+    width: auto !important; height: auto !important;
+    min-width: 240px !important;
+    background: linear-gradient(145deg, #FFF0F5, #FFE4E1) !important;
+    border: 2px solid #FFD700 !important;
+    border-radius: 25px !important;
+    padding: 8px 16px !important;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.2) !important;
+    margin: 10px auto !important; overflow: visible !important;
+}
+body[data-world="azhuo"] .flex.items-center.justify-center.w-6.h-5::after{
+    content: "订单进行中...❤️";
+    font-size: 14px !important; font-weight: 800 !important;
+    color: #DB7093 !important; white-space: nowrap !important;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8) !important;
+    animation: canary-heartbeat 1.5s infinite ease-in-out !important;
+}
+@keyframes canary-heartbeat{ 
+    0%, 100% { transform: scale(1); color: #DB7093; } 
+    50% { transform: scale(1.02); color: #FF1493; text-shadow: 0 0 8px #FF69B4; } 
+}
+body[data-world="azhuo"] .MuiStack-root.text-purple-500.mt-1{
+    background: #FFF5EE !important; border: 1px solid #FFB6C1 !important;
+    border-radius: 12px !important; padding: 10px 14px !important; margin-top: 12px !important;
+    flex-direction: row !important; flex-wrap: wrap !important;
+    justify-content: center !important; gap: 15px !important;
+    box-shadow: 0 2px 8px rgba(255, 182, 193, 0.2) !important;
+}
+body[data-world="azhuo"] .MuiStack-root.text-purple-500 p{ font-family: 'Georgia', serif !important; font-size: 0.9rem !important; margin: 0 !important; font-style: italic !important; }
+body[data-world="azhuo"] .MuiStack-root .text-purple-500, body[data-world="azhuo"] .MuiTypography-root.css-6c0gf2{ color: #C71585 !important; font-weight: bold !important; }
+body[data-world="azhuo"] .MuiStack-root .text-orange-500{ color: #FF4500 !important; text-shadow: 0 0 2px rgba(255, 69, 0, 0.2) !important; }
+body[data-world="azhuo"] .inline-block[data-state="closed"] > div, body[data-world="azhuo"] .inline-block[data-state="open"] > div{
+    background: #FFFAF0 !important; border: 2px solid #FFC0CB !important;
+    border-radius: 20px !important; height: 38px !important; color: #D87093 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 2px 5px rgba(255, 192, 203, 0.3) !important;
+}
+body[data-world="azhuo"] .inline-block[data-state="closed"] > div:hover{
+    border-color: #FF1493 !important; color: #C71585 !important;
+    background: #FFF0F5 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(255, 20, 147, 0.2) !important;
+}
+body[data-world="azhuo"] .flex.items-center.justify-between.w-full.relative{
+    background: rgba(255, 240, 245, 0.85) !important; backdrop-filter: blur(8px) !important;
+    padding: 10px !important; border-radius: 16px !important; border-bottom: 2px solid #FFE4E1 !important;
+    box-shadow: 0 4px 20px rgba(255, 182, 193, 0.15) !important;
+}
+body[data-world="azhuo"] .text-green-800.bg-green-100{ /* 未公开标签 -> 私密标签 */
+    background-color: #FFF0F5 !important; color: #DB7093 !important;
+    border: 1px solid #FFB6C1 !important; border-radius: 12px !important;
+}
+body[data-world="azhuo"] #ai-model-selector .bg-grey-100, body[data-world="azhuo"] #ai-model-selector .bg-white{
+    background: #FFFFFF !important; border: 1px solid #FFD700 !important; border-radius: 18px !important;
+    color: #CD5C5C !important;
+}
+body[data-world="azhuo"] .MuiIconButton-root:hover{
+    color: #FF1493 !important; background: rgba(255, 105, 180, 0.15) !important;
+    transform: rotate(10deg) scale(1.1) !important;
+}
+body[data-world="azhuo"] .group .bg-gray-100\/90{
+    background: linear-gradient(to bottom right, #FFF5F7, #FFF0F5) !important; 
+    border: 2px solid #FFB6C1 !important;
+    border-radius: 18px 18px 18px 4px !important; 
+    box-shadow: 5px 5px 15px rgba(255, 182, 193, 0.25) !important;
+    color: #8B4513 !important;
+}
+body[data-world="azhuo"] #ai-chat-input{
+    background-color: #FFFAFA !important; border: 2px solid #FFC0CB !important;
+    border-radius: 14px !important; color: #5D4037 !important;
+}
+body[data-world="azhuo"] #ai-chat-input:focus{ 
+    border-color: #FF69B4 !important; 
+    box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.15) !important; 
+    background-color: #FFFFFF !important;
+}
+body[data-world="azhuo"] .flex.items-center.gap-2.pb-2 > button{
+    background: linear-gradient(135deg, #FFC0CB 0%, #FFB6C1 100%) !important; 
+    color: #FFFFFF !important;
+    border: 1px solid #FF69B4 !important; border-radius: 22px !important;
+    box-shadow: 0 3px 6px rgba(255, 105, 180, 0.3) !important;
+    font-weight: bold !important; padding: 7px 20px !important;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55) !important;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.1) !important;
+}
+body[data-world="azhuo"] .flex.items-center.gap-2.pb-2 > button:hover{
+    background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%) !important;
+    color: #FFFFFF !important;
+    border-color: #C71585 !important; transform: scale(1.05) !important;
+    box-shadow: 0 0 15px rgba(255, 20, 147, 0.5) !important;
+}
+body[data-world="azhuo"] #ai-chat-bottom-input button.rounded-full, body[data-world="azhuo"] #ai-chat-bottom-input .absolute.left-2, body[data-world="azhuo"] #ai-chat-bottom-input .absolute.left-3{
+    display: none !important;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z{
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; line-height: 1.7; color: #5D4037;
+    background-color: #FFFAF0; padding: 20px; border-radius: 16px;
+    border: 3px double #FFD700; box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z h1{
+    font-size: 1.5em; color: #CD5C5C; border-bottom: 2px dashed #FF69B4;
+    padding-bottom: 10px; margin: 25px 0 18px 0; text-align: center;
+    text-shadow: 1px 1px 0 #FFF;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z details{
+    background: rgba(255, 240, 245, 0.6); border: 1px solid #FFC0CB;
+    border-radius: 12px; margin: 18px 0; padding: 6px;
+    transition: all 0.4s ease; overflow: hidden;
+    box-shadow: 2px 2px 8px rgba(255, 192, 203, 0.2);
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z details[open]{
+    background: #FFF0F5; border: 1px solid #FF69B4;
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.25);
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z summary{
+    cursor: pointer; padding: 12px 18px; font-weight: bold; font-size: 1.15em;
+    color: #C71585; list-style: none; display: flex; align-items: center;
+    background: rgba(255, 255, 255, 0.7); border-radius: 8px; outline: none;
+    transition: color 0.3s;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z summary::-webkit-details-marker{ display: none; }
+body[data-world="azhuo"] #chat-ui-ruka8x2z summary:hover{ background: rgba(255, 255, 255, 0.95); color: #FF1493; }
+body[data-world="azhuo"] #chat-ui-ruka8x2z summary::before{
+    content: '🍑'; display: inline-block; margin-right: 12px;
+    font-size: 1.3em; transition: transform 0.3s;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z details[open] summary::before{
+    transform: rotate(20deg) scale(1.2); content: '💋'; 
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z details > pre, body[data-world="azhuo"] #chat-ui-ruka8x2z details > .content-box{
+    padding: 18px; margin: 8px 0 0 0; border-top: 1px dashed #FFB6C1;
+    font-size: 1em !important; color: #8B4513; 
+    background: linear-gradient(to bottom, #FFFAFA, #FFF5EE);
+    border-radius: 0 0 10px 10px; white-space: pre-wrap; font-family: inherit;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z > pre, body[data-world="azhuo"] #chat-ui-ruka8x2z > .content-box{ /* 环境区 */
+    background-color: #FFF5EE; border: 1px solid #FFDAB9;
+    border-left: 5px solid #FF69B4; border-radius: 10px; padding: 15px;
+    font-size: 1em; color: #8B0000; white-space: pre-wrap;
+    box-shadow: inset 0 0 10px rgba(255, 218, 185, 0.3);
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z .tk-r{
+    display: block;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z .tk-r b{
+    font-weight: bold;
+    color: inherit;
+}
+body[data-world="azhuo"] #chat-ui-ruka8x2z .tk-r span{
+    color: inherit;
+}
+@media only screen and (max-width: 640px){body[data-world="azhuo"] .flex.items-center.justify-between.w-full.relative{
+        flex-wrap: nowrap !important; gap: 6px !important; padding: 8px !important;
+        overflow: hidden !important; border-bottom: 2px solid #FFC0CB !important;
+    }
+body[data-world="azhuo"] .text-green-800.bg-green-100{ display: none !important; }
+body[data-world="azhuo"] .w-px.h-4.bg-gray-200{ display: none !important; }
+body[data-world="azhuo"] #ai-model-selector{
+        flex: 1 !important; min-width: 0 !important; width: auto !important;
+    }
+body[data-world="azhuo"] #ai-model-selector button{ width: 100% !important; padding: 0 6px !important; border-color: #FFB6C1 !important; }
+body[data-world="azhuo"] #ai-model-selector span{
+        font-size: 12px !important; white-space: nowrap !important;
+        overflow: hidden !important; text-overflow: ellipsis !important; color: #C71585 !important;
+    }
+body[data-world="azhuo"] .flex.items-center.gap-1{ flex-shrink: 0 !important; }
+body[data-world="azhuo"] .flex.items-center.justify-center.w-6.h-5{
+        min-width: 0 !important; width: 96% !important; margin: 8px auto !important;
+        background: #FFF0F5 !important; border-color: #FF69B4 !important;
+    }
+body[data-world="azhuo"] .flex.items-center.justify-center.w-6.h-5::after{
+        font-size: 12px !important; content: "订单进行中...❤️" !important;
+        white-space: normal !important; text-align: center !important;
+    }
+body[data-world="azhuo"] #chat-ui-ruka8x2z{ padding: 12px; border-width: 2px; }
+body[data-world="azhuo"] #chat-ui-ruka8x2z h1{ font-size: 1.3em; margin: 15px 0; }
+body[data-world="azhuo"] #chat-ui-ruka8x2z summary{ padding: 10px; font-size: 1em; }}

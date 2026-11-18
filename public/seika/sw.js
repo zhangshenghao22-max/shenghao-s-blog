@@ -1,6 +1,6 @@
 // sw.js — 离线壳缓存（站点可达 /seika/ 子目录下）
 // 原则：代码与图标走缓存优先；提示词 / 存档等"内容"永远走网络，保证改了就生效。
-const CACHE = 'seika-shell-v20';
+const CACHE = 'seika-shell-v21';
 const BASE = new URL('./', self.location).pathname;   // 自动适配部署路径
 const SHELL = [
   BASE,
@@ -29,6 +29,7 @@ self.addEventListener('activate', (e) => {
 
 // 这些从不缓存：人设提示词、世界提示词、种子/导入数据
 function isContent(pathname) {
+  if (/skin-.*\.css$/i.test(pathname)) return true;
   return /\.(txt|json)$/i.test(pathname) || /\/seeds\//.test(pathname) || /\/imports\//.test(pathname);
 }
 
@@ -52,6 +53,7 @@ self.addEventListener('fetch', (e) => {
     })
   );
 });
+
 
 
 

@@ -305,7 +305,7 @@ summary::-webkit-details-marker{display:none}
 /* 设置底部诊断行 */
 .fine.diag{
   color:#6f6683;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  font-size:10.5px;line-height:1.7;padding:8px 10px;margin:4px 0 14px;
+  font-size:10.5px;line-height:1.7;padding:9px 11px;margin:4px 0 14px;white-space:pre-line;
   border:1px dashed #2b2240;border-radius:10px;background:#080610;
   word-break:break-all;
 }
@@ -364,4 +364,5 @@ body[data-world="family"] summary::before{
   content:"▶ ";font-size:.78em;color:var(--accent-2);opacity:.85;
 }
 body[data-world="family"] details[open] > summary::before{content:"▼ ";}
+
 

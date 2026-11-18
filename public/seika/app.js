@@ -950,8 +950,12 @@ async function showDiag() {
     const w = worldById(active() ? active().worldId : 'seika');
     const p = await getPrompt(w);
     const L = lengthOf();
+    const host = (S.cfg.base || '').replace(/^https?:\/\//, '').replace(/\/.*$/, '');
     els.diag.textContent =
-      `引擎 ${BUILD} ｜ 世界「${w.name}」｜ 提示词 ${p.length} 字符 ｜ 正文目标 ${L.words} 字 ｜ 上限 ${L.tokens} tokens`;
+      `引擎 ${BUILD}\n` +
+      `实际端点 ${host || '（未设置）'}\n` +
+      `模型 ${S.cfg.model}\n` +
+      `正文 ${L.words} 字 ｜ 上限 ${L.tokens} tokens ｜ 提示词 ${p.length} 字符`;
   } catch (e) {
     els.diag.textContent = '引擎 ' + BUILD;
   }
@@ -1449,6 +1453,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

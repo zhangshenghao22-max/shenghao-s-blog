@@ -25,10 +25,10 @@ const DEFAULT_CFG = {
 const LENGTH_PRESETS = {
   // tokens 要留足面板+选项的余量，否则正文写完就被截断，选项直接消失
   mini:   { label: '极短 · 200–350 字',   words: '200–350',   cap: 420,  paras: '2–3',   tokens: 2000 },
-  brief:  { label: '短 · 400–600 字',     words: '400–600',   cap: 720,  paras: '3–4',   tokens: 2800 },
-  short:  { label: '中 · 900–1200 字',    words: '900–1200',  cap: 1400, paras: '4–5',   tokens: 4000 },
-  normal: { label: '长 · 1400–2000 字',   words: '1400–2000', cap: 2300, paras: '6–8',   tokens: 5200 },
-  epic:   { label: '极长 · 2200–3000 字', words: '2200–3000', cap: 3400, paras: '9–12',  tokens: 7000 }
+  brief:  { label: '短 · 400–600 字',     words: '400–600',   cap: 720,  paras: '3–5',   tokens: 2800 },
+  short:  { label: '中 · 900–1200 字',    words: '900–1200',  cap: 1400, paras: '7–10',  tokens: 4000 },
+  normal: { label: '长 · 1400–2000 字',   words: '1400–2000', cap: 2300, paras: '11–16', tokens: 5200 },
+  epic:   { label: '极长 · 2200–3000 字', words: '2200–3000', cap: 3400, paras: '16–22', tokens: 7000 }
 };
 function lengthOf() { return LENGTH_PRESETS[S.cfg.len] || LENGTH_PRESETS.normal; }
 
@@ -512,7 +512,7 @@ function buildSystem(prompt, s) {
   const L = lengthOf();
   const styleLine = (S.cfg.style === 'story')
     ? '文风：剧情流。聚焦冲突和推进，闲笔从简。'
-    : '文风：生活流。允许闲笔、走神、日常琐碎，让对话有停顿和错位。人物先像活人，再谈剧情。';
+    : '文风：生活流。日常场景允许闲笔、走神、琐碎，让对话有停顿和错位；一旦进入情色场面，立刻转直写，不要用闲笔冲淡。';
   sys += `\n\n====\n【本轮篇幅】\n正文 ${L.words} 字，分 ${L.paras} 段。不要少于下限，也不要超过 ${L.cap} 字。\n${styleLine}\n只推进 1–2 个动作节点，把这一段写透，不要为了赶剧情而压缩。\n====`;
   if (s && s.summary) {
     sys += '\n\n====\n【前情摘要】（更早剧情的压缩记录，一律视为已经发生的事实，后续要与之连贯）\n' + s.summary + '\n====';
@@ -1396,6 +1396,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

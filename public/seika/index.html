@@ -93,6 +93,16 @@
       </select>
     </label>
 
+    <label>模型预设
+      <select id="cfgPreset" class="sel">
+        <option value="deepseek">DeepSeek Flash（便宜，文风偏干）</option>
+        <option value="gemini">Gemini 3.8 Flash · OpenRouter（最接近原站）</option>
+        <option value="gemini37">Gemini 3.7 Flash · OpenRouter</option>
+        <option value="glm">GLM 4.6 · OpenRouter（家中唯一异性同款）</option>
+        <option value="custom">自定义</option>
+      </select>
+    </label>
+
     <label>接口地址 Base URL
       <input id="cfgBase" type="url" placeholder="https://api.deepseek.com/v1" autocomplete="off" spellcheck="false">
     </label>
@@ -207,6 +217,7 @@
 <script src="./app.js"></script>
 </body>
 </html>
+
 
 
 

@@ -21,6 +21,15 @@ const DEFAULT_CFG = {
   style: 'life'
 };
 
+/* 模型预设：原站用的是 Gemini 3 Flash / GLM，不是 DeepSeek */
+const MODEL_PRESETS = {
+  deepseek: { label: 'DeepSeek Flash（便宜，文风偏干）', base: 'https://api.deepseek.com/v1', model: 'deepseek-flash' },
+  gemini:   { label: 'Gemini 3.8 Flash（OpenRouter，最接近原站）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.8-flash' },
+  gemini37: { label: 'Gemini 3.7 Flash（OpenRouter）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.7-flash' },
+  glm:      { label: 'GLM 4.6（OpenRouter，家中唯一异性同款）', base: 'https://openrouter.ai/api/v1', model: 'z-ai/glm-4.6' },
+  custom:   { label: '自定义（自己填 Base URL 和模型）', base: '', model: '' }
+};
+
 /* 篇幅档位：决定 max_tokens 与注入给模型的字数硬指标 */
 const LENGTH_PRESETS = {
   // tokens 要留足面板+选项的余量，否则正文写完就被截断，选项直接消失
@@ -165,6 +174,10 @@ function save() {
 
 function worlds() { return [...BUILTIN_WORLDS, ...S.worlds]; }
 function worldById(id) { return worlds().find(w => w.id === id) || BUILTIN_WORLDS[0]; }
+function isDeepSeek() {
+  return /api\.deepseek\.com/i.test(S.cfg.base || '');
+}
+
 function active() { return S.sessions.find(s => s.id === S.active) || null; }
 
 function mkSession(worldId, title) {
@@ -198,7 +211,7 @@ const els = {};
 ['app','topbar','ttl','subtitle','messages','scroller','hint','hintCard','hintTitle','hintText','btnStart',
  'optionBar','btnJump','btnMoreOpts','optWrap','input','btnSend','btnReload','sessionsSheet','sessionList','btnNewSession','btnCloseSessions',
  'worldSheet','worldList','btnCloseWorld','settingsSheet','btnCloseSettings','statusSheet','statusBody','btnCloseStatus',
- 'cfgMode','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgStyle','cfgThink','cfgKeep','cfgSummary','cfgExtend','diag',
+ 'cfgMode','cfgPreset','cfgBase','cfgKey','cfgModel','cfgTemp','cfgTempVal','cfgCtx','cfgCtxVal','cfgLen','cfgStyle','cfgThink','cfgKeep','cfgSummary','cfgExtend','diag',
  'btnAddWorld','btnGenWorld','genStatus','btnImport','btnExport','btnClear','btnLoadSample','worldForm','wName','wPrompt','btnSaveWorld','btnCancelWorld',
  'fileImport','btnStatus','btnSettings','btnSessions'
 ].forEach(id => { els[id] = $(id); });
@@ -558,7 +571,7 @@ async function requestDirect(messages, onDelta, override) {
   const res = await fetch(base + '/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
-    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: lengthOf().tokens, messages: msgs, thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } })
+    body: JSON.stringify({ model: S.cfg.model, stream: true, temperature: temp, max_tokens: lengthOf().tokens, messages: msgs, ...(isDeepSeek() ? { thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } } : {}) })
   });
   if (!res.ok) {
     let t = '';
@@ -602,7 +615,7 @@ async function callOnce(sys, user) {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
     body: JSON.stringify({
-      model: S.cfg.model, stream: false, temperature: 0.3, max_tokens: 900, thinking: { type: 'disabled' },
+      model: S.cfg.model, stream: false, temperature: 0.3, max_tokens: 900, ...(isDeepSeek() ? { thinking: { type: 'disabled' } } : {}),
       messages: [{ role: 'system', content: sys }, { role: 'user', content: user }]
     })
   });
@@ -694,7 +707,7 @@ async function requestContinue(msgs, tail, need) {
       stream: false,
       temperature: Math.min(1.2, S.cfg.temp + 0.05),
       max_tokens: 2400,
-      thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' },
+      ...(isDeepSeek() ? { thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } } : {}),
       messages: [
         { role: 'system', content: sys },
         ...msgs,
@@ -723,7 +736,7 @@ async function requestTail(msgs, partial) {
       stream: false,
       temperature: Math.min(1.1, S.cfg.temp),
       max_tokens: 1800,
-      thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' },
+      ...(isDeepSeek() ? { thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } } : {}),
       messages: [
         { role: 'system', content: sys },
         ...msgs,
@@ -922,6 +935,9 @@ async function showDiag() {
 }
 
 function fillCfgUI() {
+  const guess = Object.entries(MODEL_PRESETS).find(([k, v]) =>
+    v.base && v.base === S.cfg.base && v.model === S.cfg.model);
+  els.cfgPreset.value = S.cfg.preset || (guess ? guess[0] : 'custom');
   els.cfgBase.value = S.cfg.base;
   els.cfgKey.value = S.cfg.key;
   els.cfgModel.value = S.cfg.model;
@@ -939,6 +955,7 @@ function fillCfgUI() {
 }
 
 function readCfgUI() {
+  S.cfg.preset = els.cfgPreset.value;
   S.cfg.base = els.cfgBase.value.trim() || DEFAULT_CFG.base;
   S.cfg.key = els.cfgKey.value.trim();
   S.cfg.model = els.cfgModel.value.trim() || DEFAULT_CFG.model;
@@ -1029,6 +1046,19 @@ els.btnCloseStatus.onclick = () => closeSheet(els.statusSheet);
       closeSheet(sheet);
     }
   });
+});
+
+els.cfgPreset.addEventListener('change', () => {
+  const p = MODEL_PRESETS[els.cfgPreset.value];
+  if (p && p.base) {
+    els.cfgBase.value = p.base;
+    els.cfgModel.value = p.model;
+    S.cfg.preset = els.cfgPreset.value;
+    S.cfg.base = p.base;
+    S.cfg.model = p.model;
+    save();
+    toast('已切换到 ' + p.label);
+  }
 });
 
 els.cfgTemp.addEventListener('input', () => { els.cfgTempVal.textContent = Number(els.cfgTemp.value).toFixed(2); });
@@ -1396,6 +1426,9 @@ async function boot() {
 
 boot();
 })();
+
+
+
 
 
 

@@ -27,6 +27,8 @@ const MODEL_PRESETS = {
   gemini:   { label: 'Gemini 3.8 Flash（OpenRouter，最接近原站）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.8-flash' },
   gemini37: { label: 'Gemini 3.7 Flash（OpenRouter）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.7-flash' },
   glm:      { label: 'GLM 4.6（OpenRouter，家中唯一异性同款）', base: 'https://openrouter.ai/api/v1', model: 'z-ai/glm-4.6' },
+  rt3:      { label: 'Gemini 3 Flash · 国内中转（原站同款，实测可用）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3-flash' },
+  rt4:      { label: 'Gemini 4 Argon · 国内中转（更强，稍慢）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-argon' },
   custom:   { label: '自定义（自己填 Base URL 和模型）', base: '', model: '' }
 };
 
@@ -1426,6 +1428,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

@@ -4,7 +4,6 @@
 /* ═════════════ 常量 ═════════════ */
 const LS_KEY = 'seika.v2';
 const CHAR_BUDGET = 180000;          // 单次请求上下文软上限（字符）
-const HISTORY_SEED = './seeds/history-01.json?v=2';
 
 const DEFAULT_CFG = {
   base: 'https://api.deepseek.com/v1',
@@ -1408,28 +1407,11 @@ els.fileImport.addEventListener('change', async (e) => {
   }
 });
 
-/* 一键载入站点内置的那份记录 */
-els.btnLoadSample.onclick = async () => {
-  els.btnLoadSample.disabled = true;
-  els.btnLoadSample.textContent = '载入中…';
-  try {
-    const r = await fetch('./seeds/history-01.json?v=2', { cache: 'no-cache' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const d = await r.json();
-    const msgs = d.msgs || [];
-    if (!msgs.length) throw new Error('没有对话内容');
-    ingestSessions([{
-      worldId: 'seika',
-      title: '校规修改器 · 第1–27轮',
-      msgs: msgs.map(m => ({ role: m.role, content: m.role === 'assistant' ? balanceHtml(m.content) : m.content }))
-    }]);
-  } catch (err) {
-    toast('载入失败：' + (err.message || err));
-  } finally {
-    els.btnLoadSample.disabled = false;
-    els.btnLoadSample.textContent = '载入「校规修改器 · 27 轮」聊天记录';
-  }
-};
+/* 「载入示例对话」已下线：站点不再托管任何聊天记录，改为从本地文件导入 */
+if (els.btnLoadSample) {
+  els.btnLoadSample.textContent = '导入聊天记录…';
+  els.btnLoadSample.onclick = () => els.fileImport.click();
+}
 
 
 els.btnClear.onclick = () => {
@@ -1451,27 +1433,10 @@ async function boot() {
   fillCfgUI();
 
   if (!S.sessions.length) {
-    // 首次使用：尝试载入之前那份对话记录
-    let seeded = false;
-    try {
-      const r = await fetch(HISTORY_SEED, { cache: 'force-cache' });
-      if (r.ok) {
-        const d = await r.json();
-        if (Array.isArray(d.msgs) && d.msgs.length) {
-          const s = mkSession('seika', '校规修改器 · 续');
-          s.msgs = d.msgs.map(m => ({ role: m.role, content: m.content }));
-          s.createdAt = s.updatedAt = now();
-          S.sessions.push(s);
-          S.active = s.id;
-          seeded = true;
-        }
-      }
-    } catch {}
-    if (!seeded) {
-      const s = mkSession('seika', '新对话');
-      S.sessions.push(s);
-      S.active = s.id;
-    }
+    // 首次使用：直接建一个空会话（站点不再托管任何聊天记录）
+    const s = mkSession('seika', '新对话');
+    S.sessions.push(s);
+    S.active = s.id;
     save();
   }
 
@@ -1490,6 +1455,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

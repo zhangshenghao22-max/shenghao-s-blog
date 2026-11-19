@@ -669,37 +669,70 @@ ${text}`;
 }
 
 /* ═════════════ 篇幅工具（自动续写） ═════════════ */
-function bodyHtml(html) {
+
+// 定位正文块 `<div ...>…</div>` 的内容区间（支持内部嵌套 div）
+function bodyRange(html) {
   const i = html.indexOf('<div');
-  if (i < 0) return html;
+  if (i < 0) return null;
   const open = html.indexOf('>', i);
-  if (open < 0) return html;
-  const close = html.indexOf('</div>', open + 1);
-  return close < 0 ? html.slice(open + 1) : html.slice(open + 1, close);
+  if (open < 0) return null;
+  const re = /<\/?div\b/gi;
+  re.lastIndex = open + 1;
+  let depth = 1;
+  let m;
+  while ((m = re.exec(html))) {
+    if (m[0][1] === '/') depth--; else depth++;
+    if (depth === 0) return [open + 1, m.index];
+  }
+  return [open + 1, html.length];
+}
+
+function bodyHtml(html) {
+  const r = bodyRange(html);
+  return r ? html.slice(r[0], r[1]) : html;
 }
 
 function bodyLen(html) {
   return stripHtml(bodyHtml(html)).replace(/\s+/g, '').length;
 }
 
-// 把续写文本塞回正文块末尾（只取纯文本，绝不破坏结构化面板）
+// 续写返回里如果又冒出了选项/面板，剥掉，别混进正文
+function cleanContinuation(text) {
+  let t = String(text || '');
+  t = t.replace(/<details[\s\S]*?<\/details>/gi, '');
+  t = t.replace(/```[\s\S]*?```/g, '');
+  t = t.split('\n').filter((line) => {
+    const s = line.trim();
+    if (!s) return true;
+    if (/^[1-5]\uFE0F?\u20E3/.test(s)) return false;   // 1️⃣
+    if (/^[A-D][.、)．]/.test(s)) return false;          // A. B.
+    if (/^(📱\s*)?选项/.test(s)) return false;
+    if (/^【?(选项|状态|数值|面板)/.test(s)) return false;
+    return true;
+  }).join('\n');
+  return t.trim();
+}
+
+// 把续写文本塞回正文块末尾（只插内容区，绝不破坏后面的面板与选项）
 function appendToBody(html, text) {
   const plain = stripHtml(text).trim();
   if (!plain) return html;
-  const i = html.indexOf('<div');
-  const open = html.indexOf('>', i);
-  const close = html.indexOf('</div>', open + 1);
   const chunk = esc(plain).replace(/\n{2,}/g, '<br><br>').replace(/\n/g, '<br>');
-  if (i < 0 || open < 0 || close < 0) return html + '\n\n' + chunk;
-  return html.slice(0, close) + '\n\n' + chunk + '\n' + html.slice(close);
+  const r = bodyRange(html);
+  if (!r) return html + '\n\n' + chunk;
+  return html.slice(0, r[1]) + '\n\n' + chunk + '\n' + html.slice(r[1]);
 }
 
-async function requestContinue(msgs, tail, need) {
+async function requestContinue(msgs, bodyTail, need) {
   const base = (S.cfg.base || DEFAULT_CFG.base).replace(/\/+$/, '');
-  const w = worldById(active()?.worldId);
+  const w = worldById(active() ? active().worldId : 'seika');
   const basePrompt = await getPrompt(w);
   const sys = basePrompt +
-    '\n\n====\n【续写模式】这一轮你只负责补写正文的后续段落。只输出纯文本段落，不要输出任何 HTML 标签、数值变化块、状态面板或选项。\n====';
+    '\n\n====\n【续写模式】\n' +
+    '这一轮你只负责补写正文的后续段落，上一段正文在下面。\n' +
+    '只输出纯文本段落，不要输出任何 HTML 标签、数值变化块、状态面板或选项。\n' +
+    '特别注意：不要去执行、不要去展开任何已经列出的选项。那些选项是留给玩家的，不是给你的。\n' +
+    '只是把眼前这一幕继续往下描写。\n====';
   const res = await fetch(base + '/chat/completions', {
     method: 'POST',
     headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
@@ -712,8 +745,8 @@ async function requestContinue(msgs, tail, need) {
       messages: [
         { role: 'system', content: sys },
         ...msgs,
-        { role: 'assistant', content: tail },
-        { role: 'user', content: `接着上一段继续写，约 ${need} 字。只输出正文段落（纯文本，不要标签）。不要重复已写内容，不要总结，不要结束场景，不要跳时间。` }
+        { role: 'assistant', content: bodyTail },
+        { role: 'user', content: `接着上一段正文继续写，约 ${need} 字。\n只输出正文段落（纯文本，不要标签）。\n不要写「1️⃣」「A.」这类选项标记，不要按任何选项展开剧情，只是把当前这一幕继续描写下去。\n不要输出数值块、状态面板。不要重复已写内容，不要总结，不要结束场景，不要跳时间。` }
       ]
     })
   });
@@ -721,6 +754,7 @@ async function requestContinue(msgs, tail, need) {
   const j = await res.json();
   return j.choices?.[0]?.message?.content || '';
 }
+
 
 // 输出被 max_tokens 截断时，只补尾巴（数值块 / 状态面板 / 选项）
 async function requestTail(msgs, partial) {
@@ -891,10 +925,13 @@ async function send(text) {
       toast(`正文只有 ${bodyLen(acc)} 字，自动续写中…`);
       let extra = '';
       try {
-        extra = await requestContinue(msgs, stripHtml(acc).slice(-2600), need + 300);
+        // 只把「正文块」的纯文本交给模型，绝不能带上选项，否则它会顺着选项往下演
+        const bodyText = stripHtml(bodyHtml(acc));
+        extra = await requestContinue(msgs, bodyText.slice(-2000), need + 300);
       } catch (e) { break; }
-      if (!extra || !extra.trim()) break;
-      acc = appendToBody(acc, extra.trim());
+      extra = cleanContinuation(extra);
+      if (!extra) break;
+      acc = appendToBody(acc, extra);
       bubble.classList.add('caret');
       paint();
       bubble.classList.remove('caret');

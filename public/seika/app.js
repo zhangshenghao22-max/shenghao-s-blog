@@ -722,6 +722,59 @@ function appendToBody(html, text) {
   return html.slice(0, r[1]) + '\n\n' + chunk + '\n' + html.slice(r[1]);
 }
 
+// 把一条完整回复拆成「正文块」和「后面的数值块/面板/选项」
+function splitBodyTail(html) {
+  const r = bodyRange(html);
+  if (!r) return { head: html, tail: '' };
+  const close = html.indexOf('</div>', r[1]);
+  if (close < 0) return { head: html, tail: '' };
+  const cut = close + 6;                       // '</div>'.length
+  return { head: html.slice(0, cut), tail: html.slice(cut) };
+}
+
+// 丢掉模型多写的正文，只保留从第一个结构块开始的部分
+function cleanTailFrom(text) {
+  const t = String(text || '');
+  const i = t.search(/<(div|details|opt)\b|[1-5]\uFE0F?\u20E3/);
+  let s = i >= 0 ? t.slice(i) : t;
+  s = s.replace(/^[^<1-5]*/, '');
+  return s.trim();
+}
+
+// 正文已经定稿后，重新产出「数值块 + 状态面板 + 选项」
+async function requestTailFor(msgs, bodyHtmlText) {
+  const base = (S.cfg.base || DEFAULT_CFG.base).replace(/\/+$/, '');
+  const w = worldById(active() ? active().worldId : 'seika');
+  const basePrompt = await getPrompt(w);
+  const sys = basePrompt +
+    '\n\n====\n【尾部生成模式】\n这一轮的正文已经写完并交给玩家看过了。\n现在只需要产出收尾的三块：数值变化块、状态面板、选项。\n不要重复正文，不要解释，不要写开场白。\n====';
+  const res = await fetch(base + '/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + S.cfg.key },
+    body: JSON.stringify({
+      model: S.cfg.model,
+      stream: false,
+      temperature: Math.min(1.1, S.cfg.temp),
+      max_tokens: 2200,
+      ...(isDeepSeek() ? { thinking: { type: S.cfg.thinking ? 'enabled' : 'disabled' } } : {}),
+      messages: [
+        { role: 'system', content: sys },
+        ...msgs,
+        { role: 'assistant', content: bodyHtmlText.slice(-4000) },
+        { role: 'user', content:
+          '正文到此结束。请只输出下面三部分，不要写任何正文：\n' +
+          '1. 数值变化块（<div style="background:#0a0810;border:1px solid #a080c0;border-radius:6px;padding:8px;font-size:11px;color:#d0c0e0;">…</div>）\n' +
+          '2. 状态面板（<details>，summary 里含「📱 状态」）\n' +
+          '3. 五个选项（1️⃣ 到 5️⃣，第 5 条固定是「自由行动（请输入内容）📝」）\n' +
+          '选项必须承接正文最后停下的那一刻，是玩家接下来能做的动作。' }
+      ]
+    })
+  });
+  if (!res.ok) throw new Error('尾部生成 ' + res.status);
+  const j = await res.json();
+  return cleanTailFrom(j.choices?.[0]?.message?.content || '');
+}
+
 async function requestContinue(msgs, bodyTail, need) {
   const base = (S.cfg.base || DEFAULT_CFG.base).replace(/\/+$/, '');
   const w = worldById(active() ? active().worldId : 'seika');
@@ -914,26 +967,46 @@ async function send(text) {
     }
   }
 
-  /* ── 篇幅兜底：正文没写到下限就自动续写并拼回正文块 ── */
+  /* ── 篇幅兜底：先补足正文，再按定稿的正文重新生成尾巴 ── */
   if (acc && S.cfg.mode === 'direct' && S.cfg.autoExtend) {
     const target = Math.round(parseInt(lengthOf().words.split(/[–-]/)[0], 10) * 0.9);
-    let rounds = 0;
-    while (bodyLen(acc) < target && rounds < 2) {
-      rounds++;
-      const need = target - bodyLen(acc);
-      toast(`正文只有 ${bodyLen(acc)} 字，自动续写中…`);
+    const split = splitBodyTail(acc);
+    let body = split.head;
+    const oldTail = split.tail;
+    let extended = 0;
+
+    while (bodyLen(body) < target && extended < 2) {
+      extended++;
+      const need = target - bodyLen(body);
+      toast(`正文只有 ${bodyLen(body)} 字，自动续写中…`);
       let extra = '';
       try {
-        // 只把「正文块」的纯文本交给模型，绝不能带上选项，否则它会顺着选项往下演
-        const bodyText = stripHtml(bodyHtml(acc));
-        extra = await requestContinue(msgs, bodyText.slice(-2000), need + 300);
+        // 只给正文，不给选项，否则它会顺着选项往下演
+        extra = await requestContinue(msgs, stripHtml(bodyHtml(body)).slice(-2000), need + 300);
       } catch (e) { break; }
       extra = cleanContinuation(extra);
       if (!extra) break;
-      acc = appendToBody(acc, extra);
+      // 去重：模型如果原样重写了一遍已经有的话，丢弃
+      const probe = extra.slice(0, 24).replace(/\s/g, '');
+      const seen = stripHtml(bodyHtml(body)).replace(/\s/g, '');
+      if (probe.length >= 12 && seen.includes(probe)) break;
+      body = appendToBody(body, extra);
+      acc = body + oldTail;
       bubble.classList.add('caret');
       paint();
       bubble.classList.remove('caret');
+    }
+
+    // 正文变了：旧选项是基于「续写前的剧情」推演的，必须按定稿正文重新生成
+    if (extended > 0) {
+      toast('正文已补足，重新生成选项…');
+      let newTail = '';
+      try {
+        newTail = await requestTailFor(msgs, body);
+      } catch (e) { newTail = ''; }
+      acc = body + '\n\n' + (newTail || oldTail);
+      bubble.innerHTML = acc;
+      paint();
     }
   }
 
@@ -1455,6 +1528,8 @@ async function boot() {
 
 boot();
 })();
+
+
 
 
 

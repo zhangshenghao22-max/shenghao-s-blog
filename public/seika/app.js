@@ -270,6 +270,26 @@ function adaptHtml(html) {
   // 有些模型会把内部推理直接吐在正文里，剥掉
   out = out.replace(/<(think|thinking|reasoning|analysis)>[\s\S]*?<\/\1>/gi, '');
   out = out.replace(/<(think|thinking|reasoning|analysis)>[\s\S]*$/i, '');
+
+  // 剥掉正文前的角色外说明（Grok 常写「Got it — starting...」这类英文确认）
+  const firstTag = out.search(/<(div|details|tl|article|p|opt)\b/i);
+  if (firstTag > 15) {
+    const head = out.slice(0, firstTag);
+    if (!/<[a-z]/i.test(head)) out = out.slice(firstTag);
+  }
+
+  // 剥掉结尾的角色外说明（「以上是第一轮」「希望你喜欢」之类）
+  const dEnd = out.lastIndexOf('</details>');
+  const vEnd = out.lastIndexOf('</div>');
+  const cut = Math.max(dEnd >= 0 ? dEnd + 10 : -1, vEnd >= 0 ? vEnd + 6 : -1);
+  if (cut > 0) {
+    const rest = out.slice(cut);
+    if (rest.trim().length > 15 && !/<[a-z]/i.test(rest)) out = out.slice(0, cut);
+  }
+
+  // 少量 markdown 残留
+  out = out.replace(/\*\*([^*\n]{1,80})\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/^#{1,4}\s+(.+)$/gm, '<strong>$1</strong>');
   // 思维链（藏在 HTML 注释里的推导过程）不展示
   out = out.replace(/<details[^>]*>\s*<summary[^>]*>\s*思维链\s*<\/summary>[\s\S]*?<\/details>/gi, '');
   // 代码围栏 → <pre>（含未闭合的兜底）
@@ -910,7 +930,7 @@ async function send(text) {
     const el = els.scroller;
     const prevTop = el.scrollTop;
     const prevH = el.scrollHeight;
-    bubble.innerHTML = acc;
+    bubble.innerHTML = adaptHtml(acc);
     if (followBottom) el.scrollTop = el.scrollHeight;
     else if (el.scrollHeight - prevH > 0) el.scrollTop = prevTop;
     lastPaint = performance.now();
@@ -929,7 +949,7 @@ async function send(text) {
   } catch (e) {
     if (rafId) { cancelAnimationFrame(rafId); rafId = 0; }
     bubble.classList.remove('caret');
-    bubble.innerHTML = acc + `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ ${esc(friendlyError(e))}</div>`;
+    bubble.innerHTML = adaptHtml(acc) + `<div style="color:#d08080;font-size:13px;padding:10px;border:1px solid #4a2c38;border-radius:10px;background:#150c12;">⚠︎ ${esc(friendlyError(e))}</div>`;
     busy = false;
     els.btnSend.disabled = false;
     return;
@@ -967,7 +987,7 @@ async function send(text) {
         const tail = await requestTail(msgs, acc);
         if (tail && tail.trim()) {
           acc = acc.trimEnd() + '\n\n' + tail.trim();
-          bubble.innerHTML = acc;
+          bubble.innerHTML = adaptHtml(acc);
         }
       } catch (e) { /* 补不上就算了，别打断 */ }
     }
@@ -1011,7 +1031,7 @@ async function send(text) {
         newTail = await requestTailFor(msgs, body);
       } catch (e) { newTail = ''; }
       acc = body + '\n\n' + (newTail || oldTail);
-      bubble.innerHTML = acc;
+      bubble.innerHTML = adaptHtml(acc);
       paint();
     }
   }
@@ -1534,6 +1554,8 @@ async function boot() {
 
 boot();
 })();
+
+
 
 
 

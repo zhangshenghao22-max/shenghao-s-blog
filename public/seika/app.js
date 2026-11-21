@@ -25,8 +25,8 @@ const MODEL_PRESETS = {
   deepseek: { label: 'DeepSeek Flash（便宜，文风偏干）', base: 'https://api.deepseek.com/v1', model: 'deepseek-flash' },
   gemini:   { label: 'Gemini 3.8 Flash · OpenRouter（会被条款拦，别用于成人向）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.8-flash', blocked: true },
   glm:      { label: 'GLM 4.6 · OpenRouter', base: 'https://openrouter.ai/api/v1', model: 'z-ai/glm-4.6' },
-  rt36:     { label: '★ Gemini 3.6 Flash · 国内中转（快，3-7 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3.6-flash' },
-  rt4c:     { label: 'Gemini 4 Carbon · 国内中转（文笔最好，但要 25 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-carbon' },
+  rt4c:     { label: '★ Gemini 4 Carbon · 国内中转（破甲有效，文笔最好，约 15-25 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-carbon' },
+  rt36:     { label: 'Gemini 3.6 Flash · 国内中转（快，但会拒绝成人内容）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3.6-flash', refuses: true },
   rt4h:     { label: 'Gemini 4 Hydrogen · 国内中转（快但常空回复）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-hydrogen' },
   custom:   { label: '自定义（自己填 Base URL 和模型）', base: '', model: '' }
 };
@@ -265,6 +265,9 @@ els.scroller.addEventListener('scroll', () => {
 /* 把另一套平台输出（轻小说标签）整理成能直接渲染的 HTML */
 function adaptHtml(html) {
   let out = String(html);
+  // 有些模型会把内部推理直接吐在正文里，剥掉
+  out = out.replace(/<(think|thinking|reasoning|analysis)>[\s\S]*?<\/\1>/gi, '');
+  out = out.replace(/<(think|thinking|reasoning|analysis)>[\s\S]*$/i, '');
   // 思维链（藏在 HTML 注释里的推导过程）不展示
   out = out.replace(/<details[^>]*>\s*<summary[^>]*>\s*思维链\s*<\/summary>[\s\S]*?<\/details>/gi, '');
   // 代码围栏 → <pre>（含未闭合的兜底）
@@ -1529,6 +1532,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

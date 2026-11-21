@@ -25,8 +25,9 @@ const MODEL_PRESETS = {
   deepseek: { label: 'DeepSeek Flash（便宜，文风偏干）', base: 'https://api.deepseek.com/v1', model: 'deepseek-flash' },
   gemini:   { label: 'Gemini 3.8 Flash · OpenRouter（会被条款拦，别用于成人向）', base: 'https://openrouter.ai/api/v1', model: 'google/gemini-3.8-flash', blocked: true },
   glm:      { label: 'GLM 4.6 · OpenRouter', base: 'https://openrouter.ai/api/v1', model: 'z-ai/glm-4.6' },
-  rt3:      { label: '★ Gemini 3 Flash · 国内中转（实测能过审核，推荐）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3-flash' },
-  rt4:      { label: 'Gemini 4 Argon · 国内中转（更强，更慢）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-argon' },
+  rt36:     { label: '★ Gemini 3.6 Flash · 国内中转（快，3-7 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3.6-flash' },
+  rt4c:     { label: 'Gemini 4 Carbon · 国内中转（文笔最好，但要 25 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-carbon' },
+  rt4h:     { label: 'Gemini 4 Hydrogen · 国内中转（快但常空回复）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-hydrogen' },
   custom:   { label: '自定义（自己填 Base URL 和模型）', base: '', model: '' }
 };
 
@@ -1528,6 +1529,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 

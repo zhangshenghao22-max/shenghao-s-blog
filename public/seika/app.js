@@ -28,6 +28,8 @@ const MODEL_PRESETS = {
   rt4c:     { label: '★ Gemini 4 Carbon · 国内中转（破甲有效，文笔最好，约 15-25 秒）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-carbon' },
   rt36:     { label: 'Gemini 3.6 Flash · 国内中转（快，但会拒绝成人内容）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-3.6-flash', refuses: true },
   rt4h:     { label: 'Gemini 4 Hydrogen · 国内中转（快但常空回复）', base: 'https://fast.runtoken.ai/v1', model: 'gemini-4-hydrogen' },
+  grok45:   { label: 'Grok 4.5 · 国内中转（破甲有效，但很慢很贵）', base: 'https://fast.runtoken.ai/v1', model: 'grok-4.5' },
+  grok47:   { label: 'Grok 4.7 · 国内中转（会以"涉及未成年"拒绝）', base: 'https://fast.runtoken.ai/v1', model: 'grok-4.7', refuses: true },
   custom:   { label: '自定义（自己填 Base URL 和模型）', base: '', model: '' }
 };
 
@@ -1532,6 +1534,7 @@ async function boot() {
 
 boot();
 })();
+
 
 
 
